@@ -1,0 +1,6 @@
+{
+    "/*": {
+        "target": "http://reddit.com",
+        "secure": false
+    }
+}

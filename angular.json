@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "sass"
+          "style": "css"
         }
       },
       "root": "",
@@ -28,9 +28,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "src/assets/css/bootstrap.css",
+              "src/style.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/bootstrap.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -66,7 +69,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "areddit:build"
+            "browserTarget": "areddit:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
@@ -92,7 +96,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "assets/css/bootstrap.css",
+              "style.css"
             ],
             "scripts": []
           }
