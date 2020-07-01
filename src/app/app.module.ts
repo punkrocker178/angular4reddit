@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { HeaderFooter } from './components/header-footer/header-footer.module';
 import { RedditListingService } from './services/reddit-listing.service';
+import { RedditAuthenticateService } from './services/reddit-authenticate.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { RedditListingService } from './services/reddit-listing.service';
     HeaderFooter
   ],
   providers: [
-    RedditListingService
+    RedditListingService,
+    RedditAuthenticateService
   ],
   bootstrap: [AppComponent]
 })

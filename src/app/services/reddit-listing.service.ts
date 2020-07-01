@@ -9,16 +9,9 @@ export class RedditListingService {
 
     constructor(private http: HttpClient) { }
 
-    getListigs(segment: string, params?: any): Observable<Object> {
-        let optionParams = new HttpParams();
-        if (params) {
-            Object.keys(params).forEach((key) => {
-                optionParams.append(key, params[key]); 
-             });
-        }
-        
+    getListigs(segment: string, params?: any): Observable<Object> { 
         const options = {
-            params: optionParams ? optionParams : undefined
+            params: params
         }
 
         let data = this.http.get(environment.functionUrl + segment + '/.json', options);
