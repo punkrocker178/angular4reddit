@@ -12,5 +12,6 @@ export class AppComponent {
   constructor(private authenService: RedditAuthenticateService) { }
 
   ngOnInit() {
+    
   }
 }

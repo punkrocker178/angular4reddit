@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { AppComponent } from './app.component';
+import { AuthenticateComponent } from './components/authenticate/authenticate.component';
 
 
 const routes: Routes = [
   {
-    path: "", component: HomeComponent
+    path: "home", component: HomeComponent
+  },
+  {
+    path: "authenticate", component: AuthenticateComponent
   }
 ];
 

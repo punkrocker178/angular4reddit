@@ -8,11 +8,15 @@ import { HomeComponent } from './components/home/home.component';
 import { HeaderFooter } from './components/header-footer/header-footer.module';
 import { RedditListingService } from './services/reddit-listing.service';
 import { RedditAuthenticateService } from './services/reddit-authenticate.service';
+import { AuthenticateComponent } from './components/authenticate/authenticate.component';
+import { LocalStorageService } from './services/localStorage.service';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    AuthenticateComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +26,8 @@ import { RedditAuthenticateService } from './services/reddit-authenticate.servic
   ],
   providers: [
     RedditListingService,
-    RedditAuthenticateService
+    RedditAuthenticateService,
+    LocalStorageService
   ],
   bootstrap: [AppComponent]
 })

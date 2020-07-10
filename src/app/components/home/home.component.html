@@ -14,11 +14,9 @@
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                     </div>
                 </div>
-                <div *ngFor="let post of posts | async">
-                    {{ post | json}}
-                </div>
             </div>
             <div class="col-3">
+                <button (click)="login()" class="btn btn-success">Login</button>
                 <div class="box"></div>
             </div>
         </div>

@@ -13,4 +13,6 @@ export class ApiList {
     public static readonly LISTINGS_BY_ID :string = '/by_id';
     public static readonly LISTINGS_COMMENTS :string = '/comments';
     
+/* Get user info */
+    public static readonly USER_INFO: string = '/api/v1/me';
 }
