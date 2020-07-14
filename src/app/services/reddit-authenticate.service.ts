@@ -5,11 +5,13 @@ import { environment } from 'src/environments/environment';
 import { LocalStorageService } from './localStorage.service';
 import { ApiList } from '../constants/api-list';
 import { HeadersUtils } from '../class/Headers';
+import { Utils } from '../class/Utils';
 
 @Injectable()
 export class RedditAuthenticateService {
 
     redirectURI: string;
+
     user = {
         name: '',
         karmar: ''
@@ -30,12 +32,14 @@ export class RedditAuthenticateService {
     }
 
     login() {
+        let state = Utils.generateRandomString();
+        this.localStorage.set('state', state);
         let scope = ['read', 'identity'];
         let httParams = new HttpParams()
         .set('response_type', 'code')
         .set('duration', 'temporary')
         .set('redirect_uri', this.getRedirectUri())
-        .set('state', 'stringaa')
+        .set('state', state)
         .set('scope', scope.join(','));
         
         window.location.href = environment.loginUrl + '?' + httParams.toString();
