@@ -6,6 +6,11 @@ import { AuthenticateComponent } from './components/authenticate/authenticate.co
 
 const routes: Routes = [
   {
+    path: "",
+    pathMatch: "full",
+    redirectTo: "/home"
+  },
+  {
     path: "home", component: HomeComponent
   },
   {

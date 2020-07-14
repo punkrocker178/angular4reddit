@@ -19,7 +19,7 @@ export class AuthenticateComponent implements OnInit {
 
     ngOnInit() {
         this.activatedRoute.queryParams.subscribe(params => {
-            if (params['code']) {
+            if (params['code'] && params['state'] === this.localStorage.get('state')) {
                 this.data['code'] = params['code'];
                 this.authenService.getBearerAPI(params['code']).subscribe(res => {
                     if (res['token_type'] === 'bearer') {
