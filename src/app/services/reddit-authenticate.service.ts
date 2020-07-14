@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LocalStorageService } from './localStorage.service';
 import { ApiList } from '../constants/api-list';
-import { HeadersUtils } from '../class/Headers';
+import { HeadersUtils } from '../class/HeadersUtils';
 
 @Injectable()
 export class RedditAuthenticateService {
@@ -60,11 +60,13 @@ export class RedditAuthenticateService {
     }
 
     getUserInfo() {
-        return this.http.get(ApiList.USER_INFO, {
-            headers: HeadersUtils.buildHeaders({
-                bearerToken: this.getToken()
-            })
+        const url = HeadersUtils.buildUrl(!!this.getToken(), ApiList.USER_INFO);
+
+        const headers = HeadersUtils.buildHeaders({
+            bearerToken: this.getToken()
         });
+
+        return this.http.get(url, {headers: headers});
     }
 
     getRedirectUri() {

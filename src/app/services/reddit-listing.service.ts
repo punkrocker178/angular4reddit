@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Post } from 'src/app/model/post';
 import { environment } from 'src/environments/environment';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
-import { HeadersUtils } from '../class/Headers';
+import { HeadersUtils } from '../class/HeadersUtils';
 
 @Injectable()
 export class RedditListingService {
@@ -22,19 +22,10 @@ export class RedditListingService {
             params: params
         }
 
-        let url = '';
-        
-        if (this.authenticateService.getToken()) {
-            url = this.buildUrl('/oauth' + segment);
-        } else {
-            url = this.buildUrl(segment, true);
-        }
+        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), segment, true);
 
         let data = this.http.get(url, options);
         return data;
     }
 
-    buildUrl(segment: string, requestJson?: boolean) {
-        return environment.functionUrl + segment + (requestJson ? '/.json' : '');
-    }
 }
