@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,6 +10,7 @@ import { RedditListingService } from './services/reddit-listing.service';
 import { RedditAuthenticateService } from './services/reddit-authenticate.service';
 import { AuthenticateComponent } from './components/authenticate/authenticate.component';
 import { LocalStorageService } from './services/localStorage.service';
+import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { LocalStorageService } from './services/localStorage.service';
   providers: [
     RedditListingService,
     RedditAuthenticateService,
-    LocalStorageService
+    LocalStorageService,
+    {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

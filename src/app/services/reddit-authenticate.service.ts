@@ -6,25 +6,34 @@ import { LocalStorageService } from './localStorage.service';
 import { ApiList } from '../constants/api-list';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { Utils } from '../class/Utils';
+import { User } from '../model/user';
 
 @Injectable()
 export class RedditAuthenticateService {
 
     redirectURI: string;
 
-    user = {
-        name: '',
-        karmar: ''
+    private user: User;
+    private getAccessTokenAPI = environment.functionUrl + '/api/v1/access_token';
+    private basicAuth: string =  'Basic ' + window.btoa(environment.clientId + ':' + environment.secret);
+
+    constructor(private http: HttpClient, private localStorage: LocalStorageService) { 
+        this.user = this.getUser();
     }
 
-    constructor(private http: HttpClient, private localStorage: LocalStorageService) { }
-
     getUser() {
+        if (!this.user) {
+            if (this.localStorage.get('userOject')){
+                const userObj = this.localStorage.get('userOject');
+                return new User(userObj['name'], User.getKarma(userObj));
+            }
+            return new User();
+        }
         return this.user;
     }
 
     setUserValue(key: string, value: string) {
-        this.user[key] = value
+        this.getUser()[key] = value
     }
 
     storeUserDetail(user: any) {
@@ -37,7 +46,7 @@ export class RedditAuthenticateService {
         let scope = ['read', 'identity'];
         let httParams = new HttpParams()
         .set('response_type', 'code')
-        .set('duration', 'temporary')
+        .set('duration', 'permanent')
         .set('redirect_uri', this.getRedirectUri())
         .set('state', state)
         .set('scope', scope.join(','));
@@ -51,13 +60,25 @@ export class RedditAuthenticateService {
         .set('grant_type', 'authorization_code')
         .set('code', code)
         .set('redirect_uri', this.getRedirectUri());
-
-        let getAccessTokenAPI = environment.functionUrl + '/api/v1/access_token';
-        let basicAuth = 'Basic ' + window.btoa(environment.clientId + ':' + environment.secret);
-        return this.http.post(getAccessTokenAPI, body.toString(),
+        
+        return this.http.post(this.getAccessTokenAPI, body.toString(),
             { headers: 
                 { 
-                    'Authorization': basicAuth,
+                    'Authorization': this.basicAuth,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                } 
+            });
+    }
+
+    refreshToken() {
+        let body = new HttpParams()
+        .set('grant_type', 'refresh_token')
+        .set('refresh_token', this.localStorage.get('refreshToken'));
+
+        return this.http.post(this.getAccessTokenAPI, body.toString(),
+            { headers: 
+                { 
+                    'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 } 
             });

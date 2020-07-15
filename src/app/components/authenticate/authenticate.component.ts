@@ -22,16 +22,20 @@ export class AuthenticateComponent implements OnInit {
             if (params['code'] && params['state'] === this.localStorage.get('state')) {
                 this.data['code'] = params['code'];
                 this.authenService.getBearerAPI(params['code']).subscribe(res => {
+
                     if (res['token_type'] === 'bearer') {
                         this.localStorage.set('userToken', res['access_token']);
                         this.localStorage.set('refreshToken', res['refresh_token']);
+                        this.localStorage.set('initTime', Date.now().toString());
                         this.authenService.getUserInfo().subscribe(res => {
                             this.authenService.setUserValue('name', res['name']);
                             this.authenService.setUserValue('karma', res['comment_karma'] + res['link_karma']);
                             this.authenService.storeUserDetail(res);
                             this.router.navigateByUrl('/home');
                         });
+
                     }
+
                 });
             }
         });
