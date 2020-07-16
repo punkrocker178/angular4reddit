@@ -3,8 +3,13 @@ export class User {
     _karma: number;
 
     constructor(name?: string , karma?: number) {
-        this._name = name;
-        this._karma = karma;
+        if (name) {
+            this._name = name;
+        }
+
+        if (karma) {
+            this._karma = karma;
+        }
     }
 
     set name(name: string) {

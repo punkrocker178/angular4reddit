@@ -12,13 +12,8 @@ export class RedditListingService {
     constructor(private http: HttpClient, private authenticateService: RedditAuthenticateService) { }
 
     getListigs(segment: string, params?: any): Observable<Object> {
-        let headers = HeadersUtils.buildHeaders(
-            {
-                bearerToken: this.authenticateService.getToken()
-            }
-        );
+
         const options = {
-            headers: headers,
             params: params
         }
 

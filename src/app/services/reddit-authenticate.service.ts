@@ -7,6 +7,7 @@ import { ApiList } from '../constants/api-list';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { Utils } from '../class/Utils';
 import { User } from '../model/user';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class RedditAuthenticateService {
@@ -15,9 +16,14 @@ export class RedditAuthenticateService {
 
     private user: User;
     private getAccessTokenAPI = environment.functionUrl + '/api/v1/access_token';
+    private getRevokeTokenAPI = environment.functionUrl + '/api/v1/revoke_token';
+
     private basicAuth: string =  'Basic ' + window.btoa(environment.clientId + ':' + environment.secret);
 
-    constructor(private http: HttpClient, private localStorage: LocalStorageService) { 
+    constructor(
+        private http: HttpClient, 
+        private localStorage: LocalStorageService,
+        private router: Router) { 
         this.user = this.getUser();
     }
 
@@ -54,6 +60,14 @@ export class RedditAuthenticateService {
         window.location.href = environment.loginUrl + '?' + httParams.toString();
     }
 
+    logout() {
+        this.localStorage.remove('userToken');
+        this.localStorage.remove('refreshToken');
+        this.localStorage.remove('userObject');
+        this.user = null;
+        this.router.navigateByUrl('/home');
+    }
+
     getBearerAPI(code: string) {
 
         let body = new HttpParams()
@@ -84,14 +98,24 @@ export class RedditAuthenticateService {
             });
     }
 
+    revokeToken() {
+        let body = new HttpParams()
+        .set('token', this.localStorage.get('refreshToken'))
+        .set('token_type_hint', 'refresh_token');
+        
+        return this.http.post(this.getRevokeTokenAPI, body.toString(),
+            { headers: 
+                { 
+                    'Authorization': this.basicAuth,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+              observe: 'response' 
+            });
+    }
+
     getUserInfo() {
         const url = HeadersUtils.buildUrl(!!this.getToken(), ApiList.USER_INFO);
-
-        const headers = HeadersUtils.buildHeaders({
-            bearerToken: this.getToken()
-        });
-
-        return this.http.get(url, {headers: headers});
+        return this.http.get(url);
     }
 
     getRedirectUri() {

@@ -11,7 +11,8 @@ import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.
 })
 export class HomeComponent implements OnInit {
 
-  posts: Observable<Post[]>;
+  posts: any[];
+  nextPage: string;
 
   title: string = "Home";
   private user: any;
@@ -20,14 +21,41 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.redditService.getListigs(ApiList.LISTINGS_HOT, {limit: 25}).subscribe((data) => {
-      console.log(data);
-    });
+    this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 25 })
+      .subscribe(
+        data => {
+          this.posts = data['data']['children'];
+          this.nextPage = data['data']['after'];
+        }
+      );
 
+  }
+
+  loadMore() {
+    this.redditService.getListigs(ApiList.LISTINGS_HOT, 
+      {
+        limit: 25,
+        after: this.nextPage
+      }).subscribe(
+        data => {
+          this.posts = this.posts.concat(data['data']['children']);
+          this.nextPage = data['data']['after'];
+        }
+      )
   }
 
   login() {
     this.authenService.login();
+  }
+
+  logout() {
+    this.authenService.revokeToken().subscribe(
+      res => {
+        if (res.ok && res.status === 204) {
+          this.authenService.logout();
+        }
+      }
+    );
   }
 
 }

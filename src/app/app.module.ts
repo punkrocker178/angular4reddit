@@ -11,12 +11,14 @@ import { RedditAuthenticateService } from './services/reddit-authenticate.servic
 import { AuthenticateComponent } from './components/authenticate/authenticate.component';
 import { LocalStorageService } from './services/localStorage.service';
 import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    NavbarComponent,
     AuthenticateComponent
   ],
   imports: [

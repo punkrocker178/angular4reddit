@@ -1,26 +1,31 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-9">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <div class="col-8">
+                <div *ngFor="let post of posts">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p>/r/{{post['data']['subreddit']}}</p>
+                            <p class="float-right">by /u/{{post['data']['author']}}</p>
+                            <h5 class="card-title">{{post['data']['title']}}</h5>
+                            <img class="img-fluid" src="{{post['data']['url']}}">
+                            <p class="card-text">{{post['data']['selftext']}}</p>
+                            <span>
+                                <i class="fa fa-arrow-up"></i>
+                                {{post['data']['score']}}
+                                <i class="fa fa-arrow-down"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                </div>
+                <button class="btn btn-success" (click)="loadMore()">Load more</button>
             </div>
             <div class="col-3">
                 <button (click)="login()" class="btn btn-success">Login</button>
+                <button (click)="logout()" class="btn btn-danger">Log out</button>
                 <div class="box"></div>
             </div>
         </div>
-        <footer-component></footer-component>
     </div>
 </body>
 
