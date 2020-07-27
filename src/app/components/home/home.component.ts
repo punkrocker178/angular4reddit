@@ -44,18 +44,4 @@ export class HomeComponent implements OnInit {
       )
   }
 
-  login() {
-    this.authenService.login();
-  }
-
-  logout() {
-    this.authenService.revokeToken().subscribe(
-      res => {
-        if (res.ok && res.status === 204) {
-          this.authenService.logout();
-        }
-      }
-    );
-  }
-
 }
