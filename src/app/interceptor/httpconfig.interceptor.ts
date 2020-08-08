@@ -37,6 +37,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         }
 
         if (this.isExpiredToken()) {
+            console.log(this.localStorage.get('initTime'));
             return this.handle401Error(req, next);
         }
 
@@ -86,7 +87,9 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                     this.refreshTokenSubject.next(res.access_token);
                     req = req.clone({
                         headers: req.headers.set('Authorization', 'Bearer ' + res.access_token)
-                    })
+                    });
+                    this.localStorage.set('initTime', Date.now().toString());
+                    this.localStorage.set('userToken', res.access_token);
                     return next.handle(req);
                 })
             );

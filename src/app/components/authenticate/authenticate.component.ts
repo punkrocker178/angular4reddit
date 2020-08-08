@@ -1,14 +1,17 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { LocalStorageService } from 'src/app/services/localStorage.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'authenticate',
     templateUrl: './authenticate.component.html'
 })
 
-export class AuthenticateComponent implements OnInit {
+export class AuthenticateComponent implements OnInit, OnDestroy {
+    private ngUnsubscribe = new Subject();
     data = {};
 
     constructor(
@@ -27,7 +30,9 @@ export class AuthenticateComponent implements OnInit {
                         this.localStorage.set('userToken', res['access_token']);
                         this.localStorage.set('refreshToken', res['refresh_token']);
                         this.localStorage.set('initTime', Date.now().toString());
-                        this.authenService.getUserInfo().subscribe(res => {
+                        this.authenService.getUserInfo()
+                        .pipe(takeUntil(this.ngUnsubscribe))
+                        .subscribe(res => {
                             this.authenService.setUserValue('name', res['name']);
                             this.authenService.setUserValue('karma', res['comment_karma'] + res['link_karma']);
                             this.authenService.storeUserDetail(res);
@@ -39,5 +44,10 @@ export class AuthenticateComponent implements OnInit {
                 });
             }
         });
+    }
+
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 }

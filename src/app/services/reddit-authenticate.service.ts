@@ -8,6 +8,7 @@ import { HeadersUtils } from '../class/HeadersUtils';
 import { Utils } from '../class/Utils';
 import { User } from '../model/user';
 import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable()
 export class RedditAuthenticateService {
@@ -29,8 +30,8 @@ export class RedditAuthenticateService {
 
     getUser() {
         if (!this.user) {
-            if (this.localStorage.get('userOject')){
-                const userObj = this.localStorage.get('userOject');
+            if (this.localStorage.get('userObject')){
+                const userObj = this.localStorage.get('userObject');
                 return new User(userObj['name'], User.getKarma(userObj));
             }
             return new User();
@@ -69,7 +70,6 @@ export class RedditAuthenticateService {
     }
 
     getBearerAPI(code: string) {
-
         let body = new HttpParams()
         .set('grant_type', 'authorization_code')
         .set('code', code)

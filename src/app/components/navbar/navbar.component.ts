@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { User } from 'src/app/model/user';
 
@@ -7,10 +7,14 @@ import { User } from 'src/app/model/user';
     templateUrl: './navbar.html'
 })
 
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
 
     constructor(private authenService: RedditAuthenticateService) { }
     user: User;
+
+    ngOnInit() {
+        this.user = this.authenService.getUser();
+    }
 
     login() {
         this.authenService.login();
