@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { Observable, from, merge, forkJoin } from 'rxjs';
+import { Observable, from, merge, forkJoin, BehaviorSubject, Subscription, Subject, zip } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { Listings } from 'src/app/model/listings';
-import { pluck, map } from 'rxjs/operators';
+import { pluck, map, takeUntil, tap, mergeMap, scan } from 'rxjs/operators';
 import { Post } from 'src/app/model/post';
 
 @Component({
@@ -14,7 +14,9 @@ import { Post } from 'src/app/model/post';
 export class HomeComponent implements OnInit {
 
   listings: Observable<Listings>;
-  posts: Observable<Post[]>;
+  posts: Promise<Post[]>;
+  after: string;
+  subject: Subject<boolean> = new Subject();
 
   title = 'Home';
   private user: any;
@@ -22,30 +24,29 @@ export class HomeComponent implements OnInit {
   constructor(private redditService: RedditListingService, private authenService: RedditAuthenticateService) { }
 
   ngOnInit(): void {
-    this.listings = this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 25 });
-    this.posts = from(this.listings.pipe(pluck('children')));
-    console.log(this.posts);
+    this.listings = this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 30 }).pipe(
+      tap(next => {
+        this.after = next.after;
+      }
+      ));
+
+    this.posts = this.listings.pipe(map(res => res.children)).toPromise();
+
   }
 
   loadMore() {
-    this.listings.subscribe(model => {
+    this.listings = this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 30, after: this.after }).pipe(
+      tap(next => {
+        this.after = next.after;
+      }));
 
-      let newPosts = from(this.redditService.getListigs(ApiList.LISTINGS_HOT,
-        {
-          limit: 25,
-          after: model.after
-        }).pipe(pluck('children')));
-  
-        forkJoin(this.posts, newPosts).pipe(
-          map(
-            ([posts, newPosts]) => [...posts, ...newPosts]
-            )
-          )
-          .subscribe(data => {
-          console.log(data);
-        });
-    });
-    
+    this.posts = zip(
+      from(this.posts),
+      this.listings.pipe(pluck('children'))
+    ).pipe(
+      map(posts => posts[0].concat(posts[1]))
+      ).toPromise()
   }
+
 
 }
