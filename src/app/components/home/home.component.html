@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-8">
                 <ng-container *ngIf="!isLoading">
-                    <div *ngFor="let post of posts | async">
+                    <div *ngFor="let post of posts$ | async">
                         <div class="card mb-3">
                             <div class="card-body">
                                 <p>/r/{{post.data['subreddit']}}</p>
