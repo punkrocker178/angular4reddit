@@ -14,9 +14,11 @@ import { Post } from 'src/app/model/post';
 export class HomeComponent implements OnInit {
 
   listings: Observable<Listings>;
-  posts: Promise<Post[]>;
+  posts: Post[];
+  posts$: Observable<Post[]>;
+  listingsSubject: BehaviorSubject<Listings> = new BehaviorSubject<Listings>(null);
   after: string;
-  subject: Subject<boolean> = new Subject();
+  isLoading: boolean = true;
 
   title = 'Home';
   private user: any;
@@ -24,28 +26,23 @@ export class HomeComponent implements OnInit {
   constructor(private redditService: RedditListingService, private authenService: RedditAuthenticateService) { }
 
   ngOnInit(): void {
-    this.listings = this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 30 }).pipe(
+    this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 30 }).pipe(
       tap(next => {
         this.after = next.after;
+        this.listingsSubject.next(next);
       }
-      ));
+      )).subscribe(_ => this.isLoading = false);
 
-    this.posts = this.listings.pipe(map(res => res.children)).toPromise();
+    this.posts$ = this.listingsSubject.pipe(map(res => this.posts = [... this.posts, ...res.children]));
 
   }
 
   loadMore() {
-    this.listings = this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 30, after: this.after }).pipe(
+    this.redditService.getListigs(ApiList.LISTINGS_HOT, { limit: 30, after: this.after }).pipe(
       tap(next => {
         this.after = next.after;
-      }));
-
-    this.posts = zip(
-      from(this.posts),
-      this.listings.pipe(pluck('children'))
-    ).pipe(
-      map(posts => posts[0].concat(posts[1]))
-      ).toPromise()
+        this.listingsSubject.next(next);
+      })).subscribe();
   }
 
 
