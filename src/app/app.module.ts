@@ -12,6 +12,8 @@ import { AuthenticateComponent } from './components/authenticate/authenticate.co
 import { LocalStorageService } from './services/localStorage.service';
 import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { PostComponent } from './components/post/post.component';
 
 
 @NgModule({
@@ -19,13 +21,15 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     AppComponent,
     HomeComponent,
     NavbarComponent,
-    AuthenticateComponent
+    AuthenticateComponent,
+    PostComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HeaderFooter
+    HeaderFooter,
+    InfiniteScrollModule
   ],
   providers: [
     RedditListingService,

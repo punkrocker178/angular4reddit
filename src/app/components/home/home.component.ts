@@ -4,8 +4,7 @@ import { Observable, from, merge, forkJoin, BehaviorSubject, Subscription, Subje
 import { ApiList } from 'src/app/constants/api-list';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { Listings } from 'src/app/model/listings';
-import { pluck, map, takeUntil, tap, mergeMap, scan } from 'rxjs/operators';
-import { Post } from 'src/app/model/post';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -14,27 +13,22 @@ import { Post } from 'src/app/model/post';
 export class HomeComponent implements OnInit, OnDestroy {
 
   listings: Observable<Listings>;
-  posts: Post[] = [];
-  posts$: Observable<Post[]>;
-  listingsSubject: BehaviorSubject<Listings> = new BehaviorSubject<Listings>(null);
+  posts$ = new BehaviorSubject([]);
 
   after: string;
   isLoading: boolean = true;
 
   title = 'Home';
-  private user: any;
 
-  constructor(private redditService: RedditListingService, private authenService: RedditAuthenticateService) { }
+  constructor(
+    private redditService: RedditListingService, 
+    private authenService: RedditAuthenticateService) { }
 
   ngOnInit(): void {
     this.fetchData();
-    this.posts$ = this.listingsSubject.pipe(
-      map(res => {
-        this.posts = [...this.posts, ...res.children];
-        return this.posts;
-      })
-    );
-
+    this.posts$.subscribe(value => {
+      console.log(value);
+    })
   }
 
   loadMore() {
@@ -42,6 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   fetchData(after?: string) {
+    this.isLoading = true;
     let queryParams = {
       limit: 30
     }
@@ -53,16 +48,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.redditService.getListigs(ApiList.LISTINGS_HOT, queryParams).pipe(
       tap(next => {
         this.after = next.after;
-        this.listingsSubject.next(next);
-      },
-        takeUntil(this.listingsSubject)
+        const currentPosts = this.posts$.getValue();
+        this.posts$.next([...currentPosts, ...next.children]);
+      }
       )).subscribe(_ => this.isLoading = false);
 
   }
 
   ngOnDestroy() {
-    this.listingsSubject.next(null);
-    this.listingsSubject.unsubscribe();
   }
 
 
