@@ -14,6 +14,7 @@ import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { PostComponent } from './components/post/post.component';
+import { SafePipe } from './pipe/safe.pipe';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { PostComponent } from './components/post/post.component';
     HomeComponent,
     NavbarComponent,
     AuthenticateComponent,
-    PostComponent
+    PostComponent,
+    SafePipe
   ],
   imports: [
     BrowserModule,

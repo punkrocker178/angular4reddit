@@ -5,7 +5,6 @@ export class LocalStorageService {
     private localStorage: Storage;
 
     constructor() {
-        console.log('one');
         this.localStorage = window.localStorage;
     }
 

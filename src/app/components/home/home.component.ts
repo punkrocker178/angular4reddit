@@ -4,7 +4,7 @@ import { Observable, from, merge, forkJoin, BehaviorSubject, Subscription, Subje
 import { ApiList } from 'src/app/constants/api-list';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { Listings } from 'src/app/model/listings';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -21,14 +21,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   title = 'Home';
 
   constructor(
-    private redditService: RedditListingService, 
+    private redditService: RedditListingService,
     private authenService: RedditAuthenticateService) { }
 
   ngOnInit(): void {
     this.fetchData();
-    this.posts$.subscribe(value => {
-      console.log(value);
-    })
   }
 
   loadMore() {
@@ -38,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   fetchData(after?: string) {
     this.isLoading = true;
     let queryParams = {
-      limit: 30
+      limit: 15
     }
 
     if (after) {
@@ -46,6 +43,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.redditService.getListigs(ApiList.LISTINGS_HOT, queryParams).pipe(
+      map(data => {
+        this.parseImgUrl(data.children);
+        return data;
+      }),
       tap(next => {
         this.after = next.after;
         const currentPosts = this.posts$.getValue();
@@ -58,5 +59,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+  parseImgUrl(children: any[]) {
+    children.forEach(child => {
+      if (child.data['preview']) {
+        child.data['preview']['images'].forEach((image) => {
+          image.source.url = image.source.url.replace(/(amp;)/g, '');
+        })
+      }
+    })
+  }
 
 }
