@@ -1,7 +1,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-6-md col-12">
+            <div class="col-12 contents">
                 <div *ngFor="let post of posts$ | async">
                     <post-item [post]=post></post-item>
                 </div>
@@ -10,7 +10,7 @@
                     <i class="fa-3x fas fa-sync-alt fa-spin"></i>
                 </div>
 
-                <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="2500"
+                <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="2000"
                     (scrolled)="fetchData(after)"></div>
 
                 <button class="btn btn-success" (click)="loadMore()">Load more</button>
