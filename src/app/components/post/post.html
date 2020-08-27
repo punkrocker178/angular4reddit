@@ -1,4 +1,4 @@
-<div class="card mb-3">
+<div class="card mb-5">
     <div class="card-body" (click)="viewDetail()">
         <div class="d-flex flex-row">
             <a href="#" class="mr-auto">/r/{{post.data['subreddit']}}</a>
@@ -13,14 +13,14 @@
 
         <ng-container *ngIf="isVideo()">
             <div class="embed-responsive embed-responsive-4by3">
-                <iframe class="embed-responsive-item" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
+                <iframe allowfullscreen loading="lazy" class="embed-responsive-item" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
             </div>
         </ng-container>
 
         <p class="card-text text-truncate">{{post.data['selftext']}}</p>
 
-        <div class="d-flex">
-            <div class="p-2">
+        <div class="d-inline-flex">
+            <div class="p-2 post-buttons">
                 <span>
                     <i class="fa fa-arrow-up"></i>
                     {{post.data['score']}}
@@ -28,7 +28,7 @@
                 </span>
             </div>
 
-            <div class="p-2">
+            <div class="p-2 post-buttons">
                 <span class="d-block d-md-none">
                     <i class="fas fa-comment-dots"></i>
                     {{post.data['num_comments']}}
@@ -37,12 +37,12 @@
                 <span class="d-none d-md-block card-text">{{post.data['num_comments']}} Comments</span>
             </div>
             
-            <div class="p-2">
+            <div class="p-2 post-buttons">
                 <i class="fas fa-gift"></i>
-                <span> Give Award</span>
+                <span class="d-none d-md-block"> Give Award</span>
             </div>
 
-            <div class="p-2">
+            <div class="p-2 post-buttons">
                 <i class="fas fa-share"></i>
                 <span> Share</span>
             </div>
