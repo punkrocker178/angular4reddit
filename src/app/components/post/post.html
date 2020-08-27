@@ -1,4 +1,4 @@
-<div class="card mb-5">
+<div class="card custom-card mb-5">
     <div class="card-body" (click)="viewDetail()">
         <div class="d-flex flex-row">
             <a href="#" class="mr-auto">/r/{{post.data['subreddit']}}</a>
@@ -8,7 +8,9 @@
         <h5 class="card-title">{{post.data['title']}}</h5>
 
         <ng-container *ngIf="hasImages()">
-            <img class="p-2 img-fluid" src="{{getImage()}}">
+            <div class="crop-height">
+                <img class="p-2 img-fluid" src="{{getImage()}}">
+            </div>
         </ng-container>
 
         <ng-container *ngIf="isVideo()">
