@@ -1,55 +1,69 @@
 <div class="card custom-card mb-5">
-    <div class="card-body" (click)="viewDetail()">
-        <div class="d-flex flex-row">
-            <a href="#" class="mr-auto">/r/{{post.data['subreddit']}}</a>
-            <a href="#">by /u/{{post.data['author']}}</a>
-        </div>
-            
-        <h5 class="card-title">{{post.data['title']}}</h5>
-
-        <ng-container *ngIf="hasImages()">
-            <div class="crop-height">
-                <img class="p-2 img-fluid" src="{{getImage()}}">
-            </div>
-        </ng-container>
-
-        <ng-container *ngIf="isVideo()">
-            <div class="embed-responsive embed-responsive-4by3">
-                <iframe allowfullscreen loading="lazy" class="embed-responsive-item" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
-            </div>
-        </ng-container>
-
-        <p class="card-text text-truncate">{{post.data['selftext']}}</p>
-
-        <div class="d-inline-flex">
-            <div class="p-2 post-buttons">
-                <span>
-                    <i class="fa fa-arrow-up"></i>
-                    {{post.data['score']}}
-                    <i class="fa fa-arrow-down"></i>
-                </span>
-            </div>
-
-            <div class="p-2 post-buttons">
-                <span class="d-block d-md-none">
-                    <i class="fas fa-comment-dots"></i>
-                    {{post.data['num_comments']}}
-                </span>
-                
-                <span class="d-none d-md-block card-text">{{post.data['num_comments']}} Comments</span>
-            </div>
-            
-            <div class="p-2 post-buttons">
-                <i class="fas fa-gift"></i>
-                <span class="d-none d-md-block"> Give Award</span>
-            </div>
-
-            <div class="p-2 post-buttons">
-                <i class="fas fa-share"></i>
-                <span> Share</span>
-            </div>
-
-        </div>
-        
+  <div class="card-body" (click)="viewDetail()">
+    <div class="d-flex flex-row">
+      <a href="#" class="mr-auto">/r/{{post.data['subreddit']}}</a>
+      <a href="#">by /u/{{post.data['author']}}</a>
     </div>
+
+    <h5 class="card-title">{{post.data['title']}}</h5>
+
+    <ng-container *ngIf="hasImages()">
+      <div class="crop-height center-img">
+        <img class="img-fluid" src="{{getImage()}}">
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isVideo()">
+      <div class="embed-responsive embed-responsive-4by3">
+        <iframe allowfullscreen loading="lazy" class="embed-responsive-item"
+          [src]="getVideo() | safe: 'resourceUrl'"></iframe>
+      </div>
+    </ng-container>
+
+    <p class="card-text text-truncate">{{post.data['selftext']}}</p>
+
+    <div class="d-inline-flex button-group">
+      <div class="p-2 post-buttons">
+        <span>
+
+          <button class="btn vote-btn vote-btn-up">
+            <i class="fa fa-arrow-up"></i>
+          </button>
+
+          {{post.data['score']}}
+
+          <button class="btn vote-btn vote-btn-down">
+            <i class="fa fa-arrow-down"></i>
+          </button>
+
+        </span>
+      </div>
+
+      <div class="p-2 post-buttons">
+        <button class="btn custom-btn d-md-none">
+          <i class="fas fa-comment-dots"></i>
+          {{post.data['num_comments']}}
+        </button>
+
+        <button class="btn custom-btn d-none d-md-inline">{{post.data['num_comments']}} Comments</button>
+      </div>
+
+      <div class="p-2 post-buttons">
+        <button class="btn custom-btn">
+          <i class="fas fa-gift"></i>
+          <span class="d-none d-md-inline"> Give Award</span>
+        </button>
+
+      </div>
+
+      <div class="p-2 post-buttons">
+        <button class="btn custom-btn">
+          <i class="fas fa-share"></i>
+          <span class="d-none d-md-inline"> Share</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
 </div>
