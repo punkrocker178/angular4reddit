@@ -13,8 +13,10 @@ import { LocalStorageService } from './services/localStorage.service';
 import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { PostComponent } from './components/post/post.component';
 import { SafePipe } from './pipe/safe.pipe';
+import { PostsModule } from './components/post/posts.module';
+import { CommonModule } from '@angular/common';
+import { PipeModule } from './pipe/pipe.module';
 
 
 @NgModule({
@@ -22,15 +24,16 @@ import { SafePipe } from './pipe/safe.pipe';
     AppComponent,
     HomeComponent,
     NavbarComponent,
-    AuthenticateComponent,
-    PostComponent,
-    SafePipe
+    AuthenticateComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     HeaderFooter,
+    PipeModule,
+    PostsModule,
     InfiniteScrollModule
   ],
   providers: [
