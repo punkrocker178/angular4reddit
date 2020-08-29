@@ -1,5 +1,5 @@
-<nav class="mb-5 p-2">
-  <div>
+<nav class="mb-5 p-3">
+  <div class="d-flex flex-row">
     <svg style="width: 50px;height: 50px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25"
       class="_1O4jTk-dZ-VIxsCuYB6OR8">
       <g>
@@ -10,11 +10,14 @@
       </g>
     </svg>
     <div class="d-flex">
-      <span class="text">Angular Reddit</span>
-      <span *ngIf="user">{{user.name}}</span>
+    </div>
+    <span class="text d-flex align-items-center mr-auto">Angular Reddit</span>
+    <span *ngIf="user" class="d-flex align-items-center mr-3">{{user.name}}</span>
+    <div class="d-flex align-items-center">
       <button *ngIf="!user.name" (click)="login()" class="btn btn-success">Login</button>
       <button *ngIf="user?.name" (click)="logout()" class="btn btn-danger">Log out</button>
     </div>
+
 
   </div>
 
