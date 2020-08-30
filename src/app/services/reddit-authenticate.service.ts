@@ -50,7 +50,7 @@ export class RedditAuthenticateService {
     login() {
         let state = Utils.generateRandomString();
         this.localStorage.set('state', state);
-        let scope = ['read', 'identity'];
+        let scope = ['read', 'identity', 'history'];
         let httParams = new HttpParams()
         .set('response_type', 'code')
         .set('duration', 'permanent')
@@ -66,7 +66,9 @@ export class RedditAuthenticateService {
         this.localStorage.remove('refreshToken');
         this.localStorage.remove('userObject');
         this.user = null;
-        this.router.navigateByUrl('/home');
+        
+        // Will improve this later 
+        window.location.reload();
     }
 
     getBearerAPI(code: string) {

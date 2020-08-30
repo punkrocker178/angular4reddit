@@ -17,12 +17,14 @@ import { SafePipe } from './pipe/safe.pipe';
 import { PostsModule } from './components/post/posts.module';
 import { CommonModule } from '@angular/common';
 import { PipeModule } from './pipe/pipe.module';
+import { ListingsComponent } from './components/listings/listings.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    ListingsComponent,
     NavbarComponent,
     AuthenticateComponent
   ],

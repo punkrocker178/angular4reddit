@@ -10,65 +10,12 @@ import { tap, map, debounceTime, switchMap } from 'rxjs/operators';
   selector: 'app-home',
   templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 
-  listings: Observable<Listings>;
-  posts$ = new BehaviorSubject([]);
-  scroll$ = new BehaviorSubject(null);
+  listingsType = 'dashboard';
 
-  after: string;
-  isLoading: boolean = true;
+  ngOnInit() {
 
-  title = 'Home';
-
-  constructor(
-    private redditService: RedditListingService,
-    private authenService: RedditAuthenticateService) { }
-
-  ngOnInit(): void {
-    this.scroll$.pipe(
-      debounceTime(1000),
-      switchMap(_ => this.fetchData(this.after))
-    ).subscribe(_ => {
-      this.isLoading = false;
-    });
-  }
-
-  fetchData(after?: string) {
-    this.isLoading = true;
-    let queryParams = {
-      limit: 25
-    }
-
-    if (after) {
-      queryParams['after'] = this.after
-    }
-
-    return this.redditService.getListigs(ApiList.LISTINGS_HOT, queryParams).pipe(
-      map(data => {
-        this.parseImgUrl(data.children);
-        return data;
-      }),
-      tap(next => {
-        this.after = next.after;
-        const currentPosts = this.posts$.getValue();
-        this.posts$.next([...currentPosts, ...next.children]);
-      }
-      ))
-
-  }
-
-  ngOnDestroy() {
-  }
-
-  parseImgUrl(children: any[]) {
-    children.forEach(child => {
-      if (child.data['preview']) {
-        child.data['preview']['images'].forEach((image) => {
-          image.source.url = image.source.url.replace(/(amp;)/g, '');
-        })
-      }
-    })
   }
 
 }
