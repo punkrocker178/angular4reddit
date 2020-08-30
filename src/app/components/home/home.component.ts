@@ -4,7 +4,7 @@ import { Observable, from, merge, forkJoin, BehaviorSubject, Subscription, Subje
 import { ApiList } from 'src/app/constants/api-list';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { Listings } from 'src/app/model/listings';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   listings: Observable<Listings>;
   posts$ = new BehaviorSubject([]);
+  scroll$ = new BehaviorSubject(null);
 
   after: string;
   isLoading: boolean = true;
@@ -25,24 +26,25 @@ export class HomeComponent implements OnInit, OnDestroy {
     private authenService: RedditAuthenticateService) { }
 
   ngOnInit(): void {
-    this.fetchData();
-  }
-
-  loadMore() {
-    this.fetchData(this.after);
+    this.scroll$.pipe(
+      debounceTime(1000),
+      switchMap(_ => this.fetchData(this.after))
+    ).subscribe(_ => {
+      this.isLoading = false;
+    });
   }
 
   fetchData(after?: string) {
     this.isLoading = true;
     let queryParams = {
-      limit: 15
+      limit: 25
     }
 
     if (after) {
       queryParams['after'] = this.after
     }
 
-    this.redditService.getListigs(ApiList.LISTINGS_HOT, queryParams).pipe(
+    return this.redditService.getListigs(ApiList.LISTINGS_HOT, queryParams).pipe(
       map(data => {
         this.parseImgUrl(data.children);
         return data;
@@ -52,7 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         const currentPosts = this.posts$.getValue();
         this.posts$.next([...currentPosts, ...next.children]);
       }
-      )).subscribe(_ => this.isLoading = false);
+      ))
 
   }
 
