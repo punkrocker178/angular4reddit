@@ -1,4 +1,4 @@
-import { PostComponent } from './components/list-posts/post.component';
+import { PostComponent } from './components/list-posts-item/post.component';
 import { NgModule } from '@angular/core';
 import { PostDetailComponent } from './components/post-detail/post-detail.component';
 import { PipeModule } from 'src/app/pipe/pipe.module';

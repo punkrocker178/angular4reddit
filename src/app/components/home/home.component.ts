@@ -1,10 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { Observable, from, merge, forkJoin, BehaviorSubject, Subscription, Subject, zip } from 'rxjs';
-import { ApiList } from 'src/app/constants/api-list';
-import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
-import { Listings } from 'src/app/model/listings';
-import { tap, map, debounceTime, switchMap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',

@@ -1,0 +1,47 @@
+
+.icon-before::before:extend(.icon) {
+    display: inline-block;
+    font-family: 'Font Awesome 5 Brands';
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.icon-after::after {
+    display: inline-block;
+    font-family: 'Font Awesome 5 Brands';
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.icon-before {
+    display: flex;
+    align-items: center;
+}
+
+.icon-after {
+    display: flex;
+    align-items: center;
+}
+
+.icon-angular::before { 
+    content: '\f420';
+    color: red;
+    margin-right: 0.1rem;
+}
+
+.icon-reddit::before {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    content: '\f281';
+}
+
+.icon-aws::after {
+    content: '\f375';
+    margin-left: 0.5em;
+}
