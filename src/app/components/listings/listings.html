@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container custom-height-container">
     <div class="row">
         <div class="col-12 contents">
             <div *ngFor="let post of posts$ | async">
@@ -10,7 +10,7 @@
             </div>
 
             <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="150"
-                (scrolled)="scroll$.next($event.target)"></div>
+                (scrolled)="scroll$.next($event)"></div>
 
         </div>
     </div>
