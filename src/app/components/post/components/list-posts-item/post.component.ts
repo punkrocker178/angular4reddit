@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Post } from 'src/app/model/post';
+import { Router, UrlTree } from '@angular/router';
 
 @Component({
     selector: 'post-item',
@@ -7,6 +8,8 @@ import { Post } from 'src/app/model/post';
   })
 export class PostComponent {
   @Input() post: Post;
+
+  constructor(private router: Router) {}
 
   hasImages() {
     return !!this.post.data['preview'] && this.post.data['preview']['enabled'];
@@ -39,6 +42,7 @@ export class PostComponent {
 
   viewDetail() {
     console.log('clicked');
+    this.router.navigateByUrl(`/r/${this.post.data['subreddit']}/comments/${this.post.data['id']}`)
   }
 
 }

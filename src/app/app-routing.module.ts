@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { AuthenticateComponent } from './components/authenticate/authenticate.component';
+import { PostDetailComponent } from './components/post/components/post-detail/post-detail.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,9 @@ const routes: Routes = [
   },
   {
     path: "authenticate", component: AuthenticateComponent
+  },
+  {
+    path: "r/:subreddit/comments/:id", component: PostDetailComponent
   }
 ];
 
