@@ -1,11 +1,11 @@
 <div class="card custom-card mb-5">
   <div class="card-body" (click)="viewDetail()">
     <div class="d-flex flex-row post-author">
-      <a href="#" class="mr-auto">/r/{{post.data['subreddit']}}</a>
-      <a href="#">by /u/{{post.data['author']}}</a>
+      <a href="#" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
+      <a href="#">by /u/{{post?.data['author']}}</a>
     </div>
 
-    <h5 class="card-title">{{post.data['title']}}</h5>
+    <h5 class="card-title">{{post?.data['title']}}</h5>
 
     <ng-container *ngIf="hasImages()">
       <div class="crop-height center-img">
@@ -20,7 +20,7 @@
       </div>
     </ng-container>
 
-    <p class="card-text text-truncate">{{post.data['selftext']}}</p>
+    <p class="card-text text-truncate">{{post?.data['selftext']}}</p>
 
     <div class="d-inline-flex button-group">
       <div class="p-2 post-buttons">
@@ -30,7 +30,7 @@
             <i class="fa fa-arrow-up"></i>
           </button>
 
-          {{post.data['score']}}
+          {{post?.data['score']}}
 
           <button class="btn vote-btn vote-btn-down">
             <i class="fa fa-arrow-down"></i>
@@ -42,10 +42,10 @@
       <div class="p-2 post-buttons">
         <button class="btn custom-btn d-md-none">
           <i class="fas fa-comment-dots"></i>
-          {{post.data['num_comments']}}
+          {{post?.data['num_comments']}}
         </button>
 
-        <button class="btn custom-btn d-none d-md-inline">{{post.data['num_comments']}} Comments</button>
+        <button class="btn custom-btn d-none d-md-inline">{{post?.data['num_comments']}} Comments</button>
       </div>
 
       <div class="p-2 post-buttons">

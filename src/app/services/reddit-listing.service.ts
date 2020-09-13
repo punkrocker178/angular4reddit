@@ -5,6 +5,7 @@ import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { map } from 'rxjs/operators';
 import { Listings } from '../model/listings';
+import { PostDetail } from '../model/post-detail';
 
 @Injectable()
 export class RedditListingService {
@@ -19,12 +20,28 @@ export class RedditListingService {
 
         let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), segment, true);
 
-        let data = this.http.get(url, options);
-        return data.pipe(map((data: any) => {
+        let ob = this.http.get(url, options);
+        return ob.pipe(map((data: any) => {
             return {
                 kind: data.kind,
                 after: data.data.after,
                 children: data.data.children
+            }
+        }));
+    }
+
+    getPostDetail(path, params? :any): Observable<PostDetail> {
+        const options = {
+            params: params
+        }
+
+        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), path, true);
+
+        let ob = this.http.get(url, options);
+        return ob.pipe(map((data: any) => {
+            return {
+                detail: data[0].data.children[0],
+                comments: data[1]
             }
         }));
     }

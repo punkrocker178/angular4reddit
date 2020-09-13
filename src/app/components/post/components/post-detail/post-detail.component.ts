@@ -2,12 +2,18 @@ import { Component, Input } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'post-detail',
     templateUrl: './post-detail.html'
   })
 export class PostDetailComponent {
+
+  isLoading: boolean = true;
+
+  post: Post;
+  comments: Post;
   
   constructor(
     private router: Router,
@@ -15,9 +21,15 @@ export class PostDetailComponent {
   ) {}
   
   ngOnInit() {
-    console.log('heelo');
     const apiSegment = this.router.url;
-    console.log(apiSegment)
-    this.listingService.getListigs(apiSegment, {limt: 25}).subscribe(data => console.log(data));
+    this.listingService.getPostDetail(apiSegment)
+    .pipe(
+      tap((next) => {
+        this.post = next.detail;
+        this.comments = next.comments;
+        this.isLoading = false;
+      }) 
+    )
+    .subscribe();
   }
 }

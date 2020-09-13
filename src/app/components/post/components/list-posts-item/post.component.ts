@@ -8,8 +8,13 @@ import { Router, UrlTree } from '@angular/router';
   })
 export class PostComponent {
   @Input() post: Post;
+  @Input() isDetail: boolean;
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.parseImgUrl();
+  }
 
   hasImages() {
     return !!this.post.data['preview'] && this.post.data['preview']['enabled'];
@@ -41,8 +46,15 @@ export class PostComponent {
   }
 
   viewDetail() {
-    console.log('clicked');
-    this.router.navigateByUrl(`/r/${this.post.data['subreddit']}/comments/${this.post.data['id']}`)
+    !this.isDetail && this.router.navigateByUrl(`/r/${this.post.data['subreddit']}/comments/${this.post.data['id']}`)
+  }
+
+  parseImgUrl() {
+      if (this.post.data['preview']) {
+        this.post.data['preview']['images'].forEach((image) => {
+          image.source.url = image.source.url.replace(/(amp;)/g, '');
+        })
+      }
   }
 
 }

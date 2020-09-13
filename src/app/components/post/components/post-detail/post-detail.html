@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div *ngIf="isLoading">
+      <i class="fa-3x fas fa-sync-alt fa-spin"></i>
+    </div>
+    <ng-container *ngIf="post && !isLoading">
+      <div class="col-6">
+        <post-item [post]="post" [isDetail]="true"></post-item>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="comments && !isLoading">
+      <div class="col-6">
+        COMMENTS
+      </div>
+    </ng-container>
+  </div>
+</div>

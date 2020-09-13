@@ -48,10 +48,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
 
     return this.redditService.getListigs(this.defaultListingsTypeApi(), queryParams).pipe(
-      map(data => {
-        this.parseImgUrl(data.children);
-        return data;
-      }),
       tap(next => {
         this.after = next.after;
         const currentPosts = this.posts$.getValue();
@@ -79,15 +75,5 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
     return apiSegment;
   }
-
-  parseImgUrl(children: any[]) {
-    children.forEach(child => {
-      if (child.data['preview']) {
-        child.data['preview']['images'].forEach((image) => {
-          image.source.url = image.source.url.replace(/(amp;)/g, '');
-        })
-      }
-    })
-  }
-
+  
 }
