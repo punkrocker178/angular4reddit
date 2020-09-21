@@ -10,12 +10,14 @@ import { tap } from 'rxjs/operators';
 export class PostCommentsComponent {
 
   @Input() comments;
+  moreComments;
   
   constructor(
     private listingService: RedditListingService
   ) {}
   
   ngOnInit() {
-
+    this.moreComments = this.comments.pop();
+    console.log(this.moreComments);
   }
 }
