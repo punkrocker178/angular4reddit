@@ -41,7 +41,7 @@ export class RedditListingService {
         return ob.pipe(map((data: any) => {
             return {
                 detail: data[0].data.children[0],
-                comments: data[1]
+                comments: data[1].data.children
             }
         }));
     }

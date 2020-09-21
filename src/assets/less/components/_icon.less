@@ -1,7 +1,7 @@
 
 .icon-before::before:extend(.icon) {
     display: inline-block;
-    font-family: 'Font Awesome 5 Brands';
+    font-family: 'FontAwesome';
     font-weight: 400;
     font-style: normal;
     font-variant: normal;
@@ -11,7 +11,7 @@
 
 .icon-after::after {
     display: inline-block;
-    font-family: 'Font Awesome 5 Brands';
+    font-family: 'FontAwesome';
     font-weight: 400;
     font-style: normal;
     font-variant: normal;
@@ -44,4 +44,22 @@
 .icon-aws::after {
     content: '\f375';
     margin-left: 0.5em;
+}
+
+.icon-up::before {
+    content: '\f106';
+    margin-right: 0.5em;
+}
+
+.icon-down::after {
+    content: '\f107';
+    margin-left: 0.5em;
+}
+
+.icon-up:hover::before {
+    color: orangered;
+}
+
+.icon-down:hover::after {
+    color: dodgerblue;
 }

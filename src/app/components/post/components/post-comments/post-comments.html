@@ -1,0 +1,13 @@
+<ng-container *ngIf="comments.length">
+    <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="150">
+        <div class="mb-4" *ngFor="let comment of comments">
+            <span class="post-comments mb-2">{{comment.data.body}}</span>
+            <div class="d-flex justify-content-end">
+                <span class="mr-3">Reply</span>
+                <span class="icon-before icon-up"></span>
+                <span class="">{{comment.data.score}}</span>
+                <span class="icon-after icon-down"></span>
+            </div>
+        </div>
+    </div>
+</ng-container>

@@ -1,4 +1,5 @@
-<div class="card custom-card mb-5">
+<div class="card"
+  [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
   <div class="card-body" (click)="viewDetail()">
     <div class="d-flex flex-row post-author">
       <a href="#" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
@@ -23,23 +24,17 @@
     <p class="card-text text-truncate">{{post?.data['selftext']}}</p>
 
     <div class="d-inline-flex button-group">
-      <div class="p-2 post-buttons">
-        <span>
+      <div class="p-2 post-buttons d-flex">
 
-          <button class="btn vote-btn vote-btn-up">
-            <i class="fa fa-arrow-up"></i>
-          </button>
+          <a class="icon-before icon-up"></a>
 
-          {{post?.data['score']}}
+          <span class="align-self-center">{{post?.data['score']}}</span>
 
-          <button class="btn vote-btn vote-btn-down">
-            <i class="fa fa-arrow-down"></i>
-          </button>
+          <a class="icon-after icon-down"></a>
 
-        </span>
       </div>
 
-      <div class="p-2 post-buttons">
+      <div class="p-2 post-buttons align-self-center">
         <button class="btn custom-btn d-md-none">
           <i class="fas fa-comment-dots"></i>
           {{post?.data['num_comments']}}
@@ -48,7 +43,7 @@
         <button class="btn custom-btn d-none d-md-inline">{{post?.data['num_comments']}} Comments</button>
       </div>
 
-      <div class="p-2 post-buttons">
+      <div class="p-2 post-buttons align-self-center">
         <button class="btn custom-btn">
           <i class="fas fa-gift"></i>
           <span class="d-none d-md-inline"> Give Award</span>
@@ -56,7 +51,7 @@
 
       </div>
 
-      <div class="p-2 post-buttons">
+      <div class="p-2 post-buttons align-self-center">
         <button class="btn custom-btn">
           <i class="fas fa-share"></i>
           <span class="d-none d-md-inline"> Share</span>
