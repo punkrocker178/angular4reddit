@@ -4,12 +4,12 @@
       <i class="fa-3x fas fa-sync-alt fa-spin"></i>
     </div>
     <ng-container *ngIf="post && !isLoading">
-      <div class="col-6-md p-2">
+      <div class="col-12 p-2">
         <post-item [post]="post" [isDetail]="true"></post-item>
       </div>
     </ng-container>
     <ng-container *ngIf="comments && !isLoading">
-      <div class="col-6-md p-3 comments-section">
+      <div class="col-12 p-3 comments-section">
         <post-comments [comments]="comments"></post-comments>
       </div>
     </ng-container>

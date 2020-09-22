@@ -1,5 +1,4 @@
-<div class="card"
-  [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
+<div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
   <div class="card-body" (click)="viewDetail()">
     <div class="d-flex flex-row post-author">
       <a href="#" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
@@ -23,27 +22,30 @@
 
     <p class="card-text text-truncate">{{post?.data['selftext']}}</p>
 
-    <div class="d-inline-flex button-group">
+    <div class="d-flex button-group">
       <div class="p-2 post-buttons d-flex">
 
-          <a class="icon-before icon-up"></a>
+        <a class="icon-before icon-up"></a>
 
-          <span class="align-self-center">{{post?.data['score']}}</span>
+        <span class="align-self-center font-weight-bold">{{post?.data['score']}}</span>
 
-          <a class="icon-after icon-down"></a>
+        <a class="icon-after icon-down"></a>
 
       </div>
 
-      <div class="p-2 post-buttons align-self-center">
+      <div class="p-2 post-buttons align-self-center flex-fill">
         <button class="btn custom-btn d-md-none">
+          <span class="font-weight-bold mr-2">{{post?.data['num_comments']}}</span>
           <i class="fas fa-comment-dots"></i>
-          {{post?.data['num_comments']}}
         </button>
 
-        <button class="btn custom-btn d-none d-md-inline">{{post?.data['num_comments']}} Comments</button>
+        <button class="btn custom-btn d-none d-md-inline">
+          <span class="font-weight-bold">{{post?.data['num_comments']}}</span>
+          Comments
+        </button>
       </div>
 
-      <div class="p-2 post-buttons align-self-center">
+      <div class="p-2 post-buttons align-self-center flex-fill">
         <button class="btn custom-btn">
           <i class="fas fa-gift"></i>
           <span class="d-none d-md-inline"> Give Award</span>
@@ -51,7 +53,7 @@
 
       </div>
 
-      <div class="p-2 post-buttons align-self-center">
+      <div class="p-2 post-buttons align-self-center flex-fill">
         <button class="btn custom-btn">
           <i class="fas fa-share"></i>
           <span class="d-none d-md-inline"> Share</span>
