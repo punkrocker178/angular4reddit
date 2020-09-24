@@ -7,9 +7,13 @@
 
     <h5 class="card-title">{{post?.data['title']}}</h5>
 
+    <ng-container *ngIf="isCrossPost()">
+      <h5>Crosspost: {{post.data['crosspost_parent']}}</h5>
+    </ng-container>
+
     <ng-container *ngIf="hasImages()">
-      <div class="crop-height center-img">
-        <img class="img-fluid" src="{{getImage()}}">
+      <div class="crop-height">
+        <img class="img-fluid center-img scale-img" src="{{getImage()}}">
       </div>
     </ng-container>
 
@@ -20,7 +24,7 @@
       </div>
     </ng-container>
 
-    <p class="card-text text-truncate">{{post?.data['selftext']}}</p>
+    <p class="card-text post-self-text">{{post?.data['selftext']}}</p>
 
     <div class="d-flex button-group">
       <div class="p-2 post-buttons d-flex">

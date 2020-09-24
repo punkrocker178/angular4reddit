@@ -34,6 +34,7 @@ export class PostComponent {
       
       //  Remove double quotes
       const url = srcValue.substring(1, srcValue.length -1);
+  
       return decodeURI(url);
     }
 
@@ -47,6 +48,10 @@ export class PostComponent {
 
   viewDetail() {
     !this.isDetail && this.router.navigateByUrl(`/r/${this.post.data['subreddit']}/comments/${this.post.data['id']}`)
+  }
+
+  isCrossPost() {
+    return this.post.data['crosspost_parent'] && this.post.data['crosspost_parent_list']; 
   }
 
   parseImgUrl() {

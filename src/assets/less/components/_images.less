@@ -1,9 +1,28 @@
 .crop-height {
-    max-height: 35rem;
+    display: grid;
+    max-height: 75vh;
     overflow: hidden;
 }
 
 .center-img {
-    display: grid;
-    justify-content: center;
+    justify-self: center;
+}
+
+
+@media (min-width: 768px) { 
+    .scale-img {
+        max-width: 85%;
+    }    
+}
+
+@media (min-width: 992px) { 
+    .scale-img {
+        max-width: 80%;
+    }    
+}
+
+@media (min-width: 1200px) {
+    .scale-img {
+        max-width: 75%;
+    }  
 }
