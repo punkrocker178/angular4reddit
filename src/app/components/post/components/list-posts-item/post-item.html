@@ -24,16 +24,16 @@
       </div>
     </ng-container>
 
-    <p class="card-text post-self-text">{{post?.data['selftext']}}</p>
+    <p (click)="viewDetail()" class="card-text post-self-text">{{post?.data['selftext']}}</p>
 
     <div class="d-flex button-group">
       <div class="p-2 post-buttons d-flex">
 
-        <a (click)="vote('1')" class="icon-before icon-up"></a>
+        <a (click)="vote(1)" class="icon-before icon-up"></a>
 
         <span class="align-self-center font-weight-bold">{{post?.data['score']}}</span>
 
-        <a (click)="vote('-1')" class="icon-after icon-down"></a>
+        <a (click)="vote(-1)" class="icon-after icon-down"></a>
 
       </div>
 

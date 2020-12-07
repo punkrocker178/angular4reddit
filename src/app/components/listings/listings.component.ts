@@ -70,7 +70,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         apiSegment = '/r/' + this.subreddit + ApiList.LISTINGS_HOT;
         break;
       default:
-        apiSegment = ApiList.LISTINGS_HOT;
+        apiSegment = ApiList.LISTINGS_NEW;
         break;
     }
     return apiSegment;

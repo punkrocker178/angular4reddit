@@ -5,18 +5,27 @@ import { VotingService } from 'src/app/services/vote.service';
 
 @Component({
   selector: 'post-item',
-  templateUrl: './post.html'
+  templateUrl: './post-item.html'
 })
 export class PostComponent {
   @Input() post: Post;
   @Input() isDetail: boolean;
 
-  isVoted = false;
+  isUpVoted = false;
+  isDownVoted = false;
+  liked: boolean;
 
   constructor(private router: Router,
     private votingService: VotingService) { }
 
   ngOnInit() {
+    this.liked = this.post.data['likes'];
+    
+    if (this.liked != null) {
+      this.isUpVoted = this.liked;
+      this.isDownVoted = !this.liked;
+    }
+
     this.parseImgUrl();
   }
 
@@ -66,17 +75,40 @@ export class PostComponent {
     }
   }
 
-  vote(direction: string) {
+  vote(direction: number) {
 
-    if (!this.isVoted) {
-      this.votingService.vote(this.post.data['name'], direction).subscribe();
-      this.post.data['score'] += 1;
-    } else {
-      this.votingService.vote(this.post.data['name'], '0').subscribe();
-      this.post.data['score'] -= 1;
+    switch (direction) {
+      case 1:
+        if (this.isDownVoted) {
+          this.post.data['score'] += direction + 1;
+          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
+          this.isDownVoted = false;
+        } else if (this.isUpVoted) {
+          this.post.data['score'] -= 1;
+          this.votingService.vote(this.post.data['name'], '0').subscribe();
+        } else {
+          this.post.data['score'] += direction;
+          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
+        }
+
+        this.isUpVoted = !this.isUpVoted;
+        break;
+      case -1:
+        if (this.isUpVoted) {
+          this.post.data['score'] += direction - 1;
+          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
+          this.isUpVoted = false;
+        } else if (this.isDownVoted) {
+          this.post.data['score'] += 1;
+          this.votingService.vote(this.post.data['name'], '0').subscribe();
+        } else {
+          this.post.data['score'] += direction;
+          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
+        }
+
+        this.isDownVoted = !this.isDownVoted;
+        break;
     }
-
-    this.isVoted = !this.isVoted;
 
   }
 
