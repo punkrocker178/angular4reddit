@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit{
     logout() {
         this.authenService.revokeToken().subscribe(
             res => {
-                if (res.ok && res.status === 204) {
+                if (res.ok && res.status === 200) {
                     this.authenService.logout();
                 }
             }

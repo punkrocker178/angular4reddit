@@ -1,5 +1,5 @@
 <div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
-  <div class="card-body" (click)="viewDetail()">
+  <div class="card-body">
     <div class="d-flex flex-row post-author">
       <a href="#" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
       <a href="#">by /u/{{post?.data['author']}}</a>
@@ -13,7 +13,7 @@
 
     <ng-container *ngIf="hasImages()">
       <div class="crop-height">
-        <img class="img-fluid center-img scale-img" src="{{getImage()}}">
+        <img (click)="viewDetail()" class="img-fluid center-img scale-img" src="{{getImage()}}">
       </div>
     </ng-container>
 
@@ -29,11 +29,11 @@
     <div class="d-flex button-group">
       <div class="p-2 post-buttons d-flex">
 
-        <a class="icon-before icon-up"></a>
+        <a (click)="vote('1')" class="icon-before icon-up"></a>
 
         <span class="align-self-center font-weight-bold">{{post?.data['score']}}</span>
 
-        <a class="icon-after icon-down"></a>
+        <a (click)="vote('-1')" class="icon-after icon-down"></a>
 
       </div>
 

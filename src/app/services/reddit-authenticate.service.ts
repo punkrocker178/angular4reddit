@@ -50,7 +50,7 @@ export class RedditAuthenticateService {
     login() {
         let state = Utils.generateRandomString();
         this.localStorage.set('state', state);
-        let scope = ['read', 'identity', 'history'];
+        let scope = ['read', 'identity', 'history', 'vote'];
         let httParams = new HttpParams()
         .set('response_type', 'code')
         .set('duration', 'permanent')
@@ -116,7 +116,7 @@ export class RedditAuthenticateService {
     }
 
     getUserInfo() {
-        const url = HeadersUtils.buildUrl(!!this.getToken(), ApiList.USER_INFO);
+        const url = HeadersUtils.buildUrl(this.getToken(), ApiList.USER_INFO);
         return this.http.get(url);
     }
 
@@ -131,7 +131,7 @@ export class RedditAuthenticateService {
         if(this.localStorage.get('userToken')) {
             return 'Bearer ' + this.localStorage.get('userToken');
         }
-        return false;
+        return '';
     }
 
 }

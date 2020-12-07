@@ -1,16 +1,20 @@
 import { Component, Input } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { Router, UrlTree } from '@angular/router';
+import { VotingService } from 'src/app/services/vote.service';
 
 @Component({
-    selector: 'post-item',
-    templateUrl: './post.html'
-  })
+  selector: 'post-item',
+  templateUrl: './post.html'
+})
 export class PostComponent {
   @Input() post: Post;
   @Input() isDetail: boolean;
 
-  constructor(private router: Router) {}
+  isVoted = false;
+
+  constructor(private router: Router,
+    private votingService: VotingService) { }
 
   ngOnInit() {
     this.parseImgUrl();
@@ -31,10 +35,10 @@ export class PostComponent {
       const iframeHtml = this.post.data['media']['oembed']['html'];
       const srcAttr = iframeHtml.match(/src="(.*?)"/g)[0];
       const srcValue = srcAttr.match(/"(.*?)"/g)[0].replace(/amp;/g, '');
-      
+
       //  Remove double quotes
-      const url = srcValue.substring(1, srcValue.length -1);
-  
+      const url = srcValue.substring(1, srcValue.length - 1);
+
       return decodeURI(url);
     }
 
@@ -51,15 +55,29 @@ export class PostComponent {
   }
 
   isCrossPost() {
-    return this.post.data['crosspost_parent'] && this.post.data['crosspost_parent_list']; 
+    return this.post.data['crosspost_parent'] && this.post.data['crosspost_parent_list'];
   }
 
   parseImgUrl() {
-      if (this.post.data['preview']) {
-        this.post.data['preview']['images'].forEach((image) => {
-          image.source.url = image.source.url.replace(/(amp;)/g, '');
-        })
-      }
+    if (this.post.data['preview']) {
+      this.post.data['preview']['images'].forEach((image) => {
+        image.source.url = image.source.url.replace(/(amp;)/g, '');
+      })
+    }
+  }
+
+  vote(direction: string) {
+
+    if (!this.isVoted) {
+      this.votingService.vote(this.post.data['name'], direction).subscribe();
+      this.post.data['score'] += 1;
+    } else {
+      this.votingService.vote(this.post.data['name'], '0').subscribe();
+      this.post.data['score'] -= 1;
+    }
+
+    this.isVoted = !this.isVoted;
+
   }
 
 }
