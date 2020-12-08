@@ -18,8 +18,6 @@ import { CommonModule } from '@angular/common';
 import { PipeModule } from './pipe/pipe.module';
 import { ListingsComponent } from './components/listings/listings.component';
 import { VotingService } from './services/vote.service';
-import { VoteDirective } from './vote.directive';
-
 
 @NgModule({
   declarations: [
@@ -27,8 +25,7 @@ import { VoteDirective } from './vote.directive';
     HomeComponent,
     ListingsComponent,
     NavbarComponent,
-    AuthenticateComponent,
-    VoteDirective
+    AuthenticateComponent
   ],
   imports: [
     CommonModule,

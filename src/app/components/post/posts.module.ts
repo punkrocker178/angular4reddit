@@ -5,6 +5,7 @@ import { PipeModule } from 'src/app/pipe/pipe.module';
 import { CommonModule } from '@angular/common';
 import { PostCommentsComponent } from './components/post-comments/post-comments.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { VoteComponent } from './components/vote/vote.component';
 
 @NgModule({
     imports:[
@@ -15,7 +16,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     declarations: [
         PostComponent,
         PostDetailComponent,
-        PostCommentsComponent
+        PostCommentsComponent,
+        VoteComponent
     ],
     exports: [
         PostComponent,

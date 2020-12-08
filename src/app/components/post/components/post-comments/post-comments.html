@@ -6,10 +6,8 @@
     <span class="d-block">{{comment.data.author}}</span>
     <span class="post-comments mb-2">{{comment.data.body}}</span>
     <div class="d-flex justify-content-end">
-      <span class="mr-3">Reply</span>
-      <span (click)="vote(1)" class="icon-before icon-up"></span>
-      <span class="">{{comment.data.score}}</span>
-      <span (click)="vote(-1)" class="icon-after icon-down"></span>
+      <span class="p-2 post-buttons">Reply</span>
+      <app-vote [score]="comment.data.score" [id]="comment.data.name" [liked]="comment.data.likes"></app-vote>
     </div>
 
     <div *ngIf="hasReplies(comment)" class="children">

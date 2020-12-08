@@ -19,13 +19,6 @@ export class PostComponent {
     private votingService: VotingService) { }
 
   ngOnInit() {
-    this.liked = this.post.data['likes'];
-    
-    if (this.liked != null) {
-      this.isUpVoted = this.liked;
-      this.isDownVoted = !this.liked;
-    }
-
     this.parseImgUrl();
   }
 
