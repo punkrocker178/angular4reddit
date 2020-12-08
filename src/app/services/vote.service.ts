@@ -23,4 +23,8 @@ export class VotingService {
                 } 
             });
     }
+
+    voting(direction) {
+        
+    }
 }

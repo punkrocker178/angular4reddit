@@ -14,7 +14,7 @@ Run `npm i` or
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.  
 
 Run in docker container  
-```docker run -it -p 4200:4200 -v /your-app-directory/:/app -w /app node:latest npm start```
+```docker run --rm -it -p 4200:4200 -v /your-app-directory/:/app -w /app node:latest npm start```
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

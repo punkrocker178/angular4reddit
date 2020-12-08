@@ -1,11 +1,11 @@
 <div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
   <div class="card-body">
-    <div class="d-flex flex-row post-author">
+    <div (click)="viewDetail()" class="d-flex flex-row post-author">
       <a href="#" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
       <a href="#">by /u/{{post?.data['author']}}</a>
     </div>
 
-    <h5 class="card-title">{{post?.data['title']}}</h5>
+    <h5 (click)="viewDetail()" class="card-title">{{post?.data['title']}}</h5>
 
     <ng-container *ngIf="isCrossPost()">
       <h5>Crosspost: {{post.data['crosspost_parent']}}</h5>
