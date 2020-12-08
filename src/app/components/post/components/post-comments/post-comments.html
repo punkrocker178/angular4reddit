@@ -1,4 +1,4 @@
-<ng-container *ngIf="comments['length']">
+<ng-container *ngIf="comments['length'];else noComments">
 
   <div class="mb-2" *ngFor="let comment of comments">
 
@@ -20,3 +20,9 @@
   </div>
 
 </ng-container>
+
+<ng-template #noComments>
+  <div class="p-5">
+    <p class="text-center">No Comments \ (•◡•) /</p>
+  </div>
+</ng-template>

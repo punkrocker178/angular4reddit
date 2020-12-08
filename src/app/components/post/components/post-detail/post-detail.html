@@ -1,17 +1,17 @@
-<div class="container">
+<div class="container custom-height-container">
   <div class="row">
-    <div *ngIf="isLoading">
-      <i class="fa-3x fas fa-sync-alt fa-spin"></i>
-    </div>
-    <ng-container *ngIf="post && !isLoading">
-      <div class="col-12 p-2">
+    <div class="col-12">
+      <div *ngIf="isLoading" class="loading-spinner d-flex justify-content-center">
+        <i class="fa-3x fas fa-sync-alt fa-spin"></i>
+      </div>
+      <ng-container *ngIf="post && !isLoading">
         <post-item [post]="post" [isDetail]="true"></post-item>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="comments && !isLoading">
-      <div class="col-12 p-3 comments-section">
-        <post-comments [comments]="comments"></post-comments>
-      </div>
-    </ng-container>
+      </ng-container>
+      <ng-container *ngIf="comments && !isLoading">
+        <div class="comments-section">
+          <post-comments [comments]="comments"></post-comments>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>
