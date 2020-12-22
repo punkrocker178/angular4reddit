@@ -1,5 +1,5 @@
 <div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
-  <div class="card-body">
+  <div class="card-body" [ngClass]="{'mb-3': isDetail}">
     <div (click)="viewDetail()" class="d-flex flex-row post-author">
       <a href="#" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
       <a href="#">by /u/{{post?.data['author']}}</a>
@@ -12,7 +12,7 @@
     </ng-container>
 
     <ng-container *ngIf="hasImages()">
-      <div class="crop-height">
+      <div [ngClass]="{'crop-height': !isDetail}" class="img-container">
         <img (click)="viewDetail()" class="img-fluid center-img scale-img" src="{{getImage()}}">
       </div>
     </ng-container>
@@ -24,7 +24,7 @@
       </div>
     </ng-container>
 
-    <p (click)="viewDetail()" class="card-text post-self-text">{{post?.data['selftext']}}</p>
+    <p *ngIf="post?.data['selftext']" (click)="viewDetail()" class="card-text post-self-text">{{post?.data['selftext']}}</p>
 
     <div class="d-flex button-group">
       <app-vote [score]="post?.data['score']"
