@@ -1,6 +1,7 @@
 <div class="container custom-height-container">
     <div class="row">
         <div class="col-12 contents">
+            <app-sort></app-sort>
             <div *ngFor="let post of posts$ | async">
                 <post-item [post]="post"></post-item>
             </div>

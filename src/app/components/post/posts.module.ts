@@ -7,6 +7,7 @@ import { PostCommentsComponent } from './components/post-comments/post-comments.
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { VoteComponent } from './components/vote/vote.component';
 import { RouterModule } from '@angular/router';
+import { SortComponent } from './components/sort/sort.component';
 
 @NgModule({
     imports:[
@@ -19,12 +20,14 @@ import { RouterModule } from '@angular/router';
         PostComponent,
         PostDetailComponent,
         PostCommentsComponent,
-        VoteComponent
+        VoteComponent,
+        SortComponent
     ],
     exports: [
         PostComponent,
         PostDetailComponent,
-        PostCommentsComponent
+        PostCommentsComponent,
+        SortComponent
     ]
   })
   export class PostsModule { }

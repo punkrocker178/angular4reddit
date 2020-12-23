@@ -1,5 +1,11 @@
 export class ApiList {
 
+    /* Listings label */
+    public static readonly LISTINGS_HOT_LABEL: string = 'Hot';
+    public static readonly LISTINGS_BEST_LABEL: string = 'Best';
+    public static readonly LISTINGS_NEW_LABEL: string = 'New';
+    public static readonly LISTINGS_RISING_LABEL: string = 'Rising';
+
     /* Listtings APIs */
     public static readonly LISTINGS_HOT: string = '/hot';
     public static readonly LISTINGS_BEST: string = '/best';
