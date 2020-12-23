@@ -2,13 +2,16 @@
 
   <div class="mb-2" *ngFor="let comment of comments">
 
-    <span *ngIf="isReplies" class="d-block">Reply to: {{comment.data.parent_id}}</span>
-    <span class="d-block">{{comment.data.author}}</span>
-    <span class="post-comments mb-2">{{comment.data.body}}</span>
-    <div class="d-flex justify-content-end">
-      <span class="p-2 post-buttons">Reply</span>
-      <app-vote [score]="comment.data.score" [id]="comment.data.name" [liked]="comment.data.likes"></app-vote>
+    <div *ngIf="comment.kind == 't1'; else moreReplies">
+      <span *ngIf="isReplies" class="d-block">Reply to: {{comment.data.parent_id}}</span>
+      <span class="d-block">{{comment.data.author}}</span>
+      <span class="post-comments mb-2">{{comment.data.body}}</span>
+      <div class="d-flex justify-content-end">
+        <span class="p-2 post-buttons">Reply</span>
+        <app-vote [score]="comment.data.score" [id]="comment.data.name" [liked]="comment.data.likes"></app-vote>
+      </div>
     </div>
+    
 
     <div *ngIf="hasReplies(comment)" class="children">
       <post-comments [isReplies]="true" [comments]="comment.data['replies']">
@@ -22,5 +25,11 @@
 <ng-template #noComments>
   <div class="p-5">
     <p class="text-center">No Comments \ (•◡•) /</p>
+  </div>
+</ng-template>
+
+<ng-template #moreReplies>
+  <div class="d-flex justify-content-end">
+    <span class="p-2 post-buttons">More Replies</span>
   </div>
 </ng-template>

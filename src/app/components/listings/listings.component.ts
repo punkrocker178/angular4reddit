@@ -23,8 +23,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   after: string;
   isLoading: boolean = true;
 
-  title = 'Home';
-
   constructor(
     private redditService: RedditListingService) { }
 

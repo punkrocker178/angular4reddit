@@ -18,11 +18,15 @@ import { CommonModule } from '@angular/common';
 import { PipeModule } from './pipe/pipe.module';
 import { ListingsComponent } from './components/listings/listings.component';
 import { VotingService } from './services/vote.service';
+import { SubredditComponent } from './components/subreddit/subreddit.component';
+import { UserComponent } from './components/user/user.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    SubredditComponent,
+    UserComponent,
     ListingsComponent,
     NavbarComponent,
     AuthenticateComponent
