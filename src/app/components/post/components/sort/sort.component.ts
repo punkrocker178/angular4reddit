@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { ApiList } from 'src/app/constants/api-list';
 
 @Component({
@@ -7,14 +8,19 @@ import { ApiList } from 'src/app/constants/api-list';
 })
 export class SortComponent {
 
-    sortCategories = [ApiList.LISTINGS_BEST_LABEL, ApiList.LISTINGS_HOT_LABEL, ApiList.LISTINGS_RISING_LABEL, ApiList.LISTINGS_NEW_LABEL]
+    sortCategories = [ApiList.LISTINGS_BEST_LABEL, ApiList.LISTINGS_HOT_LABEL, ApiList.LISTINGS_RISING_LABEL, ApiList.LISTINGS_NEW_LABEL];
+    selectedValue =  ApiList.LISTINGS_HOT_LABEL;
+
+    @Output() changeSort = new EventEmitter();
 
     constructor() {
 
     }
 
     ngOnInit() {
-        console.log(this.sortCategories);
     }
 
+    change() {
+        this.changeSort.emit(this.selectedValue);
+    }
 }

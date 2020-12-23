@@ -8,12 +8,14 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { VoteComponent } from './components/vote/vote.component';
 import { RouterModule } from '@angular/router';
 import { SortComponent } from './components/sort/sort.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports:[
         PipeModule,
         InfiniteScrollModule,
         RouterModule,
+        FormsModule,
         CommonModule
     ],
     declarations: [

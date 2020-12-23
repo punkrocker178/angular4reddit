@@ -16,7 +16,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   @Input() username: string;
   @Input() subreddit: string;
 
-  listings: Observable<Listings>;
+  sort = ApiList.LISTINGS_HOT;
   posts$ = new BehaviorSubject([]);
   scroll$ = new BehaviorSubject(null);
 
@@ -55,6 +55,25 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   }
 
+  changeSort(value) {
+    switch (value) {
+      case ApiList.LISTINGS_HOT_LABEL:
+        this.sort = ApiList.LISTINGS_HOT;
+        break;
+      case ApiList.LISTINGS_BEST_LABEL:
+        this.sort = ApiList.LISTINGS_BEST;
+        break;
+      case ApiList.LISTINGS_RISING_LABEL:
+        this.sort = ApiList.LISTINGS_RISING;
+        break;
+      case ApiList.LISTINGS_NEW_LABEL:
+        this.sort = ApiList.LISTINGS_NEW;
+        break;
+    }
+    this.posts$.next([]);
+    this.fetchData().subscribe(_ => this.isLoading = false);
+  }
+
   ngOnDestroy() {
   }
 
@@ -62,16 +81,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
     let apiSegment = '';
     switch (this.type) {
       case 'user-profile':
-        apiSegment = '/user/' + this.username +  '/overview' + ApiList.LISTINGS_HOT;
+        apiSegment = '/user/' + this.username + '/overview' + ApiList.LISTINGS_HOT;
         break;
       case 'subreddit':
         apiSegment = '/r/' + this.subreddit + ApiList.LISTINGS_HOT;
         break;
       default:
-        apiSegment = ApiList.LISTINGS_NEW;
+        apiSegment = this.sort;
         break;
     }
     return apiSegment;
   }
-  
+
 }
