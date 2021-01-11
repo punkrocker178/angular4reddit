@@ -38,7 +38,7 @@
           <i class="fas fa-comment-dots"></i>
         </button>
 
-        <button class="btn custom-btn d-none d-md-inline">
+        <button (click)="viewDetail()" class="btn custom-btn d-none d-md-inline">
           <span class="font-weight-bold">{{post?.data['num_comments']}}</span>
           Comments
         </button>
