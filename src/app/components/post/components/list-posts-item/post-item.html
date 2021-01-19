@@ -3,6 +3,7 @@
     <div (click)="viewDetail()" class="d-flex flex-row post-author">
       <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
       <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
+      <span>{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
     </div>
 
     <h5 (click)="viewDetail()" class="card-title">{{post?.data['title']}}</h5>
@@ -12,15 +13,15 @@
     </ng-container>
 
     <ng-container *ngIf="hasImages()">
-      <div [ngClass]="{'crop-height': !isDetail}" class="img-container">
+      <div [ngClass]="{'crop-height': !isDetail, 'blur-img': post.data['over_18']}" class="img-container">
         <img (click)="viewDetail()" class="img-fluid center-img scale-img" src="{{getImage()}}">
       </div>
     </ng-container>
 
     <ng-container *ngIf="isVideo()">
-      <div class="embed-responsive embed-responsive-4by3 scale-media">
-        <iframe allowfullscreen loading="lazy" class="embed-responsive-item"
-          [src]="getVideo() | safe: 'resourceUrl'"></iframe>
+      <div [ngClass]="{'blur-img': post.data['over_18']}" class="embed-responsive scale-media">
+        <video controls class="embed-responsive-item media letter-box-color">
+        <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video>
       </div>
     </ng-container>
 

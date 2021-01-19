@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { SafePipe } from 'src/app/pipe/safe.pipe';
+import { DateTimePipe } from './date-time.pipe';
 
 @NgModule({
     declarations: [
-        SafePipe
+        SafePipe,
+        DateTimePipe
     ],
     exports: [
-        SafePipe
+        SafePipe,
+        DateTimePipe
     ]
   })
   export class PipeModule { }
