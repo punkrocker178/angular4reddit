@@ -3,7 +3,7 @@
     <div (click)="viewDetail()" class="d-flex flex-row post-author">
       <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
       <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
-      <span>{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
+      <span [title]="post.data['created_utc'] | dateTimePipe: 'format'" class="ml-2">{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
     </div>
 
     <h5 (click)="viewDetail()" class="card-title">{{post?.data['title']}}</h5>
