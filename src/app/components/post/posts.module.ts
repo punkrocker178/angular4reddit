@@ -1,4 +1,4 @@
-import { PostComponent } from './components/list-posts-item/post.component';
+import { PostItemComponent } from './components/list-posts-item/post-item.component';
 import { NgModule } from '@angular/core';
 import { PostDetailComponent } from './components/post-detail/post-detail.component';
 import { PipeModule } from 'src/app/pipe/pipe.module';
@@ -19,14 +19,14 @@ import { FormsModule } from '@angular/forms';
         CommonModule
     ],
     declarations: [
-        PostComponent,
+        PostItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
         VoteComponent,
         SortComponent
     ],
     exports: [
-        PostComponent,
+        PostItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
         SortComponent

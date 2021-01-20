@@ -7,7 +7,7 @@ import { VotingService } from 'src/app/services/vote.service';
   selector: 'post-item',
   templateUrl: './post-item.html'
 })
-export class PostComponent {
+export class PostItemComponent {
   @Input() post: Post;
   @Input() isDetail: boolean;
 
@@ -40,7 +40,7 @@ export class PostComponent {
 
       //  Remove double quotes
       const url = srcValue.substring(1, srcValue.length - 1);
-
+ 
       return decodeURI(url);
     }
 
@@ -48,7 +48,18 @@ export class PostComponent {
   }
 
   getImage() {
-    const image = this.post.data['preview']['images'][0]['source']['url'];
+    const images = this.post.data['preview']['images'];
+    let image = '';
+    if (images.length > 0) {
+      
+      if (images[0]['variants'] && images[0]['variants']['gif']) {
+        image = images[0]['variants']['gif']['source']['url'];
+      }else {
+        image = images[0]['source']['url'];
+      }
+      
+    }
+    
     return image;
   }
 
