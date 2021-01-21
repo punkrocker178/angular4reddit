@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ElementRef, Renderer2 } from '@angular/core';
 import { Post } from 'src/app/model/post';
-import { Router, UrlTree } from '@angular/router';
+import { Router } from '@angular/router';
 import { VotingService } from 'src/app/services/vote.service';
+import { Utils } from 'src/app/class/Utils';
 
 @Component({
   selector: 'post-item',
@@ -16,10 +17,13 @@ export class PostItemComponent {
   liked: boolean;
 
   constructor(private router: Router,
-    private votingService: VotingService) { }
+    private votingService: VotingService,
+    private renderer2: Renderer2,
+    private el: ElementRef) { }
 
   ngOnInit() {
     this.parseImgUrl();
+
   }
 
   hasImages() {
@@ -36,11 +40,11 @@ export class PostItemComponent {
     if (!this.post.data['is_video']) {
       const iframeHtml = this.post.data['media']['oembed']['html'];
       const srcAttr = iframeHtml.match(/src="(.*?)"/g)[0];
-      const srcValue = srcAttr.match(/"(.*?)"/g)[0].replace(/amp;/g, '');
+      const srcValue = Utils.clearUrl(srcAttr.match(/"(.*?)"/g)[0]);
 
       //  Remove double quotes
       const url = srcValue.substring(1, srcValue.length - 1);
- 
+
       return decodeURI(url);
     }
 
@@ -51,15 +55,15 @@ export class PostItemComponent {
     const images = this.post.data['preview']['images'];
     let image = '';
     if (images.length > 0) {
-      
+
       if (images[0]['variants'] && images[0]['variants']['gif']) {
         image = images[0]['variants']['gif']['source']['url'];
-      }else {
+      } else {
         image = images[0]['source']['url'];
       }
-      
+
     }
-    
+
     return image;
   }
 
@@ -74,7 +78,7 @@ export class PostItemComponent {
   parseImgUrl() {
     if (this.post.data['preview']) {
       this.post.data['preview']['images'].forEach((image) => {
-        image.source.url = image.source.url.replace(/(amp;)/g, '');
+        image.source.url = Utils.clearUrl(image.source.url);
       })
     }
   }

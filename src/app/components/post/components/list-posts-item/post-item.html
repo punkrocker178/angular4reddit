@@ -24,8 +24,7 @@
         <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video>
       </div>
     </ng-container>
-
-    <p *ngIf="post?.data['selftext']" (click)="viewDetail()" class="card-text">{{post?.data['selftext']}}</p>
+    <div appMarkdown [selfText]="post?.data['selftext']"></div>
 
     <div class="d-flex button-group">
       <app-vote [score]="post?.data['score']"

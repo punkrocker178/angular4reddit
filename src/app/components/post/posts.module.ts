@@ -9,6 +9,7 @@ import { VoteComponent } from './components/vote/vote.component';
 import { RouterModule } from '@angular/router';
 import { SortComponent } from './components/sort/sort.component';
 import { FormsModule } from '@angular/forms';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
     imports:[
@@ -16,7 +17,8 @@ import { FormsModule } from '@angular/forms';
         InfiniteScrollModule,
         RouterModule,
         FormsModule,
-        CommonModule
+        CommonModule,
+        DirectivesModule
     ],
     declarations: [
         PostItemComponent,

@@ -1,6 +1,9 @@
+import  marked  from 'marked';
+
 export class Utils {
     static stringCharacters = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+    // Weak method
     public static generateRandomString() {
         let stringLen = this.randomNumbers(4,6);
         let result = '';
@@ -21,5 +24,9 @@ export class Utils {
         }
 
         return random;
+    }
+
+    static clearUrl(url: string) {
+        return url.replace(/amp;/g, '');
     }
 }
