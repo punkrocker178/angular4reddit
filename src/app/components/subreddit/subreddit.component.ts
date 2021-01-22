@@ -23,16 +23,16 @@ export class SubredditComponent implements OnInit {
                 private renderer2: Renderer2) { }
 
     ngOnInit() {
-         this.activatedRoute.paramMap.pipe(
+         this.subscription = this.activatedRoute.paramMap.pipe(
             switchMap((param) => {
                 this.subreddit = param.get('subreddit');
-                return this.subscription = this.subredditService.getSubredditAbout(`r/${this.subreddit}`);
+                return this.subredditService.getSubredditAbout(`r/${this.subreddit}`);
             }),
             tap((next:any) => {
                 console.log(next, 'next');
                 this.subredditData = next.data;    
                 this.clearImages();
-            })).subscribe();
+            }));
     }
 
     clearImages() {
