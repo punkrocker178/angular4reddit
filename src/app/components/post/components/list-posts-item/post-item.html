@@ -25,7 +25,7 @@
       </div>
     </ng-container>
 
-    <div class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
+    <div (click)="viewDetail()" class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
 
   </div>
   <div class="card-footer d-flex button-group">

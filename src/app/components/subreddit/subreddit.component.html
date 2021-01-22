@@ -1,7 +1,14 @@
 <div>
     <div *ngIf="(subscription | async)" class="subreddit-header">
-        <img [src]="subredditData.community_icon || subredditData.icon_img">
-        <h2>{{subredditData?.title}}</h2>
+        <div class="crop-banner-img">
+            <img class="img-fluid" [src]="subredditData.banner_background_image">
+        </div>
+        
+        <div class="banner">
+            <img class="banner-icon" [src]="subredditData.community_icon || subredditData.icon_img || subredditData.header_img">
+            <h4 class="align-self-center  ml-2 p-2">{{subredditData?.title}}</h4>
+        </div>
+        
         <div appMarkdown [selfText]="subredditData.public_description"></div>
     </div>
     <listings-component [type]="listingType" [subreddit]="subreddit"></listings-component>

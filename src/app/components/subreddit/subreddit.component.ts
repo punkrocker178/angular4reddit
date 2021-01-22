@@ -40,12 +40,20 @@ export class SubredditComponent implements OnInit {
             this.subredditData.banner_img = Utils.clearUrl(this.subredditData.banner_img);
         }
 
+        if (this.subredditData.banner_background_image) {
+            this.subredditData.banner_background_image = Utils.clearUrl(this.subredditData.banner_background_image);
+        }
+
         if (this.subredditData.community_icon) {
             this.subredditData.community_icon = Utils.clearUrl(this.subredditData.community_icon);
         }
 
         if (this.subredditData.icon_img) {
             this.subredditData.icon_img = Utils.clearUrl(this.subredditData.icon_img);
+        }
+
+        if (this.subredditData.header_img) {
+            this.subredditData.header_img = Utils.clearUrl(this.subredditData.header_img);
         }
     }
 
