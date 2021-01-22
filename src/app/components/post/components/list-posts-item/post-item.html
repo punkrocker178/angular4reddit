@@ -24,41 +24,41 @@
         <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video>
       </div>
     </ng-container>
-    <div appMarkdown [selfText]="post?.data['selftext']"></div>
 
-    <div class="d-flex button-group">
-      <app-vote [score]="post?.data['score']"
-                [id]="post?.data['name']"
-                [liked]="post?.data['likes']"
-      ></app-vote>
+    <div class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
 
-      <div class="p-2 post-buttons align-self-center flex-fill">
-        <button class="btn custom-btn d-md-none">
-          <span class="font-weight-bold mr-2">{{post?.data['num_comments']}}</span>
-          <i class="fas fa-comment-dots"></i>
-        </button>
+  </div>
+  <div class="card-footer d-flex button-group">
+    <app-vote [score]="post?.data['score']"
+              [id]="post?.data['name']"
+              [liked]="post?.data['likes']"
+    ></app-vote>
 
-        <button (click)="viewDetail()" class="btn custom-btn d-none d-md-inline">
-          <span class="font-weight-bold">{{post?.data['num_comments']}}</span>
-          Comments
-        </button>
-      </div>
+    <div class="p-2 post-buttons align-self-center flex-fill">
+      <button class="btn custom-btn d-md-none">
+        <span class="font-weight-bold mr-2">{{post?.data['num_comments']}}</span>
+        <i class="fas fa-comment-dots"></i>
+      </button>
 
-      <div class="p-2 post-buttons align-self-center flex-fill">
-        <button class="btn custom-btn">
-          <i class="fas fa-gift"></i>
-          <span class="d-none d-md-inline"> Give Award</span>
-        </button>
+      <button (click)="viewDetail()" class="btn custom-btn d-none d-md-inline">
+        <span class="font-weight-bold">{{post?.data['num_comments']}}</span>
+        Comments
+      </button>
+    </div>
 
-      </div>
+    <div class="p-2 post-buttons align-self-center flex-fill">
+      <button class="btn custom-btn">
+        <i class="fas fa-gift"></i>
+        <span class="d-none d-md-inline"> Give Award</span>
+      </button>
 
-      <div class="p-2 post-buttons align-self-center flex-fill">
-        <button class="btn custom-btn">
-          <i class="fas fa-share"></i>
-          <span class="d-none d-md-inline"> Share</span>
-        </button>
-      </div>
+    </div>
 
+    <div class="p-2 post-buttons align-self-center flex-fill">
+      <button class="btn custom-btn">
+        <i class="fas fa-share"></i>
+        <span class="d-none d-md-inline"> Share</span>
+      </button>
     </div>
 
   </div>

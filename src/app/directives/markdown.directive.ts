@@ -19,7 +19,11 @@ export class MarkdownDirective {
 
   parseMarkdown() {
     if (this.selfText) {
-      this.parsed = marked(this.selfText);
+      this.parsed = marked(this.selfText, {
+        gfm: true,
+        smartypants: true,
+        smartLists: true
+      });
       this.renderer2.setProperty(this.el.nativeElement, 'innerHTML', this.parsed);
     }
   }

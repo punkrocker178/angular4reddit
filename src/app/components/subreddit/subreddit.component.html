@@ -1,8 +1,8 @@
 <div>
-    <div class="subreddit-header">
-        <img [src]="subredditData?.community_icon || subredditData?.icon_img">
+    <div *ngIf="(subscription | async)" class="subreddit-header">
+        <img [src]="subredditData.community_icon || subredditData.icon_img">
         <h2>{{subredditData?.title}}</h2>
-        <div *ngIf="(subscription | async)" appMarkdown [selfText]="subredditData.description"></div>
+        <div appMarkdown [selfText]="subredditData.public_description"></div>
     </div>
     <listings-component [type]="listingType" [subreddit]="subreddit"></listings-component>
     <div class="float-right">
