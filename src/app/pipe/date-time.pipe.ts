@@ -39,7 +39,7 @@ export class DateTimePipe implements PipeTransform {
       }
 
       if (diffDays.days > 30) {
-        timeLabel = 'm';
+        timeLabel = Math.floor(diffMonths.months) > 1 ? 'months' : 'month';
         diffTime = diffMonths.months;
       }
 

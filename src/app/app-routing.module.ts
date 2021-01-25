@@ -4,7 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AuthenticateComponent } from './components/authenticate/authenticate.component';
 import { PostDetailComponent } from './components/post/components/post-detail/post-detail.component';
 import { SubredditComponent } from './components/subreddit/subreddit.component';
-import { UserComponent } from './components/user/user.component';
+import { UserProfileComponent } from './components/user/user-profile.component';
 
 
 const routes: Routes = [
@@ -26,7 +26,7 @@ const routes: Routes = [
     path: "r/:subreddit/comments/:id", component: PostDetailComponent
   },
   {
-    path: "u/:user", component: UserComponent
+    path: "u/:user", component: UserProfileComponent
   },
 ];
 

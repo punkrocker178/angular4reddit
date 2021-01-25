@@ -11,10 +11,10 @@
              <ng-template #defaultSnoo>
                 <img class="banner-icon" src="../../../assets/images/snoo.png">
              </ng-template>
-             <div class="d-flex flex-column p-3-lg pl-2">
+             <div class="d-flex flex-column p-lg-3 pl-2">
                 <h4 class="mb-2">{{subredditData?.title}}</h4>
                 <div appMarkdown [selfText]="subredditData.public_description"></div>
-                <span class="icon-before icon-cake ml-auto">
+                <span class="icon-before icon-cake">
                     <span class="ml-2">{{subredditData.created_utc | dateTimePipe: 'format'}}</span>
                 </span>
                 

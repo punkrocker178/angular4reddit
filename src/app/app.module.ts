@@ -19,16 +19,17 @@ import { PipeModule } from './pipe/pipe.module';
 import { ListingsComponent } from './components/listings/listings.component';
 import { VotingService } from './services/vote.service';
 import { SubredditComponent } from './components/subreddit/subreddit.component';
-import { UserComponent } from './components/user/user.component';
+import { UserProfileComponent } from './components/user/user-profile.component';
 import { SubredditService } from './services/subreddit.service';
 import { DirectivesModule } from './directives/directives.module';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SubredditComponent,
-    UserComponent,
+    UserProfileComponent,
     ListingsComponent,
     NavbarComponent,
     AuthenticateComponent
@@ -50,6 +51,7 @@ import { DirectivesModule } from './directives/directives.module';
     LocalStorageService,
     VotingService,
     SubredditService,
+    UserService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

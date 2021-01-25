@@ -1,0 +1,19 @@
+<div>
+    <div *ngIf="(this.about$ | async)">
+        <img [src]="userProfile['about'].icon_img">
+        <span>{{userProfile['about'].name}}</span>
+        <span>Karma</span>
+        <span>{{userProfile['about'].total_karma}}</span>
+        <span class="icon-before icon-cake"></span>
+        <span>{{userProfile['about'].created_utc | dateTimePipe: 'format'}}</span>
+
+    </div>
+
+    <div *ngIf="(this.comments$ | async)">
+
+    </div>
+
+    <div *ngIf="(this.overview$ | async)">
+
+    </div>
+</div>
