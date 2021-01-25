@@ -1,15 +1,27 @@
 <div>
     <div *ngIf="(subscription | async)" class="subreddit-header">
-        <div class="crop-banner-img">
+        <div *ngIf="subredditData.banner_background_image" class="crop-banner-img">
             <img class="img-fluid" [src]="subredditData.banner_background_image">
         </div>
         
         <div class="banner">
-            <img class="banner-icon" [src]="subredditData.community_icon || subredditData.icon_img || subredditData.header_img">
-            <h4 class="align-self-center  ml-2 p-2">{{subredditData?.title}}</h4>
+            <img *ngIf="(subredditData.community_icon || subredditData.icon_img || subredditData.header_img); else defaultSnoo"
+             class="banner-icon" [src]="subredditData.community_icon || subredditData.icon_img || subredditData.header_img">
+
+             <ng-template #defaultSnoo>
+                <img class="banner-icon" src="../../../assets/images/snoo.png">
+             </ng-template>
+             <div class="d-flex flex-column p-3-lg pl-2">
+                <h4 class="mb-2">{{subredditData?.title}}</h4>
+                <div appMarkdown [selfText]="subredditData.public_description"></div>
+                <span class="icon-before icon-cake ml-auto">
+                    <span class="ml-2">{{subredditData.created_utc | dateTimePipe: 'format'}}</span>
+                </span>
+                
+             </div>
+            
         </div>
         
-        <div appMarkdown [selfText]="subredditData.public_description"></div>
     </div>
     <listings-component [type]="listingType" [subreddit]="subreddit"></listings-component>
     <div class="float-right">
