@@ -19,15 +19,21 @@ export class DateTimePipe implements PipeTransform {
     if (type === 'diff') {
       const now = DateTime.local();
       const postTime = DateTime.fromSeconds(value);
-      const diff = now.diff(postTime, 'hours').toObject();
+      const diff = now.diff(postTime, 'minutes').toObject();
+      const diffHours = now.diff(postTime, 'hours').toObject();
       const diffDays = now.diff(postTime, 'days').toObject();
       const diffMonths = now.diff(postTime, 'months').toObject();
       const diffYears = now.diff(postTime, 'years').toObject();
 
-      let timeLabel = 'h';
-      let diffTime = diff.hours;
+      let timeLabel = 'm';
+      let diffTime = diff.minutes;
 
-      if (diff.hours > 24) {
+      if (diff.minutes > 59) {
+        timeLabel = 'h';
+        diffTime = diffHours.hours;
+      }
+
+      if (diffHours.hours > 24) {
         timeLabel = 'd';
         diffTime = diffDays.days;
       }
