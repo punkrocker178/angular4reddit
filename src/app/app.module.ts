@@ -23,6 +23,7 @@ import { UserProfileComponent } from './components/user/user-profile.component';
 import { SubredditService } from './services/subreddit.service';
 import { DirectivesModule } from './directives/directives.module';
 import { UserService } from './services/user.service';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { UserService } from './services/user.service';
     UserProfileComponent,
     ListingsComponent,
     NavbarComponent,
-    AuthenticateComponent
+    AuthenticateComponent,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,

@@ -5,6 +5,7 @@ import { AuthenticateComponent } from './components/authenticate/authenticate.co
 import { PostDetailComponent } from './components/post/components/post-detail/post-detail.component';
 import { SubredditComponent } from './components/subreddit/subreddit.component';
 import { UserProfileComponent } from './components/user/user-profile.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,12 @@ const routes: Routes = [
   {
     path: "u/:user", component: UserProfileComponent
   },
+  {
+    path: "404", component: NotFoundComponent
+  },
+  {
+    path: "**", component: NotFoundComponent
+  }
 ];
 
 @NgModule({

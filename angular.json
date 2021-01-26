@@ -95,8 +95,8 @@
               "src/assets"
             ],
             "styles": [
-              "assets/css/bootstrap.css",
-              "style.css"
+              "src/assets/css/bootstrap.css",
+              "src/assets/less/style.less"
             ],
             "scripts": []
           }
