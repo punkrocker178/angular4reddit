@@ -36,6 +36,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   fetchData(after?: string) {
+
+    if (this.after == null && this.posts$.getValue().length > 0) {
+      return;
+    }
+
     this.isLoading = true;
     let queryParams = {
       limit: 25

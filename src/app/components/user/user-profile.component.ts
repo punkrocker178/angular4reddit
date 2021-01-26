@@ -17,6 +17,8 @@ export class UserProfileComponent implements OnInit {
     overview$: Observable<Object>;
 
     userProfile = {};
+    username;
+    listingsType = 'user-profile';
 
     constructor(private activatedRoute: ActivatedRoute,
         private userService: UserService
@@ -26,6 +28,7 @@ export class UserProfileComponent implements OnInit {
         this.activatedRoute.paramMap.pipe(
             tap(params => {
                 const user = params.get('user');
+                this.username = user;
                 this.comments$ = this.userService.getUserComments(user).pipe(
                     tap(next => this.userProfile['comments'] = next['data']));
 

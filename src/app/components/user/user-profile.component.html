@@ -1,12 +1,29 @@
-<div>
-    <div *ngIf="(this.about$ | async)">
-        <img [src]="userProfile['about'].icon_img">
-        <span>{{userProfile['about'].name}}</span>
-        <span>Karma</span>
-        <span>{{userProfile['about'].total_karma}}</span>
-        <span class="icon-before icon-cake"></span>
-        <span>{{userProfile['about'].created_utc | dateTimePipe: 'format'}}</span>
+<div class="container">
+    <div class="d-flex" *ngIf="(this.about$ | async)">
+        <div class="p-4">
+            <img class="banner-icon" [src]="userProfile['about'].icon_img">
+        </div>
+        
 
+        <div class="flex-column p-4">
+            <span class="p-2">{{ userProfile['about'].name }}</span>
+
+            <div class="d-flex flex-row">
+                <div class="p-2">
+                    <h5>Karma</h5>
+                    <span>{{userProfile['about'].total_karma}}</span>
+                </div>
+                <div class="p-2">
+                    <h5 class="icon-before icon-cake">
+                        Cake Day
+                    </h5>
+                    <span>{{ userProfile['about'].created_utc | dateTimePipe: 'format'}} </span>
+                </div>
+              
+            </div>
+        </div>
+        
+        
     </div>
 
     <div *ngIf="(this.comments$ | async)">
@@ -16,6 +33,7 @@
     </div>
 
     <div *ngIf="(this.overview$ | async)">
-        <div class="overview-block"></div>
+        <listings-component [type]="listingsType"
+                            [username]="username"></listings-component>
     </div>
 </div>
