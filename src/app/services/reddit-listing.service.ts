@@ -18,7 +18,7 @@ export class RedditListingService {
             params: params
         }
 
-        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), segment, true);
+        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), segment);
 
         let ob = this.http.get(url, options);
         return ob.pipe(map((data: any) => {
@@ -35,7 +35,7 @@ export class RedditListingService {
             params: params
         }
 
-        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), path, true);
+        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), path);
 
         let ob = this.http.get(url, options);
         return ob.pipe(map((data: any) => {

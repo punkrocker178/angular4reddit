@@ -25,7 +25,13 @@
       </div>
     </ng-container>
 
-    <div (click)="viewDetail()" class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
+    <ng-container *ngIf="!isComment(); else commentBlock">
+      <div (click)="viewDetail()" class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
+    </ng-container>
+
+    <ng-template #commentBlock>
+      <div (click)="viewDetail()" class="markdown" appMarkdown [selfText]="post?.data['body']"></div>
+    </ng-template>
 
   </div>
   <div class="card-footer d-flex button-group">

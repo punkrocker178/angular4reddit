@@ -34,6 +34,14 @@ export class PostItemComponent {
     return this.post.data['is_video'] || this.post.data['media'];
   }
 
+  isGallery() {
+    return this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
+  }
+
+  isComment() {
+    return this.post.kind === 't1';
+  }
+
   getVideo() {
 
     //  Get embeded link from iframe element returned

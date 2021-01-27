@@ -1,6 +1,6 @@
 export class User {
-    _name: string;
-    _karma: number;
+    private _name: string;
+    private _karma: number;
 
     constructor(name?: string , karma?: number) {
         if (name) {

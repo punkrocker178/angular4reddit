@@ -1,3 +1,9 @@
+/** 
+ * 
+ *  Code is heavily referenced from https://dev-academy.com/angular-jwt 
+ * 
+ *  **/
+
 import { Injectable } from '@angular/core';
 import {
     HttpInterceptor,
@@ -12,7 +18,6 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError, switchMap, filter, take } from 'rxjs/operators';
 import { LocalStorageService } from '../services/localStorage.service';
 import { RedditAuthenticateService } from '../services/reddit-authenticate.service';
-import { nextTick } from 'process';
 
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
