@@ -48,7 +48,7 @@ export class DateTimePipe implements PipeTransform {
         diffTime = diffYears.years;
       }
 
-      result = `${Math.floor(diffTime)}${timeLabel}`;
+      result = `${Math.floor(Math.abs(diffTime))}${timeLabel}`;
     } else if (type === 'format') {
       result = DateTime.fromSeconds(value).toFormat(FormatConfigs.dateTime);
     }

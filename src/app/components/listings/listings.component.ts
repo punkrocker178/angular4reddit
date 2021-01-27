@@ -3,8 +3,8 @@ import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
-import { Listings } from 'src/app/model/listings';
-import { tap, map, debounceTime, switchMap } from 'rxjs/operators';
+import { tap, debounceTime, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'listings-component',
@@ -24,7 +24,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
 
   constructor(
-    private redditService: RedditListingService) { }
+    private redditService: RedditListingService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.scroll$.pipe(
@@ -55,8 +56,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.after = next.after;
         const currentPosts = this.posts$.getValue();
         this.posts$.next([...currentPosts, ...next.children]);
-      }
-      ))
+      }));
 
   }
 
@@ -86,10 +86,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
     let apiSegment = '';
     switch (this.type) {
       case 'user-profile':
-        apiSegment = '/user/' + this.username + '/overview' + ApiList.LISTINGS_HOT;
+        apiSegment = `/user/${this.username}/overview${this.sort}`;
         break;
       case 'subreddit':
-        apiSegment = '/r/' + this.subreddit + ApiList.LISTINGS_HOT;
+        apiSegment = `/r/${this.subreddit}${this.sort}`;
         break;
       default:
         apiSegment = this.sort;

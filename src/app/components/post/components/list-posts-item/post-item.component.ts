@@ -3,6 +3,7 @@ import { Post } from 'src/app/model/post';
 import { Router } from '@angular/router';
 import { VotingService } from 'src/app/services/vote.service';
 import { Utils } from 'src/app/class/Utils';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'post-item',
@@ -75,8 +76,21 @@ export class PostItemComponent {
     return image;
   }
 
-  viewDetail() {
-    !this.isDetail && this.router.navigateByUrl(`/r/${this.post.data['subreddit']}/comments/${this.post.data['id']}`)
+  // Needs refactor
+  viewDetail(isComment?: boolean) {
+    
+    let path = `/r/${this.post.data['subreddit']}/comments/`;
+
+    if (isComment && this.post.data['parent_id']) {
+      const parent_id = this.post.data['parent_id'].split('_');
+      const params = new HttpParams()
+      .set('comment', this.post.data['id']);
+      path += `${parent_id[1]}?${params.toString()}`;
+    } else {
+      path += `${this.post.data['id']}`;
+    }
+
+    !this.isDetail && this.router.navigateByUrl(path);
   }
 
   isCrossPost() {

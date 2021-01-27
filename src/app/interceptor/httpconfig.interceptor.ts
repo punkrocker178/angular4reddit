@@ -54,6 +54,11 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
         return next.handle(req).pipe(
             catchError(error => {
+
+                if (error.status === 404) {
+                    return this.handle404Error(error);
+                }
+
                 if (error.status === 401) {
                     return this.handle401Error(req, next);
                 }
@@ -80,6 +85,18 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         return request.clone({
             headers: request.headers.set('Authorization', 'Bearer ' + token)
         });
+    }
+
+    handle404Error(error) {
+        let err=  error.error;
+        if (err == null) {
+            err = {
+                status: 404,
+                message: '[HttpInterceptor] Not Found'
+            }
+        }
+
+        return throwError(err);
     }
 
     handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
