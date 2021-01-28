@@ -1,3 +1,7 @@
+.justify-center-mixin() {
+    justify-items: center;
+}
+
 .custom-card {
     max-height: 100vh;
 }
@@ -32,11 +36,6 @@
     border-radius: 4px;
 }
 
-.button-group {
-    justify-items: center;
-    padding: 0 1rem 0 2rem;
-}
-
 .post-author {
     font-size: 14px;
 }
@@ -59,4 +58,20 @@
     max-width: 100%;
     margin-top: 1rem;
 }
+
+@media (min-width: 360px) {
+    .button-group {
+        .justify-center-mixin();
+        padding: 0 0 0 0.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .button-group {
+        .justify-center-mixin();
+        padding: 0 1rem 0 1.5rem;
+    }
+}
+
+
 

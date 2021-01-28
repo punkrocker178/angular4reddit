@@ -1,3 +1,8 @@
+.icon-mixin() {
+    width: auto;
+    border-radius: 50px;
+}
+
 .crop-height {
     display: grid;
     max-height: 75vh!important;
@@ -33,9 +38,13 @@
 }
 
 .banner-icon {
+    .icon-mixin();
     height: 50px;
-    width: auto;
-    border-radius: 50px;
+}
+
+.navbar-icon {
+    .icon-mixin();
+    height: 50px;
 }
 
 @media (min-width: 768px) { 
@@ -43,8 +52,9 @@
         max-height: 65vh;
     }
     .banner-icon {
+        .icon-mixin();
         height: 90px;
-    }    
+    }
 }
 
 @media (min-width: 992px) { 
