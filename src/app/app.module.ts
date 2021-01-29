@@ -24,6 +24,7 @@ import { SubredditService } from './services/subreddit.service';
 import { DirectivesModule } from './directives/directives.module';
 import { UserService } from './services/user.service';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { SharedDirectivesModule } from './shared/directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     PipeModule,
     PostsModule,
     InfiniteScrollModule,
-    DirectivesModule
+    DirectivesModule,
+    SharedDirectivesModule
   ],
   providers: [
     RedditListingService,

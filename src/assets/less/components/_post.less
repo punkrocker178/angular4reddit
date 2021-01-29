@@ -59,6 +59,25 @@
     margin-top: 1rem;
 }
 
+.popover-tooltip {
+    background: #333;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 4px;
+    padding: 10px;
+    display: none;
+}
+
+.popover-tooltip[data-show] {
+    display: block;
+}
+
+.popover-tooltip > h5, p {
+    margin-bottom: 0;
+}
+
+
 @media (min-width: 360px) {
     .button-group {
         .justify-center-mixin();

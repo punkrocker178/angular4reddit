@@ -10,6 +10,8 @@ import { RouterModule } from '@angular/router';
 import { SortComponent } from './components/sort/sort.component';
 import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from 'src/app/directives/directives.module';
+import { AwardComponent } from './components/award/award.component';
+import { SharedDirectivesModule } from 'src/app/shared/directives/directives.module';
 
 @NgModule({
     imports:[
@@ -18,20 +20,23 @@ import { DirectivesModule } from 'src/app/directives/directives.module';
         RouterModule,
         FormsModule,
         CommonModule,
-        DirectivesModule
+        DirectivesModule,
+        SharedDirectivesModule
     ],
     declarations: [
         PostItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
         VoteComponent,
-        SortComponent
+        SortComponent,
+        AwardComponent
     ],
     exports: [
         PostItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
-        SortComponent
+        SortComponent,
+        AwardComponent
     ]
   })
   export class PostsModule { }
