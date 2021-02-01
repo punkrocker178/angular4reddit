@@ -42,6 +42,7 @@ export class PopoverDirective {
     private renderer2: Renderer2) { }
 
   ngAfterViewInit() {
+
     this.popoverInstance = createPopper(this.virtualElement, this.tooltip, {
       placement: this.config.placement,
       modifiers: [{
@@ -51,6 +52,7 @@ export class PopoverDirective {
       },
       }]
     });
+
   }
 
   generateGetBoundingClientRect(x = 0, y = 0) {
@@ -62,6 +64,10 @@ export class PopoverDirective {
       bottom: y,
       left: x,
     });
+  }
+
+  ngOnDestroy() {
+    this.popoverInstance.destroy();
   }
 
 }

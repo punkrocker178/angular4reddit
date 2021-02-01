@@ -7,7 +7,7 @@
     </div>
 
     <ng-container *ngIf="post.data['all_awardings'] && post.data['all_awardings'].length > 0">
-      <app-award [awards]="post.data['all_awardings']"></app-award>
+      <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
     </ng-container>
 
     <h5 (click)="viewDetail()" class="card-title">{{post?.data['title']}}</h5>

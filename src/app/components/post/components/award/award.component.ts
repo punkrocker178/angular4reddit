@@ -7,6 +7,7 @@ import { Component, Input, Output } from '@angular/core';
 export class AwardComponent {
 
     @Input() awards;
+    @Input() isDetail;
 
     numberOfItems = 5;
     isShowAll = false;
