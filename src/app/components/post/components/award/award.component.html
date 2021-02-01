@@ -9,6 +9,7 @@
     </div>
     <div #tooltip role="tooltip" class="popover-tooltip">
       <h5>{{award['name']}}</h5>
+      <img class="award-icon-popover" [src]="award['icon_url'] | replacePipe">
       <p>{{award['description']}}</p>
     </div>
 

@@ -1,3 +1,11 @@
+/**
+ * 
+ *  This directive use popperjs library to create a popover. I'm using popper's Virtual element instead of HTMLElement
+ *  because the position of the popover is got offset very far from the target element
+ *  I can't figured out why.
+ * 
+ */
+
 import { Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
 import { createPopper } from '@popperjs/core';
 
@@ -12,43 +20,48 @@ export class PopoverDirective {
   @Input() config;
   @Input() tooltip?: HTMLElement;
 
-  @HostListener('mouseenter') onMouseEnter() {
+  popoverInstance;
+
+  virtualElement = {
+    getBoundingClientRect: this.generateGetBoundingClientRect()
+  }
+
+  // Reference from https://popper.js.org/docs/v2/virtual-elements/
+  @HostListener('mousemove', ['$event']) onMousemove(event) {
+    this.virtualElement.getBoundingClientRect = this.generateGetBoundingClientRect(event.clientX, event.clientY);
+    this.popoverInstance.update();
     this.renderer2.setAttribute(this.tooltip, 'data-show', 'true');
   }
 
-  // @HostListener('mouseleave') onMouseLeave() {
-  //   this.renderer2.removeAttribute(this.tooltip, 'data-show');
-  // }
+  @HostListener('mouseleave') onMouseLeave() {
+    this.renderer2.removeAttribute(this.tooltip, 'data-show');
+  }
 
   constructor(
     private el: ElementRef,
     private renderer2: Renderer2) { }
 
-  ngOnInit() {
-    // this.tooltipElement = this.createTooltip();
-    
-  }
-
   ngAfterViewInit() {
-    console.log('here');
-    createPopper(this.el.nativeElement, this.tooltip, {
-      placement: this.config.placement
+    this.popoverInstance = createPopper(this.virtualElement, this.tooltip, {
+      placement: this.config.placement,
+      modifiers: [{
+        name: 'offset',
+        options: {
+        offset: [0, 20],
+      },
+      }]
     });
   }
 
-  createTooltip() {
-    const tooltip = this.renderer2.createElement('div');
-    const title = this.renderer2.createElement('h5');
-    const body = this.renderer2.createElement('p');
-    this.renderer2.appendChild(title, this.renderer2.createText(this.config.title));
-    this.renderer2.appendChild(body, this.renderer2.createText(this.config.body));
-    this.renderer2.appendChild(tooltip, title);
-    this.renderer2.appendChild(tooltip, body);
-    this.renderer2.setAttribute(tooltip, 'role', 'tooltip');
-    this.renderer2.addClass(tooltip, 'popover-tooltip');
-    this.renderer2.appendChild(this.el.nativeElement, tooltip);
-    return tooltip;
+  generateGetBoundingClientRect(x = 0, y = 0) {
+    return () => ({
+      width: 0,
+      height: 0,
+      top: y,
+      right: x,
+      bottom: y,
+      left: x,
+    });
   }
-
 
 }
