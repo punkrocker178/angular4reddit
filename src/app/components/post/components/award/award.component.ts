@@ -13,8 +13,14 @@ export class AwardComponent {
 
     popoverConfig = {
         placement: 'bottom',
-        body: 'Test',
-        title: 'Test title'
+        modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 0],
+              },
+            },
+          ],
     }
 
     constructor() {}

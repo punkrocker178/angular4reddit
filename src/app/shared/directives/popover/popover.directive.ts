@@ -10,24 +10,29 @@ export class PopoverDirective {
 
   // Needs to create config interface
   @Input() config;
+  @Input() tooltip?: HTMLElement;
 
   @HostListener('mouseenter') onMouseEnter() {
-    this.renderer2.setAttribute(this.tooltipElement, 'data-show', 'true');
+    this.renderer2.setAttribute(this.tooltip, 'data-show', 'true');
   }
 
-  @HostListener('mouseleave') onMouseLeave() {
-    this.renderer2.removeAttribute(this.tooltipElement, 'data-show');
-  }
+  // @HostListener('mouseleave') onMouseLeave() {
+  //   this.renderer2.removeAttribute(this.tooltip, 'data-show');
+  // }
 
   constructor(
     private el: ElementRef,
     private renderer2: Renderer2) { }
 
   ngOnInit() {
-    this.tooltipElement = this.createTooltip();
-    createPopper(this.el.nativeElement, this.tooltipElement, {
-      placement: this.config.placement,
-      modifiers: this.config.modifier
+    // this.tooltipElement = this.createTooltip();
+    
+  }
+
+  ngAfterViewInit() {
+    console.log('here');
+    createPopper(this.el.nativeElement, this.tooltip, {
+      placement: this.config.placement
     });
   }
 

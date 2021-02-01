@@ -1,11 +1,19 @@
 <div class="d-flex flex-row flex-wrap">
   <ng-container *ngFor="let award of awards; let elementIndex = index">
-    <div class="p-1" *ngIf="elementIndex < numberOfItems">
+    <div aria-describedby="tooltip" appPopover [config]="popoverConfig" [tooltip]="tooltip" class="p-1"
+      *ngIf="elementIndex < numberOfItems">
       <img class="award-icon" [src]="award['icon_url'] | replacePipe">
-      <span aria-describedby="tooltip" appPopover [config]="popoverConfig" [id]="'test-popover'+elementIndex"
-        class="award-icon">{{ award['count']}}</span>
+      <span>
+        {{ award['count']}}
+      </span>
     </div>
+    <div #tooltip role="tooltip" class="popover-tooltip">
+      <h5>{{award['name']}}</h5>
+      <p>{{award['description']}}</p>
+    </div>
+
   </ng-container>
-  <span class="align-self-center post-author btn" *ngIf="!isShowAll && (getNumbersRemain() > 0)" (click)="showAllAwards()">Show
+  <span class="align-self-center post-author btn" *ngIf="!isShowAll && (getNumbersRemain() > 0)"
+    (click)="showAllAwards()">Show
     {{getNumbersRemain()}} more</span>
 </div>
