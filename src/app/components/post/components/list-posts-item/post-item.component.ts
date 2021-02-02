@@ -43,6 +43,13 @@ export class PostItemComponent {
     return this.post.kind === 't1';
   }
 
+  // Needs enhancement. The logic does not cover all cases
+  isEmbededLink() {
+    return !this.post.data['is_self']
+     && !this.post.data['is_reddit_media_domain']
+     && !this.post.data['url'].includes('https://www.reddit.com');
+  }
+
   getVideo() {
 
     //  Get embeded link from iframe element returned

@@ -1,11 +1,16 @@
 <div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
   <div class="card-body crop-content" [ngClass]="{'mb-3': isDetail}">
+
+    <!-- Subreddit - author - post date -->
     <div (click)="viewDetail()" class="d-flex flex-row post-author">
-      <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'" class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
+      <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
+        class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
       <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
-      <span [title]="post.data['created_utc'] | dateTimePipe: 'format'" class="ml-2">{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
+      <span [title]="post.data['created_utc'] | dateTimePipe: 'format'"
+        class="ml-2">{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
     </div>
 
+    <!-- Awards -->
     <ng-container *ngIf="post.data['all_awardings'] && post.data['all_awardings'].length > 0">
       <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
     </ng-container>
@@ -24,26 +29,37 @@
 
     <ng-container *ngIf="isVideo()">
       <div [ngClass]="{'blur-img': post.data['over_18']}" class="embed-responsive scale-media">
-        <video controls class="embed-responsive-item media letter-box-color">
-        <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video>
+        <video *ngIf="!isEmbededLink()" controls class="embed-responsive-item media letter-box-color">
+          <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video>
+        <iframe *ngIf="isEmbededLink()" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
       </div>
     </ng-container>
 
+    <!-- Post text content -->
     <ng-container *ngIf="!isComment(); else commentBlock">
       <div (click)="viewDetail()" class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
     </ng-container>
 
     <ng-template #commentBlock>
-      <span>Commented on <a target="_blank" [href]="post.data['link_url']" class="font-weight-bold">{{post.data['link_title']}}</a></span>
-      <div (click)="viewDetail(true)" class="post-comments markdown-comments" appMarkdown [selfText]="post?.data['body']"></div>
+      <span>Commented on <a target="_blank" [href]="post.data['link_url']"
+          class="font-weight-bold">{{post.data['link_title']}}</a></span>
+      <div (click)="viewDetail(true)" class="post-comments markdown-comments" appMarkdown
+        [selfText]="post?.data['body']"></div>
     </ng-template>
 
+
+    <div *ngIf="isEmbededLink() && !isVideo()">
+      <a class="d-flex flex-row" [href]="post.data['url']" target="_blank">
+        <span class="mr-auto">{{ post.data['url'] }}</span>
+        <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
+      </a>
+    </div>
+
   </div>
+
+  <!-- Vote - Comments - Share section -->
   <div class="card-footer d-flex button-group">
-    <app-vote [score]="post?.data['score']"
-              [id]="post?.data['name']"
-              [liked]="post?.data['likes']"
-    ></app-vote>
+    <app-vote [score]="post?.data['score']" [id]="post?.data['name']" [liked]="post?.data['likes']"></app-vote>
 
     <div class="p-2 post-buttons align-self-center flex-fill">
       <button class="btn custom-btn d-md-none">
@@ -60,7 +76,7 @@
     <div class="p-2 post-buttons align-self-center flex-fill">
       <button class="btn custom-btn">
         <i class="fas fa-gift"></i>
-        <span class="d-none d-md-inline"> Give Award</span>
+        <span class="d-none d-md-inline">Give Award</span>
       </button>
 
     </div>
@@ -68,7 +84,7 @@
     <div class="p-2 post-buttons align-self-center flex-fill">
       <button class="btn custom-btn">
         <i class="fas fa-share"></i>
-        <span class="d-none d-md-inline"> Share</span>
+        <span class="d-none d-md-inline">Share</span>
       </button>
     </div>
 
