@@ -25,6 +25,7 @@ import { DirectivesModule } from './directives/directives.module';
 import { UserService } from './services/user.service';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SharedDirectivesModule } from './shared/directives/directives.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { SharedDirectivesModule } from './shared/directives/directives.module';
     PostsModule,
     InfiniteScrollModule,
     DirectivesModule,
-    SharedDirectivesModule
+    SharedDirectivesModule,
+    NgbModule
   ],
   providers: [
     RedditListingService,

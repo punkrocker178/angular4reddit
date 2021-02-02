@@ -50,6 +50,10 @@ export class PostItemComponent {
      && !this.post.data['url'].includes('https://www.reddit.com');
   }
 
+  isOver18() {
+    return this.post.data['over_18'];
+  }
+
   getVideo() {
 
     //  Get embeded link from iframe element returned

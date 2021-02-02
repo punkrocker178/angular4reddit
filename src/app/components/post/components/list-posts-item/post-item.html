@@ -15,20 +15,24 @@
       <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
     </ng-container>
 
-    <h5 (click)="viewDetail()" class="card-title">{{post?.data['title']}}</h5>
+    <h5 (click)="viewDetail()" class="card-title mb-1">{{post?.data['title']}}</h5>
+
+    <div class="mb-2">
+      <span *ngIf="isOver18()" class="nsfw-text">NSFW</span>
+    </div>
 
     <ng-container *ngIf="isCrossPost()">
       <h5>Crosspost: {{post.data['crosspost_parent']}}</h5>
     </ng-container>
 
     <ng-container *ngIf="hasImages()">
-      <div [ngClass]="{'crop-height': !isDetail, 'blur-img': post.data['over_18']}" class="img-container">
+      <div [ngClass]="{'crop-height': !isDetail, 'blur-img': isOver18()}" class="img-container">
         <img (click)="viewDetail()" class="img-fluid center-img scale-img" src="{{getImage()}}">
       </div>
     </ng-container>
 
     <ng-container *ngIf="isVideo()">
-      <div [ngClass]="{'blur-img': post.data['over_18']}" class="embed-responsive scale-media">
+      <div [ngClass]="{'blur-img': isOver18()}" class="embed-responsive scale-media">
         <video *ngIf="!isEmbededLink()" controls class="embed-responsive-item media letter-box-color">
           <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video>
         <iframe *ngIf="isEmbededLink()" [src]="getVideo() | safe: 'resourceUrl'"></iframe>

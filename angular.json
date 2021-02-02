@@ -28,12 +28,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/assets/css/bootstrap.css",
+              "src/assets/css/bootstrap.min.css",
               "src/assets/less/style.less"
             ],
-            "scripts": [
-              "src/assets/js/bootstrap.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
