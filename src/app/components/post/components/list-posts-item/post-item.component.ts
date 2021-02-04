@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { VotingService } from 'src/app/services/vote.service';
 import { Utils } from 'src/app/class/Utils';
 import { HttpParams } from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NsfwPopupComponent } from 'src/app/components/modals/nsfw/nsfw-popup.component';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'post-item',
@@ -16,13 +19,17 @@ export class PostItemComponent {
   isUpVoted = false;
   isDownVoted = false;
   liked: boolean;
+  over18_consent: boolean;
 
   constructor(private router: Router,
     private votingService: VotingService,
+    private modalService: NgbModal,
+    private userService: UserService,
     private renderer2: Renderer2,
     private el: ElementRef) { }
 
   ngOnInit() {
+    this.over18_consent = this.userService.isNSFWAllowed();
     this.parseImgUrl();
 
   }
@@ -47,7 +54,7 @@ export class PostItemComponent {
   isEmbededLink() {
     return !this.post.data['is_self']
      && !this.post.data['is_reddit_media_domain']
-     && !this.post.data['url'].includes('https://www.reddit.com');
+     && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
   }
 
   isOver18() {
@@ -55,7 +62,6 @@ export class PostItemComponent {
   }
 
   getVideo() {
-
     //  Get embeded link from iframe element returned
     if (!this.post.data['is_video']) {
       const iframeHtml = this.post.data['media']['oembed']['html'];
@@ -90,18 +96,30 @@ export class PostItemComponent {
   // Needs refactor
   viewDetail(isComment?: boolean) {
     
-    let path = `/r/${this.post.data['subreddit']}/comments/`;
-
-    if (isComment && this.post.data['parent_id']) {
-      const parent_id = this.post.data['parent_id'].split('_');
-      const params = new HttpParams()
-      .set('comment', this.post.data['id']);
-      path += `${parent_id[1]}?${params.toString()}`;
-    } else {
-      path += `${this.post.data['id']}`;
+    if (this.isOver18() && !this.over18_consent) {
+      const modalRef = this.modalService.open(NsfwPopupComponent);
+      modalRef.result.then(result => {
+        this.over18_consent = true;
+      }, reason => {
+        console.log(reason, 'reason');
+      })
     }
 
-    !this.isDetail && this.router.navigateByUrl(path);
+    if (this.isDetail) {
+      let path = `/r/${this.post.data['subreddit']}/comments/`;
+
+      if (isComment && this.post.data['parent_id']) {
+        const parent_id = this.post.data['parent_id'].split('_');
+        const params = new HttpParams()
+        .set('comment', this.post.data['id']);
+        path += `${parent_id[1]}?${params.toString()}`;
+      } else {
+        path += `${this.post.data['id']}`;
+      }
+  
+      !this.isDetail && this.router.navigateByUrl(path);
+    }
+    
   }
 
   isCrossPost() {

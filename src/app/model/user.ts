@@ -1,4 +1,6 @@
-export class User {
+import { UserInterface } from "./user.interface";
+
+export class User implements UserInterface {
     private _name: string;
     private _karma: number;
 

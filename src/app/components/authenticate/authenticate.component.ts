@@ -33,8 +33,6 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
                         this.authenService.getUserInfo()
                         .pipe(takeUntil(this.ngUnsubscribe))
                         .subscribe(res => {
-                            this.authenService.setUserValue('name', res['name']);
-                            this.authenService.setUserValue('karma', res['comment_karma'] + res['link_karma']);
                             this.authenService.storeUserDetail(res);
                             this.router.navigateByUrl('/home');
                         });

@@ -39,10 +39,6 @@ export class RedditAuthenticateService {
         return this.user;
     }
 
-    setUserValue(key: string, value: string) {
-        this.getUser()[key] = value
-    }
-
     storeUserDetail(user: any) {
         this.localStorage.set('userObject', user);
     }
@@ -50,7 +46,7 @@ export class RedditAuthenticateService {
     login() {
         let state = Utils.generateRandomString();
         this.localStorage.set('state', state);
-        let scope = ['read', 'identity', 'history', 'vote'];
+        let scope = ['read', 'identity', 'history', 'vote', 'account'];
         let httParams = new HttpParams()
         .set('response_type', 'code')
         .set('duration', 'permanent')

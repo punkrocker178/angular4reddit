@@ -26,6 +26,7 @@ import { UserService } from './services/user.service';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SharedDirectivesModule } from './shared/directives/directives.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NsfwPopupComponent } from './components/modals/nsfw/nsfw-popup.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SubredditService,
     UserService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
+  ],
+  entryComponents: [
+    NsfwPopupComponent
   ],
   bootstrap: [AppComponent]
 })

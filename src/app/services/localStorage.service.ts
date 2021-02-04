@@ -8,7 +8,7 @@ export class LocalStorageService {
         this.localStorage = window.localStorage;
     }
 
-    set(key: string, value: string) {
+    set(key: string, value: any) {
         if (this.isSupportLocalStorage()) {
             this.localStorage.setItem(key, JSON.stringify(value));
             return true;
