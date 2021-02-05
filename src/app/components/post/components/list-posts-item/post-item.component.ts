@@ -105,7 +105,7 @@ export class PostItemComponent {
       })
     }
 
-    if (this.isDetail) {
+    if (!this.isDetail) {
       let path = `/r/${this.post.data['subreddit']}/comments/`;
 
       if (isComment && this.post.data['parent_id']) {

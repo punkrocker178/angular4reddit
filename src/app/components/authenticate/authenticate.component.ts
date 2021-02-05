@@ -4,6 +4,7 @@ import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.
 import { LocalStorageService } from 'src/app/services/localStorage.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { UserService } from "src/app/services/user.service";
 
 @Component({
     selector: 'authenticate',
@@ -18,6 +19,7 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute, 
         private authenService: RedditAuthenticateService,
         private localStorage: LocalStorageService,
+        private userService: UserService,
         private router: Router) { }
 
     ngOnInit() {
@@ -34,6 +36,7 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
                         .pipe(takeUntil(this.ngUnsubscribe))
                         .subscribe(res => {
                             this.authenService.storeUserDetail(res);
+                            this.userService.setUser(res);
                             this.router.navigateByUrl('/home');
                         });
 

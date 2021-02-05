@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
-import { User } from 'src/app/model/user';
+import { UserService } from 'src/app/services/user.service';
+import { UserInterface } from 'src/app/model/user.interface';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'navbar',
@@ -9,11 +11,22 @@ import { User } from 'src/app/model/user';
 
 export class NavbarComponent implements OnInit{
 
-    constructor(private authenService: RedditAuthenticateService) { }
-    user: User;
+    constructor(private authenService: RedditAuthenticateService,
+        private userService: UserService) { }
+    user: UserInterface;
+    userSubscribtion;
 
     ngOnInit() {
-        this.user = this.authenService.getUser();
+       this.userSubscribtion = this.userService.user$.pipe(
+           take(2),
+            tap(next => {
+                this.user = next;
+            })
+        );
+    }
+
+    isLoggedIn() {
+        return this.authenService.getIsLoggedIn();
     }
 
     login() {
@@ -24,6 +37,9 @@ export class NavbarComponent implements OnInit{
         this.authenService.revokeToken().subscribe(
             res => {
                 if (res.ok && res.status === 200) {
+                    this.userService.setUser({
+                        name: 'anonymous'
+                    });
                     this.authenService.logout();
                 }
             }

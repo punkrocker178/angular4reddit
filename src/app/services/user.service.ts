@@ -1,39 +1,52 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
-import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LocalStorageService } from './localStorage.service';
 import { UserInterface } from '../model/user.interface';
+import { HeadersUtils } from '../class/HeadersUtils';
 
 @Injectable()
 export class UserService {
 
-    private path = environment.functionUrl + '/oauth';
     private preferencesAPI = 'api/v1/me/prefs';
 
     private allowNSFW: BehaviorSubject<boolean> = new BehaviorSubject(false);
     allowNSFW$ = this.allowNSFW.asObservable();
 
-    private user: UserInterface;
+    private userSubject: BehaviorSubject<UserInterface> = new BehaviorSubject({
+        name: 'anonymous'
+    });
+
+    public user$ = this.userSubject.asObservable();
 
     constructor(private http: HttpClient,
         private authenticateService: RedditAuthenticateService,
         private localStorage: LocalStorageService) {
 
         const userObject = localStorage.get('userObject');
-        this.user = userObject;
 
-        if (this.user.over_18) {
-            this.allowNSFW.next(this.user.over_18);
+        if (userObject) {
+            this.userSubject.next(userObject);
         }
+    
+        if (this.userSubject.getValue().over_18) {
+            this.allowNSFW.next(this.userSubject.getValue().over_18);
+        }
+    }
 
+    setUser(user) {
+        this.userSubject.next(user);
+    }
+
+    getUser() {
+        return this.userSubject.getValue();
     }
 
     getUserAbout(user) {
-        const aboutAPI = `${this.path}/u/${user}/about`;
-        return this.http.get(aboutAPI,
+        const aboutAPI = `/u/${user}/about`;
+        return this.http.get(HeadersUtils.buildUrl(this.authenticateService.getIsLoggedIn(), aboutAPI),
             {
                 headers:
                 {
@@ -43,8 +56,8 @@ export class UserService {
     }
 
     getUserOverview(user) {
-        const aboutAPI = `${this.path}/u/${user}/overview`;
-        return this.http.get(aboutAPI,
+        const overviewAPI = `/u/${user}/overview`;
+        return this.http.get(HeadersUtils.buildUrl(this.authenticateService.getIsLoggedIn(), overviewAPI),
             {
                 headers:
                 {
@@ -54,8 +67,8 @@ export class UserService {
     }
 
     getUserComments(user) {
-        const aboutAPI = `${this.path}/u/${user}/comments`;
-        return this.http.get(aboutAPI,
+        const commentsAPI = `/u/${user}/comments`;
+        return this.http.get(HeadersUtils.buildUrl(this.authenticateService.getIsLoggedIn(), commentsAPI),
             {
                 headers:
                 {
@@ -85,12 +98,32 @@ export class UserService {
     }
 
     updateNSFW(flag: boolean) {
-        const userPreferencePayload = this.getUpdateNSFWPayload(flag);
-        this.updateUserPreference(userPreferencePayload).pipe(tap(next => {
-            this.allowNSFW.next(next['over_18']);
-            this.user.over_18 = next['over_18'];
-            this.localStorage.set('userObject', this.user);
-        })).subscribe();
+        if (this.authenticateService.getIsLoggedIn()) {
+            const userPreferencePayload = this.getUpdateNSFWPayload(flag);
+            this.updateUserPreference(userPreferencePayload).pipe(tap(next => {
+                this.storeNSFW(next['over_18'], true);
+            })).subscribe();
+        } else {
+            this.storeNSFW(flag);
+        }
+
+    }
+
+    private storeNSFW(data, isLoggedIn?: boolean) {
+
+        let value;
+        let user = this.userSubject.getValue();
+        if (isLoggedIn) {
+            value = data['over_18'];
+            user.over_18 = data['over_18'];
+        } else {
+            value = data;
+            user.over_18 = data;
+        }
+
+        this.allowNSFW.next(value);
+        this.localStorage.set('userObject', user);
+
     }
 
     getUpdateNSFWPayload(flag: boolean) {
@@ -101,7 +134,6 @@ export class UserService {
     }
 
     isNSFWAllowed() {
-        console.log('2');
         return this.allowNSFW.getValue();
     }
 }

@@ -15,7 +15,6 @@ export class RedditAuthenticateService {
 
     redirectURI: string;
 
-    private user: User;
     private getAccessTokenAPI = environment.functionUrl + '/api/v1/access_token';
     private getRevokeTokenAPI = environment.functionUrl + '/api/v1/revoke_token';
 
@@ -25,18 +24,10 @@ export class RedditAuthenticateService {
         private http: HttpClient, 
         private localStorage: LocalStorageService,
         private router: Router) { 
-        this.user = this.getUser();
     }
 
-    getUser() {
-        if (!this.user) {
-            if (this.localStorage.get('userObject')){
-                const userObj = this.localStorage.get('userObject');
-                return new User(userObj['name'], User.getKarma(userObj));
-            }
-            return new User();
-        }
-        return this.user;
+    getIsLoggedIn() {
+        return this.localStorage.get('userObject').name !== 'anonymous';
     }
 
     storeUserDetail(user: any) {
@@ -61,7 +52,7 @@ export class RedditAuthenticateService {
         this.localStorage.remove('userToken');
         this.localStorage.remove('refreshToken');
         this.localStorage.remove('userObject');
-        this.user = null;
+        this.localStorage.remove('state');
         
         // Will improve this later 
         window.location.reload();

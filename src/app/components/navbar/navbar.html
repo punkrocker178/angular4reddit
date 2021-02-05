@@ -4,12 +4,14 @@
       <img class="navbar-icon" src="../../../assets//images/reddit.png">
     </a>
     <span routerLink="/" class="text d-flex align-items-center mr-auto">Angular Reddit</span>
-    <span [routerLink]="'u/'+ user.name" *ngIf="user" class="d-flex align-items-center mr-3">{{user.name}}</span>
-    <div class="d-flex align-items-center">
-      <button *ngIf="!user.name" (click)="login()" class="btn btn-success">Login</button>
-      <button *ngIf="user?.name" (click)="logout()" class="btn btn-danger">Log out</button>
-    </div>
-
+    
+    <ng-container *ngIf="userSubscribtion | async">
+      <span [routerLink]="'u/'+ user.name" *ngIf="user?.name !== 'anonymous'" class="d-flex align-items-center mr-3">{{user.name}}</span>
+      <div class="d-flex align-items-center">
+        <button *ngIf="user.name === 'anonymous'" (click)="login()" class="btn btn-success">Login</button>
+        <button *ngIf="user?.name !== 'anonymous'" (click)="logout()" class="btn btn-danger">Log out</button>
+      </div>
+    </ng-container>
 
   </div>
 
