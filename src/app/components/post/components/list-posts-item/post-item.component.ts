@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, Renderer2 } from '@angular/core';
+import { Component, Input, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { Router } from '@angular/router';
 import { VotingService } from 'src/app/services/vote.service';
@@ -7,6 +7,11 @@ import { HttpParams } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NsfwPopupComponent } from 'src/app/components/modals/nsfw/nsfw-popup.component';
 import { UserService } from 'src/app/services/user.service';
+import { DomParserPipe } from 'src/app/pipe/dom-parser.pipe';
+import { Domains } from 'src/app/constants/domains';
+import { ReplacePipe } from 'src/app/pipe/replace.pipe';
+
+declare var twttr: any;
 
 @Component({
   selector: 'post-item',
@@ -15,6 +20,7 @@ import { UserService } from 'src/app/services/user.service';
 export class PostItemComponent {
   @Input() post: Post;
   @Input() isDetail: boolean;
+  @ViewChild('twitterEmbed') tweet: ElementRef;
 
   isUpVoted = false;
   isDownVoted = false;
@@ -25,13 +31,17 @@ export class PostItemComponent {
     private votingService: VotingService,
     private modalService: NgbModal,
     private userService: UserService,
-    private renderer2: Renderer2,
-    private el: ElementRef) { }
+    private renderer2: Renderer2) { }
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
     this.parseImgUrl();
+  }
 
+  ngAfterViewInit() {
+    if (this.isEmbededLink() && this.isTwitterEmbedded()) {
+      this.initTwitter();
+    }
   }
 
   hasImages() {
@@ -39,7 +49,7 @@ export class PostItemComponent {
   }
 
   isVideo() {
-    return this.post.data['is_video'] || this.post.data['media'];
+    return (this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded();
   }
 
   isGallery() {
@@ -53,8 +63,13 @@ export class PostItemComponent {
   // Needs enhancement. The logic does not cover all cases
   isEmbededLink() {
     return !this.post.data['is_self']
-     && !this.post.data['is_reddit_media_domain']
-     && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
+      && !this.post.data['selftext']
+      && !this.post.data['is_reddit_media_domain']
+      && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
+  }
+
+  isTwitterEmbedded() {
+    return this.post.data['domain'] === Domains.twitterDomain;
   }
 
   isOver18() {
@@ -95,7 +110,7 @@ export class PostItemComponent {
 
   // Needs refactor
   viewDetail(isComment?: boolean) {
-    
+
     if (this.isOver18() && !this.over18_consent) {
       const modalRef = this.modalService.open(NsfwPopupComponent);
       modalRef.result.then(result => {
@@ -111,15 +126,15 @@ export class PostItemComponent {
       if (isComment && this.post.data['parent_id']) {
         const parent_id = this.post.data['parent_id'].split('_');
         const params = new HttpParams()
-        .set('comment', this.post.data['id']);
+          .set('comment', this.post.data['id']);
         path += `${parent_id[1]}?${params.toString()}`;
       } else {
         path += `${this.post.data['id']}`;
       }
-  
+
       !this.isDetail && this.router.navigateByUrl(path);
     }
-    
+
   }
 
   isCrossPost() {
@@ -169,6 +184,13 @@ export class PostItemComponent {
         break;
     }
 
+  }
+
+  initTwitter() {
+    let html = DomParserPipe.prototype.transform(this.post.data['media']['oembed']['html']);
+    html = ReplacePipe.prototype.transform(html, '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>', '');
+    this.renderer2.setProperty(this.tweet.nativeElement, 'innerHTML', html);
+    twttr.widgets.load();
   }
 
 }

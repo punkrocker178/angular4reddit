@@ -39,6 +39,16 @@
       </div>
     </ng-container>
 
+    <div *ngIf="isEmbededLink() && !isVideo()">
+      <a class="d-flex flex-row" [href]="post.data['url']" target="_blank">
+        <span class="mr-auto">{{ post.data['url'] }}</span>
+        <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
+      </a>
+    </div>
+
+    <div #twitterEmbed *ngIf="isEmbededLink() && isTwitterEmbedded()">
+    </div>
+
     <!-- Post text content -->
     <ng-container *ngIf="!isComment(); else commentBlock">
       <div (click)="viewDetail()" class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
@@ -50,14 +60,6 @@
       <div (click)="viewDetail(true)" class="post-comments markdown-comments" appMarkdown
         [selfText]="post?.data['body']"></div>
     </ng-template>
-
-
-    <div *ngIf="isEmbededLink() && !isVideo()">
-      <a class="d-flex flex-row" [href]="post.data['url']" target="_blank">
-        <span class="mr-auto">{{ post.data['url'] }}</span>
-        <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
-      </a>
-    </div>
 
   </div>
 

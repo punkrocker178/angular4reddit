@@ -1,6 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DateTime } from 'luxon';
-import { FormatConfigs } from '../config/format-config';
 
 @Pipe({
   name: 'replacePipe'
