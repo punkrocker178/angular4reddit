@@ -45,7 +45,8 @@ export class PostItemComponent {
   }
 
   hasImages() {
-    return !!this.post.data['preview'] && this.post.data['preview']['enabled'];
+    return !!this.post.data['preview'] && this.post.data['preview']['enabled']
+    && Domains.imagesDomains.includes(this.post.data['domain']);
   }
 
   isVideo() {
@@ -64,7 +65,8 @@ export class PostItemComponent {
   isEmbededLink() {
     return !this.post.data['is_self']
       && !this.post.data['selftext']
-      && !this.post.data['is_reddit_media_domain']
+      && !this.post.data['is_reddit_media_domain'] 
+      && !this.hasImages()
       && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
   }
 

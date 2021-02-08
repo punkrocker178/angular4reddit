@@ -1,29 +1,31 @@
 <div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
   <div class="card-body crop-content" [ngClass]="{'mb-3': isDetail}">
 
-    <!-- Subreddit - author - post date -->
-    <div (click)="viewDetail()" class="d-flex flex-row post-author">
-      <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
-        class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
-      <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
-      <span [title]="post.data['created_utc'] | dateTimePipe: 'format'"
-        class="ml-2">{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
+    <div class="card-side-padding">
+      <!-- Subreddit - author - post date -->
+      <div (click)="viewDetail()" class="d-flex flex-row post-author">
+        <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
+          class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
+        <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
+        <span [title]="post.data['created_utc'] | dateTimePipe: 'format'"
+          class="ml-2">{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
+      </div>
+
+      <!-- Awards -->
+      <ng-container *ngIf="post.data['all_awardings'] && post.data['all_awardings'].length > 0">
+        <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
+      </ng-container>
+
+      <h5 (click)="viewDetail()" class="card-title mb-2">{{post?.data['title']}}</h5>
+
+      <div *ngIf="isOver18()" class="mb-2">
+        <span class="nsfw-text">NSFW</span>
+      </div>
+
+      <ng-container *ngIf="isCrossPost()">
+        <h5>Crosspost: {{post.data['crosspost_parent']}}</h5>
+      </ng-container>
     </div>
-
-    <!-- Awards -->
-    <ng-container *ngIf="post.data['all_awardings'] && post.data['all_awardings'].length > 0">
-      <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
-    </ng-container>
-
-    <h5 (click)="viewDetail()" class="card-title mb-1">{{post?.data['title']}}</h5>
-
-    <div class="mb-2">
-      <span *ngIf="isOver18()" class="nsfw-text">NSFW</span>
-    </div>
-
-    <ng-container *ngIf="isCrossPost()">
-      <h5>Crosspost: {{post.data['crosspost_parent']}}</h5>
-    </ng-container>
 
     <ng-container *ngIf="hasImages()">
       <div [ngClass]="{'crop-height': !isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container">
@@ -39,7 +41,7 @@
       </div>
     </ng-container>
 
-    <div *ngIf="isEmbededLink() && !isVideo()">
+    <div class="card-side-padding" *ngIf="isEmbededLink() && !isVideo()">
       <a class="d-flex flex-row" [href]="post.data['url']" target="_blank">
         <span class="mr-auto">{{ post.data['url'] }}</span>
         <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
@@ -51,14 +53,18 @@
 
     <!-- Post text content -->
     <ng-container *ngIf="!isComment(); else commentBlock">
-      <div (click)="viewDetail()" class="markdown" appMarkdown [selfText]="post?.data['selftext']"></div>
+      <div (click)="viewDetail()" class="markdown card-side-padding" appMarkdown [selfText]="post?.data['selftext']">
+      </div>
     </ng-container>
 
     <ng-template #commentBlock>
-      <span>Commented on <a target="_blank" [href]="post.data['link_url']"
-          class="font-weight-bold">{{post.data['link_title']}}</a></span>
-      <div (click)="viewDetail(true)" class="post-comments markdown-comments" appMarkdown
-        [selfText]="post?.data['body']"></div>
+      <div class="card-side-padding">
+        <span>Commented on <a target="_blank" [href]="post.data['link_url']"
+            class="font-weight-bold">{{post.data['link_title']}}</a></span>
+        <div (click)="viewDetail(true)" class="post-comments markdown-comments" appMarkdown
+          [selfText]="post?.data['body']"></div>
+      </div>
+
     </ng-template>
 
   </div>

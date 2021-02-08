@@ -15,6 +15,7 @@ export class ReplacePipe implements PipeTransform {
   transform(value: string, regex?: string, replace?: string): string {
       let stringReplace = replace;
       let stringRegex = regex;
+      let result = '';
 
       if (!regex) {
           stringRegex = 'amp;';
@@ -25,6 +26,10 @@ export class ReplacePipe implements PipeTransform {
 
       }
 
-      return value.replace(stringRegex, stringReplace);
+      if (value) {
+        result = value.replace(stringRegex, stringReplace);
+      }
+
+      return result;
   }
 }
