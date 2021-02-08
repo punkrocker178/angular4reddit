@@ -3,16 +3,22 @@
   <div class="mb-2" *ngFor="let comment of comments">
 
     <div *ngIf="comment.kind == 't1'; else moreReplies">
-      <span *ngIf="isReplies" class="d-block">Reply to: {{comment.data.parent_id}}</span>
       <span class="mr-2">{{comment.data.author}}</span>
-      <span [title]="comment.data.created_utc | dateTimePipe: 'format'">{{comment.data.created_utc | dateTimePipe: 'diff'}}</span>
+      <span
+        [title]="comment.data.created_utc | dateTimePipe: 'format'">{{comment.data.created_utc | dateTimePipe: 'diff'}}</span>
+
+      <!-- Awards -->
+      <ng-container *ngIf="comment.data['all_awardings'] && comment.data['all_awardings'].length > 0">
+        <app-award [isDetail]="false" [awards]="comment.data['all_awardings']"></app-award>
+      </ng-container>
+
       <div class="post-comments markdown-comments" appMarkdown [selfText]="comment.data.body"></div>
       <div class="d-flex justify-content-end">
         <span class="p-2 post-buttons">Reply</span>
         <app-vote [score]="comment.data.score" [id]="comment.data.name" [liked]="comment.data.likes"></app-vote>
       </div>
     </div>
-    
+
 
     <div *ngIf="hasReplies(comment)" class="children">
       <post-comments [isReplies]="true" [comments]="comment.data['replies']">

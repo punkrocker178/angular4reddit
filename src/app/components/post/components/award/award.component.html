@@ -2,14 +2,10 @@
   <ng-container *ngFor="let award of awards; let elementIndex = index">
 
     <ng-container *ngIf="isDetail; else noPopover">
-
       <!-- Icon -->
       <div aria-describedby="tooltip" appPopover [config]="popoverConfig" [tooltip]="tooltip" class="p-1"
         *ngIf="elementIndex < numberOfItems">
-        <img class="award-icon" [src]="award['icon_url'] | replacePipe">
-        <span>
-          {{ award['count']}}
-        </span>
+        <ng-container *ngTemplateOutlet="award_template; context: {$implicit: award}"></ng-container>
       </div>
 
       <!-- Tooltip -->
@@ -22,17 +18,23 @@
     </ng-container>
 
     <ng-template #noPopover>
-      <div class="p-1" [title]="award['name']">
-        <img class="award-icon" [src]="award['icon_url'] | replacePipe">
-        <span>
-          {{ award['count']}}
-        </span>
+      <div *ngIf="elementIndex < numberOfItems" class="p-1" [title]="award['name']">
+        <ng-container *ngTemplateOutlet="award_template; context: {$implicit: award}"></ng-container>
       </div>
     </ng-template>
 
-
   </ng-container>
+
   <span class="align-self-center post-author btn" *ngIf="!isShowAll && (getNumbersRemain() > 0)"
     (click)="showAllAwards()">Show
     {{getNumbersRemain()}} more</span>
+
 </div>
+
+<!-- Award Template -->
+<ng-template #award_template let-award>
+  <img class="award-icon" [src]="award['icon_url'] | replacePipe">
+  <span>
+    {{ award['count']}}
+  </span>
+</ng-template>
