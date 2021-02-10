@@ -27,7 +27,7 @@ export class RedditAuthenticateService {
     }
 
     getIsLoggedIn() {
-        return this.localStorage.get('userObject').name !== 'anonymous';
+        return this.localStorage.get('userObject') && this.localStorage.get('userObject').name !== 'anonymous';
     }
 
     storeUserDetail(user: any) {
