@@ -32,4 +32,8 @@ export class PostDetailComponent {
     )
     .subscribe();
   }
+
+  isArchived() {
+    return this.post.data['archived'];
+  }
 }

@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from 'src/app/directives/directives.module';
 import { AwardComponent } from './components/award/award.component';
 import { SharedDirectivesModule } from 'src/app/shared/directives/directives.module';
+import { SharedComponentsModule } from 'src/app/shared/components/shared-components.module';
 
 @NgModule({
     imports:[
@@ -21,7 +22,8 @@ import { SharedDirectivesModule } from 'src/app/shared/directives/directives.mod
         FormsModule,
         CommonModule,
         DirectivesModule,
-        SharedDirectivesModule
+        SharedDirectivesModule,
+        SharedComponentsModule
     ],
     declarations: [
         PostItemComponent,

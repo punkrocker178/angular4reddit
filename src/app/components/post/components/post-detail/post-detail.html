@@ -7,6 +7,11 @@
       <ng-container *ngIf="post && !isLoading">
         <post-item [post]="post" [isDetail]="true"></post-item>
       </ng-container>
+      
+      <ng-container *ngIf="!isArchived()">
+        <trumbowyg-editor></trumbowyg-editor>
+      </ng-container>
+      
       <ng-container *ngIf="comments && !isLoading">
         <div class="comments-section">
           <post-comments [comments]="comments"></post-comments>

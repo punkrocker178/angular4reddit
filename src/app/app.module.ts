@@ -27,6 +27,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SharedDirectivesModule } from './shared/directives/directives.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NsfwPopupComponent } from './components/modals/nsfw/nsfw-popup.component';
+import { SharedComponentsModule } from './shared/components/shared-components.module';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { NsfwPopupComponent } from './components/modals/nsfw/nsfw-popup.componen
     InfiniteScrollModule,
     DirectivesModule,
     SharedDirectivesModule,
+    SharedComponentsModule,
     NgbModule
   ],
   providers: [
