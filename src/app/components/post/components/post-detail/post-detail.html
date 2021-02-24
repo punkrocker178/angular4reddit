@@ -4,12 +4,14 @@
       <div *ngIf="isLoading" class="loading-spinner d-flex justify-content-center">
         <i class="fa-3x fas fa-sync-alt fa-spin"></i>
       </div>
+      
       <ng-container *ngIf="post && !isLoading">
         <post-item [post]="post" [isDetail]="true"></post-item>
       </ng-container>
       
-      <ng-container *ngIf="!isArchived()">
+      <ng-container *ngIf="!isArchived() && !isLoading">
         <trumbowyg-editor></trumbowyg-editor>
+        <button class="btn btn-dark" (click)="comment()">Comment</button>
       </ng-container>
       
       <ng-container *ngIf="comments && !isLoading">
@@ -17,6 +19,7 @@
           <post-comments [comments]="comments"></post-comments>
         </div>
       </ng-container>
+
     </div>
   </div>
 </div>

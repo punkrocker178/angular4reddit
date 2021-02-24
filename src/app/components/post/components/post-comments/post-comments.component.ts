@@ -26,8 +26,6 @@ export class PostCommentsComponent {
         this.comments = this.comments.data['children'];  
       }
     }
-
-    // this.moreComments = this.comments.pop();
   }
 
   /* Issue: ExpressionChangedAfterItHasBeenCheckedError */

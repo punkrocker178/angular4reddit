@@ -28,6 +28,8 @@ import { SharedDirectivesModule } from './shared/directives/directives.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NsfwPopupComponent } from './components/modals/nsfw/nsfw-popup.component';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
+import { TrumbowygService } from './services/trumbowyg.service';
+import { RedditSubmitService } from './services/reddit-submit.service';
 
 @NgModule({
   declarations: [
@@ -61,6 +63,8 @@ import { SharedComponentsModule } from './shared/components/shared-components.mo
     VotingService,
     SubredditService,
     UserService,
+    TrumbowygService,
+    RedditSubmitService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
   entryComponents: [

@@ -13,11 +13,10 @@ export class TrumbowygComponent {
     }
 
     ngAfterViewInit() {
-        $("trumbowyg-editor").trumbowyg({
+        $("#trumbowyg-content").trumbowyg({
             btns: [
                 ['formatting'],
-                ['strong', 'em', 'del'],
-                ['superscript', 'subscript'],
+                ['strong', 'em'],
                 ['link'],
                 ['unorderedList', 'orderedList'],
                 ['horizontalRule'],
