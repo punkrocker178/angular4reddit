@@ -35,13 +35,13 @@ export class CommentComponent {
 
     replyComment(id: string, kind: string) {
 
-        // const postId = `${kind}_${id}`;
-        // this.redditSubmitService.comment(postId).subscribe(data => {
-        //   this.enableEditor = false;
+        const postId = `${kind}_${id}`;
+        this.redditSubmitService.comment(postId).subscribe(data => {
+          this.cancelEditor();
         //   this.comments.push({
         //     data: data,
         //     kind: 't1'
         //   });
-        // });
+        });
     }
 }
