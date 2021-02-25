@@ -1,1 +1,5 @@
-<div id="trumbowyg-content"></div>
+<div *ngIf="!configs?.isComment; else commentEditor" id="trumbowyg-content"></div>
+
+<ng-template #commentEditor>
+    <div [id]="'trumbowyg-comment-content-' + editorId"></div>
+</ng-template>

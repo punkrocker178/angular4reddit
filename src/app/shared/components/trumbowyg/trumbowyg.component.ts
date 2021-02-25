@@ -7,13 +7,17 @@ declare var $: any;
 })
 export class TrumbowygComponent {
     @Input() configs;
+
+    @Input() editorId;
     
     constructor() {
 
     }
 
     ngAfterViewInit() {
-        $("#trumbowyg-content").trumbowyg({
+        const trumbowygEditor = this.configs && this.configs.isComment ? 
+        '#trumbowyg-comment-content-' + this.editorId: '#trumbowyg-content';
+        $(trumbowygEditor).trumbowyg({
             btns: [
                 ['formatting'],
                 ['strong', 'em'],

@@ -44,11 +44,9 @@ export class PostDetailComponent {
   }
 
   comment() {
-    const content = this.trumbowygService.getTrumbowygAsMarkdown();
     const postId = `${this.post.kind}_${this.post.data['id']}`;
-    const payload = this.redditSubmitService.commentPayload(postId, content);
-    this.redditSubmitService.submitComment(payload).subscribe(data => {
-      this.trumbowygService.clearEditor();
+
+    this.redditSubmitService.comment(postId).subscribe(data => {
       this.comments.push({
         data: data,
         kind: 't1'

@@ -1,8 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Post } from 'src/app/model/post';
-import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { VotingService } from 'src/app/services/vote.service';
-
+import { Component, Input } from '@angular/core';
 @Component({
     selector: 'post-comments',
     templateUrl: './post-comments.html',
@@ -14,11 +10,13 @@ export class PostCommentsComponent {
   @Input() isReplies;
 
   moreComments;
+  enableEditor: boolean;
+
+  trumbowygConfigs = {
+    isComment: true
+  }
   
-  constructor(
-    private listingService: RedditListingService,
-    private votingService: VotingService
-  ) {}
+  constructor() {}
   
   ngOnInit() {
     if (typeof this.comments === 'object') {
@@ -35,7 +33,4 @@ export class PostCommentsComponent {
     comment.data['replies']['data']['children'].length > 0;
   }
 
-  vote(direction) {
-
-  }
 }

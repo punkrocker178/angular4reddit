@@ -12,16 +12,27 @@ export class TrumbowygService {
         this.turndownService = new turndown();
     }
 
-    public getTrumbowygContent() {
-        return $("#trumbowyg-content").trumbowyg('html');
+    private getTrumbowygSelector(isComment: boolean, editorId: string) {
+        return isComment ? '#trumbowyg-comment-content-' + editorId : '#trumbowyg-content';
     }
 
-    public getTrumbowygAsMarkdown() {
-        return this.turndownService.turndown(this.getTrumbowygContent());
+    public getTrumbowygContent(isComment?: boolean, editorId?: string) {
+        const selector = this.getTrumbowygSelector(isComment, editorId);
+        return $(selector).trumbowyg('html');
     }
 
-    public clearEditor() {
-        $('#trumbowyg-content').trumbowyg('empty');
+    public getTrumbowygAsMarkdown(isComment?: boolean) {
+        return this.turndownService.turndown(this.getTrumbowygContent(isComment));
+    }
+
+    public clearEditor(isComment?: boolean, editorId?: string) {
+        const selector = this.getTrumbowygSelector(isComment, editorId);
+        $(selector).trumbowyg('empty');
+    }
+
+    public destroyEditor(isComment?: boolean, editorId?: string) {
+        const selector = this.getTrumbowygSelector(isComment, editorId);
+        $(selector).trumbowyg('destroy');
     }
 
 }

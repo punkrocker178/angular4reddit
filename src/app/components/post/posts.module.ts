@@ -13,6 +13,7 @@ import { DirectivesModule } from 'src/app/directives/directives.module';
 import { AwardComponent } from './components/award/award.component';
 import { SharedDirectivesModule } from 'src/app/shared/directives/directives.module';
 import { SharedComponentsModule } from 'src/app/shared/components/shared-components.module';
+import { CommentComponent } from './components/comment/comment.component';
 
 @NgModule({
     imports:[
@@ -29,6 +30,7 @@ import { SharedComponentsModule } from 'src/app/shared/components/shared-compone
         PostItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
+        CommentComponent,
         VoteComponent,
         SortComponent,
         AwardComponent
@@ -37,6 +39,7 @@ import { SharedComponentsModule } from 'src/app/shared/components/shared-compone
         PostItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
+        CommentComponent,
         SortComponent,
         AwardComponent
     ]
