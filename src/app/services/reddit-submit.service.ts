@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HeadersUtils } from '../class/HeadersUtils';
+import { TrumbowygConstants } from '../constants/trymbowyg-constants';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { TrumbowygService } from './trumbowyg.service';
 
@@ -13,9 +14,10 @@ export class RedditSubmitService {
         private trumbowygService: TrumbowygService) { }
 
 
-    comment(postId: string): Observable<Object> {
-        const content = this.trumbowygService.getTrumbowygAsMarkdown();
-        const payload = this.commentPayload(postId, content);
+    comment(thingID, postID?: string): Observable<Object> {
+        const trumbowygSelector = postID ? `${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${postID}` : TrumbowygConstants.TRUMBOWYG_EDITOR;
+        const content = this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
+        const payload = this.commentPayload(thingID, content);
         return this.submitComment(payload);
     }
 
@@ -41,6 +43,6 @@ export class RedditSubmitService {
                     'Authorization': this.authenticateService.getToken(),
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-            }).pipe(tap(_ => this.trumbowygService.clearEditor()));
+            }).pipe(tap(_ => this.trumbowygService.clearPostEditor()));
     }
 }

@@ -44,9 +44,9 @@ export class PostDetailComponent {
   }
 
   comment() {
-    const postId = `${this.post.kind}_${this.post.data['id']}`;
+    const thingID = `${this.post.kind}_${this.post.data['id']}`;
 
-    this.redditSubmitService.comment(postId).subscribe(data => {
+    this.redditSubmitService.comment(thingID).subscribe(data => {
       this.comments.push({
         data: data,
         kind: 't1'

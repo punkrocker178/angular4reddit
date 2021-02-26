@@ -33,4 +33,8 @@ export class PostCommentsComponent {
     comment.data['replies']['data']['children'].length > 0;
   }
 
+  pushComment(comment) {
+    this.comments.push(comment);
+  }
+
 }

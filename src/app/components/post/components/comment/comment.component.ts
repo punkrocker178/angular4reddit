@@ -1,14 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 
 @Component({
-    selector: 'comment',
+    selector: 'app-comment',
     templateUrl: './comment.component.html'
 })
 export class CommentComponent {
 
     @Input() commentData;
+    @Output() submittedComment: EventEmitter<Object> = new EventEmitter();
 
     enableEditor: boolean;
 
@@ -29,19 +31,18 @@ export class CommentComponent {
     }
 
     cancelEditor() {
-        this.trumbowygService.destroyEditor(true, this.commentData.data.id);
+        this.trumbowygService.destroyEditor(`${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData.data.id}`);
         this.enableEditor = false;
     }
 
     replyComment(id: string, kind: string) {
-
-        const postId = `${kind}_${id}`;
-        this.redditSubmitService.comment(postId).subscribe(data => {
+        const thingID = `${kind}_${id}`;
+        this.redditSubmitService.comment(thingID, id).subscribe(data => {
           this.cancelEditor();
-        //   this.comments.push({
-        //     data: data,
-        //     kind: 't1'
-        //   });
+              this.submittedComment.emit({
+                data: data,
+                kind: 't1'
+              });
         });
     }
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import turndown from 'turndown';
+import { TrumbowygConstants } from '../constants/trymbowyg-constants';
 
 declare var $: any;
 
@@ -8,31 +9,41 @@ export class TrumbowygService {
 
     turndownService;
 
+    trumbowygInstances = [];
+
     constructor() {
         this.turndownService = new turndown();
     }
 
-    private getTrumbowygSelector(isComment: boolean, editorId: string) {
-        return isComment ? '#trumbowyg-comment-content-' + editorId : '#trumbowyg-content';
+    pushInstance(id) {
+        this.trumbowygInstances.push(id);
     }
 
-    public getTrumbowygContent(isComment?: boolean, editorId?: string) {
-        const selector = this.getTrumbowygSelector(isComment, editorId);
-        return $(selector).trumbowyg('html');
+    destroyAllEditors() {
+        this.trumbowygInstances.forEach(id => {
+            this.destroyEditor(id);
+        })
     }
 
-    public getTrumbowygAsMarkdown(isComment?: boolean) {
-        return this.turndownService.turndown(this.getTrumbowygContent(isComment));
+    initEditor(trumbowygSelector: string, configs) {
+        $(trumbowygSelector).trumbowyg(configs);
+        this.pushInstance(trumbowygSelector);
     }
 
-    public clearEditor(isComment?: boolean, editorId?: string) {
-        const selector = this.getTrumbowygSelector(isComment, editorId);
-        $(selector).trumbowyg('empty');
+    public getTrumbowygContent(trumbowygSelector: string) {
+        return $(trumbowygSelector).trumbowyg('html');
     }
 
-    public destroyEditor(isComment?: boolean, editorId?: string) {
-        const selector = this.getTrumbowygSelector(isComment, editorId);
-        $(selector).trumbowyg('destroy');
+    public getTrumbowygAsMarkdown(trumbowygSelector: string) {
+        return this.turndownService.turndown(this.getTrumbowygContent(trumbowygSelector));
+    }
+
+    public clearPostEditor() {
+        $(TrumbowygConstants.TRUMBOWYG_EDITOR).trumbowyg('empty');
+    }
+
+    public destroyEditor(trumbowygSelector: string) {
+        $(trumbowygSelector).trumbowyg('destroy');
     }
 
 }

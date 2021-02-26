@@ -3,7 +3,10 @@
   <div class="mb-2" *ngFor="let comment of comments">
 
     <div *ngIf="comment.kind == 't1'; else moreReplies">
-      <comment [commentData]="comment"></comment>
+      <app-comment 
+      [commentData]="comment"
+      (submittedComment)="pushComment($event)"
+      ></app-comment>
     </div>
 
 
