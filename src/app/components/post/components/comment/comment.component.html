@@ -10,10 +10,10 @@
 <div class="post-comments markdown-comments" appMarkdown [selfText]="commentData.data.body"></div>
 <ng-container *ngIf="enableEditor">
   <trumbowyg-editor [configs]="trumbowygConfigs" [editorId]="commentData.data.id"></trumbowyg-editor>
-  <button (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>
-  <button (click)="cancelEditor()">Cancel</button>
+  <button class="btn btn-dark" (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>
+  <button class="btn btn-outline-secondary" (click)="cancelEditor()">Cancel</button>
 </ng-container>
 <div class="d-flex justify-content-end">
-  <span (click)="showReplyEditor()" class="p-2 post-buttons">Reply</span>
+  <span (click)="showReplyEditor()" class="p-2 post-buttons btn">Reply</span>
   <app-vote [score]="commentData.data.score" [id]="commentData.data.name" [liked]="commentData.data.likes"></app-vote>
 </div>
