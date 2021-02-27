@@ -30,6 +30,7 @@ import { NsfwPopupComponent } from './components/modals/nsfw/nsfw-popup.componen
 import { SharedComponentsModule } from './shared/components/shared-components.module';
 import { TrumbowygService } from './services/trumbowyg.service';
 import { RedditSubmitService } from './services/reddit-submit.service';
+import { CheckDeviceFeatureService } from './services/check-device-feature.service';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { RedditSubmitService } from './services/reddit-submit.service';
     UserService,
     TrumbowygService,
     RedditSubmitService,
+    CheckDeviceFeatureService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
   entryComponents: [

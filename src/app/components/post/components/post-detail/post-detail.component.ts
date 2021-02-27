@@ -5,6 +5,7 @@ import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { tap } from 'rxjs/operators';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
+import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
 @Component({
   selector: 'post-detail',
@@ -19,12 +20,14 @@ export class PostDetailComponent {
 
   postId: string;
 
+  commentContent: string;
+
   constructor(
     private router: Router,
     private listingService: RedditListingService,
-    private trumbowygService: TrumbowygService,
+    private checkDeviceFeatureService: CheckDeviceFeatureService,
     private redditSubmitService: RedditSubmitService
-  ) {}
+  ) { }
 
   ngOnInit() {
     const apiSegment = this.router.url;
@@ -45,12 +48,21 @@ export class PostDetailComponent {
 
   comment() {
     const thingID = `${this.post.kind}_${this.post.data['id']}`;
+    const content  = {
+      thingID: thingID,
+      content: this.commentContent ? this.commentContent : null
+  };
 
-    this.redditSubmitService.comment(thingID).subscribe(data => {
+    this.redditSubmitService.comment(content).subscribe(data => {
       this.comments.push({
         data: data,
         kind: 't1'
       });
     });
   }
+
+  useTrumbowygEditor() {
+    return !this.checkDeviceFeatureService.isTouchScreen;
+  }
+
 }

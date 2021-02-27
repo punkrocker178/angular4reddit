@@ -14,10 +14,17 @@ export class RedditSubmitService {
         private trumbowygService: TrumbowygService) { }
 
 
-    comment(thingID, postID?: string): Observable<Object> {
+    comment(data, postID?: string): Observable<Object> {
         const trumbowygSelector = postID ? `${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${postID}` : TrumbowygConstants.TRUMBOWYG_EDITOR;
-        const content = this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
-        const payload = this.commentPayload(thingID, content);
+        let content;
+
+        if (data.content) {
+            content = data.content;
+        } else {
+            content = this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
+        }
+
+        const payload = this.commentPayload(data.thingID, content);
         return this.submitComment(payload);
     }
 

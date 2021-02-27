@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
+import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 
@@ -13,6 +14,7 @@ export class CommentComponent {
     @Output() submittedComment: EventEmitter<Object> = new EventEmitter();
 
     enableEditor: boolean;
+    commentContent: string;
 
     trumbowygConfigs = {
         isComment: true
@@ -20,7 +22,8 @@ export class CommentComponent {
 
     constructor(
         private redditSubmitService: RedditSubmitService,
-        private trumbowygService: TrumbowygService) {
+        private trumbowygService: TrumbowygService,
+        private checkDeviceFeatureService: CheckDeviceFeatureService) {
     }
 
     ngOnInit() {
@@ -37,12 +40,20 @@ export class CommentComponent {
 
     replyComment(id: string, kind: string) {
         const thingID = `${kind}_${id}`;
-        this.redditSubmitService.comment(thingID, id).subscribe(data => {
+        const content  = {
+            thingID: thingID,
+            content: this.commentContent ? this.commentContent : null
+        };
+        this.redditSubmitService.comment(content, id).subscribe(data => {
           this.cancelEditor();
               this.submittedComment.emit({
                 data: data,
                 kind: 't1'
               });
         });
+    }
+
+    useTrumbowygEditor() {
+        return !this.checkDeviceFeatureService.isTouchScreen;
     }
 }
