@@ -14,6 +14,7 @@ export class CommentComponent {
     @Output() submittedComment: EventEmitter<Object> = new EventEmitter();
 
     enableEditor: boolean;
+    disableReplyBtn = true;
     commentContent: string;
 
     trumbowygConfigs = {
@@ -55,5 +56,9 @@ export class CommentComponent {
 
     useTrumbowygEditor() {
         return !this.checkDeviceFeatureService.isTouchScreen;
+    }
+
+    displayReplyButton(value: boolean) {
+        this.disableReplyBtn = value;
     }
 }

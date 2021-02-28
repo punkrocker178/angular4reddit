@@ -11,13 +11,16 @@
 
       <ng-container *ngIf="!isArchived() && !isLoading">
 
-        <trumbowyg-editor *ngIf="useTrumbowygEditor(); else textAreaEditor"></trumbowyg-editor>
+        <trumbowyg-editor (triggerCommentButton)="displayCommentButton($event)" *ngIf="useTrumbowygEditor(); else textAreaEditor"></trumbowyg-editor>
 
         <ng-template #textAreaEditor>
           <textarea [(ngModel)]="commentContent" placeholder="What are your thoughts ?" class="form-control mb-2 mt-2"></textarea>
         </ng-template>
 
-        <button class="btn btn-dark" (click)="comment()">Comment</button>
+        <div class="d-flex flex-row-reverse">
+          <button [disabled]="disableCommentBtn" class="btn btn-dark" (click)="comment()">Comment</button>
+        </div>
+        
       </ng-container>
 
       <ng-container *ngIf="comments && !isLoading">

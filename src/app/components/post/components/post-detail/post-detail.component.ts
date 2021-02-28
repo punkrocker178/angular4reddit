@@ -20,6 +20,7 @@ export class PostDetailComponent {
 
   postId: string;
 
+  disableCommentBtn = true;
   commentContent: string;
 
   constructor(
@@ -63,6 +64,10 @@ export class PostDetailComponent {
 
   useTrumbowygEditor() {
     return !this.checkDeviceFeatureService.isTouchScreen;
+  }
+  
+  displayCommentButton(value: boolean) {
+    this.disableCommentBtn = value;
   }
 
 }

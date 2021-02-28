@@ -10,14 +10,17 @@
 <div class="post-comments markdown-comments" appMarkdown [selfText]="commentData.data.body"></div>
 <ng-container *ngIf="enableEditor">
 
-  <trumbowyg-editor *ngIf="useTrumbowygEditor(); else textAreaComment" [configs]="trumbowygConfigs"
+  <trumbowyg-editor (triggerCommentButton)="displayReplyButton($event)" *ngIf="useTrumbowygEditor(); else textAreaComment" [configs]="trumbowygConfigs"
     [editorId]="commentData.data.id"></trumbowyg-editor>
 
   <ng-template #textAreaComment>
     <textarea [(ngModel)]="commentContent" placeholder="What are your thoughts ?" class="form-control mb-2"></textarea>
   </ng-template>
 
-  <button class="btn btn-dark mr-2" (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>
+  <button class="btn btn-dark mr-2" 
+    [disabled]="disableReplyBtn"
+    (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>
+    
   <button class="btn btn-outline-secondary" (click)="cancelEditor()">Cancel</button>
 </ng-container>
 <div class="d-flex justify-content-end">
