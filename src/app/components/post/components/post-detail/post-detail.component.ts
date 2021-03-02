@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
+import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 
 @Component({
   selector: 'post-detail',
@@ -27,7 +28,8 @@ export class PostDetailComponent {
     private router: Router,
     private listingService: RedditListingService,
     private checkDeviceFeatureService: CheckDeviceFeatureService,
-    private redditSubmitService: RedditSubmitService
+    private redditSubmitService: RedditSubmitService,
+    private trumbowygService: TrumbowygService
   ) { }
 
   ngOnInit() {
@@ -49,12 +51,14 @@ export class PostDetailComponent {
 
   comment() {
     const thingID = `${this.post.kind}_${this.post.data['id']}`;
-    const content  = {
+    const content = this.checkDeviceFeatureService.isTouchScreen ?
+      this.commentContent : this.trumbowygService.getTrumbowygContent(TrumbowygConstants.TRUMBOWYG_EDITOR);
+    const data = {
       thingID: thingID,
-      content: this.commentContent ? this.commentContent : null
-  };
+      content: content
+    };
 
-    this.redditSubmitService.comment(content).subscribe(data => {
+    this.redditSubmitService.comment(data).subscribe(data => {
       this.comments.push({
         data: data,
         kind: 't1'
@@ -65,7 +69,7 @@ export class PostDetailComponent {
   useTrumbowygEditor() {
     return !this.checkDeviceFeatureService.isTouchScreen;
   }
-  
+
   displayCommentButton(value: boolean) {
     this.disableCommentBtn = value;
   }

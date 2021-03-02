@@ -41,11 +41,16 @@ export class CommentComponent {
 
     replyComment(id: string, kind: string) {
         const thingID = `${kind}_${id}`;
-        const content  = {
+        const trumbowygSelector = `${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData.data.id}`;
+
+        const content = this.checkDeviceFeatureService.isTouchScreen ?
+         this.commentContent : this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
+
+        const data  = {
             thingID: thingID,
-            content: this.commentContent ? this.commentContent : null
+            content: content
         };
-        this.redditSubmitService.comment(content, id).subscribe(data => {
+        this.redditSubmitService.comment(data).subscribe(data => {
           this.cancelEditor();
               this.submittedComment.emit({
                 data: data,

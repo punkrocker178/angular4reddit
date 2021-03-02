@@ -13,7 +13,8 @@ import { DirectivesModule } from 'src/app/directives/directives.module';
 import { AwardComponent } from './components/award/award.component';
 import { SharedDirectivesModule } from 'src/app/shared/directives/directives.module';
 import { SharedComponentsModule } from 'src/app/shared/components/shared-components.module';
-import { CommentComponent } from './components/comment/comment.component';
+import { CommentComponent } from './components/comment/components/comment-detail/comment.component';
+import { CommentEditorComponent } from './components/comment/comment-editor/comment-editor.component';
 
 @NgModule({
     imports:[
@@ -33,7 +34,8 @@ import { CommentComponent } from './components/comment/comment.component';
         CommentComponent,
         VoteComponent,
         SortComponent,
-        AwardComponent
+        AwardComponent,
+        CommentEditorComponent
     ],
     exports: [
         PostItemComponent,
