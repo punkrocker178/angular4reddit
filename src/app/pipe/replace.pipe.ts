@@ -12,13 +12,13 @@ export class ReplacePipe implements PipeTransform {
    * @param regex: string
    * @param replace: string
    */
-  transform(value: string, regex?: string, replace?: string): string {
+  transform(value: string, regex?: string| RegExp, replace?: string): string {
       let stringReplace = replace;
       let stringRegex = regex;
       let result = '';
 
       if (!regex) {
-          stringRegex = 'amp;';
+          stringRegex = /amp;/g;
       }
 
       if (!replace) {

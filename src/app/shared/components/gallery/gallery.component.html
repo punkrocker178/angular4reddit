@@ -1,0 +1,21 @@
+<div>
+  <button class="btn btn-light previous-btn" (click)="previous()">
+    <div class="icon-before icon-less-than"></div>
+  </button>
+  <img class="img-fluid center-img scale-img"
+    [src]="(source ? data.items[index][source] : data.items[index]) | replacePipe">
+  <button class="btn btn-light next-btn" (click)="next()">
+    <div class="icon-before icon-greater-than"></div>
+  </button>
+  <!-- <div *ngIf="data.items.length < 6; else pageNumber">
+        <div *ngFor="let i of data.items" class="circle-dot"></div>
+    </div> -->
+
+  <!-- <ng-template #pageNumber>
+        <span>{{index + 1}} / {{data.items.length}}</span>
+    </ng-template> -->
+
+  <span>{{index + 1}} / {{data.items.length}}</span>
+
+
+</div>

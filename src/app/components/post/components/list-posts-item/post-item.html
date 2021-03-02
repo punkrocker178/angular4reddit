@@ -33,6 +33,10 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="isGallery()">
+      <app-gallery [data]="galleryData" [configs]="galleryConfigs"></app-gallery>
+    </ng-container>
+
     <ng-container *ngIf="isVideo()">
       <div [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
         <video *ngIf="!isEmbededLink()" controls class="embed-responsive-item media letter-box-color">

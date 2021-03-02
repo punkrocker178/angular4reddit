@@ -27,6 +27,14 @@ export class PostItemComponent {
   liked: boolean;
   over18_consent: boolean;
 
+  galleryConfigs = {
+    src: 'source'
+  }
+
+  galleryData = {
+    items: []
+  };
+
   constructor(private router: Router,
     private votingService: VotingService,
     private modalService: NgbModal,
@@ -36,6 +44,10 @@ export class PostItemComponent {
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
     this.parseImgUrl();
+    
+    if (this.isGallery()) {
+      this.getGalleryImages();
+    }
   }
 
   ngAfterViewInit() {
@@ -54,7 +66,8 @@ export class PostItemComponent {
   }
 
   isGallery() {
-    return this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
+    return this.post.data['is_gallery'] &&
+     this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
   }
 
   isComment() {
@@ -193,6 +206,21 @@ export class PostItemComponent {
     html = ReplacePipe.prototype.transform(html, '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>', '');
     this.renderer2.setProperty(this.tweet.nativeElement, 'innerHTML', html);
     twttr.widgets.load();
+  }
+
+  getGalleryImages() {
+    
+    this.galleryData.items = this.post.data['gallery_data']['items'];
+
+    this.galleryData.items.forEach(item => {
+      const mediaId = item['media_id'];
+      item.metadata = {
+        ...this.post.data['media_metadata'][mediaId]
+      };
+
+      item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
+    });
+
   }
 
 }
