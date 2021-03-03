@@ -28,7 +28,8 @@ export class PostItemComponent {
   over18_consent: boolean;
 
   galleryConfigs = {
-    src: 'source'
+    src: 'source',
+    position: 'top-left'
   }
 
   galleryData = {

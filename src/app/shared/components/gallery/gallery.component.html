@@ -1,4 +1,4 @@
-<div>
+<div class="gallery">
   <button class="btn btn-light previous-btn" (click)="previous()">
     <div class="icon-before icon-less-than"></div>
   </button>
@@ -15,7 +15,10 @@
         <span>{{index + 1}} / {{data.items.length}}</span>
     </ng-template> -->
 
-  <span>{{index + 1}} / {{data.items.length}}</span>
+  <div class="image-number-background" [ngClass]="positionClass">
+    <span class="image-number">{{index + 1}} / {{data.items.length}}</span>
+  </div>
+  
 
 
 </div>

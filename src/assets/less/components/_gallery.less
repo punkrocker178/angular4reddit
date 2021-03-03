@@ -1,7 +1,12 @@
+.gallery {
+    position: relative;
+}
+
 .gallery-btn {
     display: block;
     position: absolute;
-    top: 50%;
+    top: calc(50% - 15px);
+    opacity: 0.3;
 }
 
 .previous-btn:extend(.gallery-btn) {
@@ -11,3 +16,75 @@
 .next-btn:extend(.gallery-btn) {
     right: 5px;
 }
+
+.previous-btn:hover {
+    opacity: 1;
+}
+
+.next-btn:hover {
+    opacity: 1;
+}
+
+.image-number-background {
+    position: absolute;
+    background-color: rgba(0,0,0,0.35);
+    border-radius: 10%;
+    padding: 0.625rem 0.5rem;
+}
+
+.image-number-top-left {
+    top: 10%;
+    left: calc(5% - 8px);
+}
+
+.image-number-top-right {
+    top: 10%;
+    right: calc(5% - 8px);
+}
+
+.image-number-bottom-left {
+    bottom: 10%;
+    left: calc(5% - 8px);
+}
+
+.image-number-bottom-right {
+    top: 10%;
+    right: calc(5% - 8px);
+}
+
+.image-number {
+    font-family: open-sans;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+@media (max-width: 540px) {
+
+    .image-number-background {
+        position: absolute;
+        background-color: rgba(0,0,0,0.35);
+        border-radius: 10%;
+        padding: 4px;
+    }
+
+    .image-number-top-left {
+        top: 5%;
+        left: calc(5% - 8px);
+    }
+    
+    .image-number-top-right {
+        top: 5%;
+        right: calc(5% - 8px);
+    }
+    
+    .image-number-bottom-left {
+        bottom: 5%;
+        left: calc(5% - 8px);
+    }
+    
+    .image-number-bottom-right {
+        top: 5%;
+        right: calc(5% - 8px);
+    }
+  }
