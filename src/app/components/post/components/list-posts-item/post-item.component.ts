@@ -125,7 +125,6 @@ export class PostItemComponent {
 
   // Needs refactor
   viewDetail(isComment?: boolean) {
-
     if (this.isOver18() && !this.over18_consent) {
       const modalRef = this.modalService.open(NsfwPopupComponent);
       modalRef.result.then(result => {
@@ -146,8 +145,8 @@ export class PostItemComponent {
       } else {
         path += `${this.post.data['id']}`;
       }
-
-      !this.isDetail && this.router.navigateByUrl(path);
+      
+      this.router.navigateByUrl(path);
     }
 
   }
