@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
@@ -7,6 +7,7 @@ import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
+import { CommentEditorComponent } from '../comment/components/comment-editor/comment-editor.component';
 
 @Component({
   selector: 'post-detail',
@@ -22,7 +23,8 @@ export class PostDetailComponent {
   postId: string;
 
   disableCommentBtn = true;
-  commentContent: string;
+
+  @ViewChild(CommentEditorComponent) commentEditor;
 
   constructor(
     private router: Router,
@@ -52,7 +54,7 @@ export class PostDetailComponent {
   comment() {
     const thingID = `${this.post.kind}_${this.post.data['id']}`;
     const content = this.checkDeviceFeatureService.isTouchScreen ?
-      this.commentContent : this.trumbowygService.getTrumbowygContent(TrumbowygConstants.TRUMBOWYG_EDITOR);
+      this.commentEditor.commentContent: this.trumbowygService.getTrumbowygAsMarkdown(TrumbowygConstants.TRUMBOWYG_EDITOR);
     const data = {
       thingID: thingID,
       content: content

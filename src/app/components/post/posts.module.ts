@@ -14,7 +14,7 @@ import { AwardComponent } from './components/award/award.component';
 import { SharedDirectivesModule } from 'src/app/shared/directives/directives.module';
 import { SharedComponentsModule } from 'src/app/shared/components/shared-components.module';
 import { CommentComponent } from './components/comment/components/comment-detail/comment.component';
-import { CommentEditorComponent } from './components/comment/comment-editor/comment-editor.component';
+import { CommentEditorComponent } from './components/comment/components/comment-editor/comment-editor.component';
 
 @NgModule({
     imports:[

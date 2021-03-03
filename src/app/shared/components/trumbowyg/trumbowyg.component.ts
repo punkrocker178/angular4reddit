@@ -17,6 +17,11 @@ export class TrumbowygComponent {
     @Output() triggerCommentButton = new EventEmitter();
 
     keyEventSubscribtion: Subscription;
+    private _trumbowygSelector: string;
+
+    public get trumbowygSelector() {
+        return this._trumbowygSelector;
+    }
 
     @ViewChild('editor') editorInstance: ElementRef;
     @ViewChild('commentEditorInstance') commentEditorInstance: ElementRef;
@@ -26,10 +31,10 @@ export class TrumbowygComponent {
     }
 
     ngAfterViewInit() {
-        const trumbowygEditor = this.configs && this.configs.isComment ? 
+        this._trumbowygSelector = this.configs && this.configs.isComment ? 
         TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR + '-' + this.editorId: TrumbowygConstants.TRUMBOWYG_EDITOR;
         
-        this.trumbowygService.initEditor(trumbowygEditor, 
+        this.trumbowygService.initEditor(this._trumbowygSelector, 
             {
                 btns: [
                     ['formatting'],
@@ -40,7 +45,5 @@ export class TrumbowygComponent {
                     ['removeformat']
                 ]
             });
-
-
     }
 }
