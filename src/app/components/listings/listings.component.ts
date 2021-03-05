@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { tap, debounceTime, switchMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'listings-component',
@@ -20,15 +20,32 @@ export class ListingsComponent implements OnInit, OnDestroy {
   posts$ = new BehaviorSubject([]);
   scroll$ = new BehaviorSubject(null);
 
+  scrollSubscription: Subscription;
+  paramSubscription: Subscription;
+
   after: string;
   isLoading: boolean = true;
 
   constructor(
     private redditService: RedditListingService,
-    private router: Router) { }
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.scroll$.pipe(
+
+    this.paramSubscription = this.activatedRoute.paramMap.pipe(
+      tap((param) => {
+        this.subreddit = param.get('subreddit');
+      }), switchMap(_ => {
+        if (this.posts$.getValue().length > 0) {
+          return this.fetchData(null, true)
+        } else {
+          return of([]);
+        }
+      }
+      )
+    ).subscribe();
+
+    this.scrollSubscription = this.scroll$.pipe(
       debounceTime(1000),
       switchMap(_ => this.fetchData(this.after))
     ).subscribe(_ => {
@@ -36,10 +53,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
     });
   }
 
-  fetchData(after?: string) {
+  fetchData(after?: string, refreshData?: boolean) {
 
-    if (this.after == null && this.posts$.getValue().length > 0) {
+    if (this.after == null && this.posts$.getValue().length > 0 && !refreshData) {
       return;
+    }
+
+    if (refreshData) {
+      this.posts$.next([]);
     }
 
     this.isLoading = true;
@@ -80,6 +101,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.paramSubscription.unsubscribe();
+    this.scrollSubscription.unsubscribe();
   }
 
   defaultListingsTypeApi() {

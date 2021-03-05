@@ -1,0 +1,3 @@
+<div>
+  <input type="text" placeholder="Search" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" (selectItem)=navigateToSubreddit($event)>
+</div>

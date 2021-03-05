@@ -31,6 +31,8 @@ import { SharedComponentsModule } from './shared/components/shared-components.mo
 import { TrumbowygService } from './services/trumbowyg.service';
 import { RedditSubmitService } from './services/reddit-submit.service';
 import { CheckDeviceFeatureService } from './services/check-device-feature.service';
+import { SearchModule } from './components/search/search.module';
+import { RedditSearchService } from './services/reddit-search.service';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,8 @@ import { CheckDeviceFeatureService } from './services/check-device-feature.servi
     DirectivesModule,
     SharedDirectivesModule,
     SharedComponentsModule,
-    NgbModule
+    NgbModule,
+    SearchModule
   ],
   providers: [
     RedditListingService,
@@ -66,6 +69,7 @@ import { CheckDeviceFeatureService } from './services/check-device-feature.servi
     UserService,
     TrumbowygService,
     RedditSubmitService,
+    RedditSearchService,
     CheckDeviceFeatureService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
