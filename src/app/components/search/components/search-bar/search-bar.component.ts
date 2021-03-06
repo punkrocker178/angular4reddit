@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { fromEvent, Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
 
@@ -9,19 +9,31 @@ import { RedditSearchService } from 'src/app/services/reddit-search.service';
     templateUrl: './search-bar.component.html'
 })
 
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent {
 
     constructor(private redditSearchService: RedditSearchService,
         private router: Router) {}
 
     model;
 
+    keyEventSubscription: Subscription;
+    @ViewChild('inputEl') inputElement: ElementRef;
+
+    ngAfterViewInit() {
+        const keyEvent = fromEvent(this.inputElement.nativeElement, 'keydown');
+        this.keyEventSubscription = keyEvent.pipe(tap((event: any) => {
+            if (event.keyCode === 13) {
+                this.navigateToSearchComponent();
+            }
+        })).subscribe();
+    }
+
     search = (text$: Observable<String>) => {
         return text$.pipe(debounceTime(300), distinctUntilChanged(), switchMap((term: string) => {
             if (term.length < 2) {
                 return of([]);
             }
-            return this.redditSearchService.searchSubreddit(term);
+            return this.redditSearchService.searchSubredditNames(term);
         }), catchError(error => {
             console.error(error);
             return of([]);
@@ -33,8 +45,16 @@ export class SearchBarComponent implements OnInit {
         this.router.navigateByUrl(`/r/${subreddit}`);
     }
 
-    ngOnInit() {
-
+    navigateToSearchComponent() {
+        const path = `/search/${this.model}`;
+        this.router.navigateByUrl(path);
     }
 
+    resultFormatter = (result: string) => {
+        return `/r/${result}`;
+    }
+
+    ngOnDestroy() {
+        this.keyEventSubscription.unsubscribe();
+    }
 }

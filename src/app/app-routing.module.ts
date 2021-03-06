@@ -6,6 +6,7 @@ import { PostDetailComponent } from './components/post/components/post-detail/po
 import { SubredditComponent } from './components/subreddit/subreddit.component';
 import { UserProfileComponent } from './components/user/user-profile.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { SearchPageComponent } from './components/search/components/search-page/search-page.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,9 @@ const routes: Routes = [
   },
   {
     path: "u/:user", component: UserProfileComponent
+  },
+  {
+    path: "search/:term", component: SearchPageComponent
   },
   {
     path: "404", component: NotFoundComponent

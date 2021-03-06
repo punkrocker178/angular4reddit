@@ -1,3 +1,8 @@
 <div>
-  <input type="text" placeholder="Search" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" (selectItem)=navigateToSubreddit($event)>
+  <input #inputEl
+  type="text" placeholder="Search" class="form-control" 
+  [(ngModel)]="model" [ngbTypeahead]="search" (selectItem)=navigateToSubreddit($event)
+  [resultFormatter]="resultFormatter" [focusFirst]="false"
+  >
+  <button (click)="navigateToSearchComponent()" class="btn btn-success icon-before icon-search"></button>
 </div>

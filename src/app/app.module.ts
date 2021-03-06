@@ -33,6 +33,7 @@ import { RedditSubmitService } from './services/reddit-submit.service';
 import { CheckDeviceFeatureService } from './services/check-device-feature.service';
 import { SearchModule } from './components/search/search.module';
 import { RedditSearchService } from './services/reddit-search.service';
+import { SearchPageComponent } from './components/search/components/search-page/search-page.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { RedditSearchService } from './services/reddit-search.service';
     ListingsComponent,
     NavbarComponent,
     AuthenticateComponent,
+    SearchPageComponent,
     NotFoundComponent
   ],
   imports: [
