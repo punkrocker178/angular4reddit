@@ -16,10 +16,14 @@ export class RedditSearchService {
     /* https://github.com/pushshift/api */
     pushshiftSubmissionAPI = '/pushshift/reddit/search/submission';
 
-    searchSubreddit(name: string) {
+    searchSubreddit(name: string, limit? : number) {
         const payload = {
             q: name,
-            show_users: true
+            show_users: true,
+        }
+
+        if (limit) {
+            payload['limit'] = limit;
         }
 
         let params = new HttpParams();

@@ -44,7 +44,6 @@ import { SearchPageComponent } from './components/search/components/search-page/
     ListingsComponent,
     NavbarComponent,
     AuthenticateComponent,
-    SearchPageComponent,
     NotFoundComponent
   ],
   imports: [

@@ -29,7 +29,6 @@ export class SubredditComponent implements OnInit {
                 return this.subredditService.getSubredditAbout(`r/${this.subreddit}`);
             }),
             tap((next:any) => {
-                console.log(next, 'next');
                 this.subredditData = next.data;    
                 this.clearImages();
             }));

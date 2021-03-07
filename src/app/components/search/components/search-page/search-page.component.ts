@@ -12,7 +12,9 @@ import { RedditSearchService } from 'src/app/services/reddit-search.service';
 export class SearchPageComponent {
 
     subreddit$;
+    subreddits;
     submission$;
+    submissions;
 
     constructor(private redditSearchService: RedditSearchService,
         private activatedRoute: ActivatedRoute) {}
@@ -27,7 +29,10 @@ export class SearchPageComponent {
     }
 
     searchSubreddits(name: string) {
-        this.subreddit$ = this.redditSearchService.searchSubreddit(name);
+        const limit = 5;
+        this.subreddit$ = this.redditSearchService.searchSubreddit(name, limit).pipe(
+            tap(next => this.subreddits = next)
+        );
     }
 
     searchSubmissions(term: string) {
