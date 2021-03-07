@@ -15,6 +15,7 @@ import { SharedDirectivesModule } from 'src/app/shared/directives/directives.mod
 import { SharedComponentsModule } from 'src/app/shared/components/shared-components.module';
 import { CommentComponent } from './components/comment/components/comment-detail/comment.component';
 import { CommentEditorComponent } from './components/comment/components/comment-editor/comment-editor.component';
+import { SubmissionItemComponent } from './components/submission/submission-item.component';
 
 @NgModule({
     imports:[
@@ -29,6 +30,7 @@ import { CommentEditorComponent } from './components/comment/components/comment-
     ],
     declarations: [
         PostItemComponent,
+        SubmissionItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
         CommentComponent,
@@ -39,6 +41,7 @@ import { CommentEditorComponent } from './components/comment/components/comment-
     ],
     exports: [
         PostItemComponent,
+        SubmissionItemComponent,
         PostDetailComponent,
         PostCommentsComponent,
         CommentComponent,

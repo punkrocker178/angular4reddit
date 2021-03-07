@@ -1,0 +1,16 @@
+<div class="d-flex flex-row p-2">
+    <img [src]="submissionData['thumbnail']">
+    <div class="d-felx flex-column">
+      <p>{{submissionData.title}}</p>
+      <div class="d-flex">
+        <span>{{subredddit}}</span>
+
+        <a class="ml-2" [routerLink]="'/u/' + submissionData['author']" [routerLinkActive]="'active'">Posted by
+          /u/{{submissionData['author']}}</a>
+
+        <span [title]="submissionData['created_utc'] | dateTimePipe: 'format'"
+          class="ml-2">{{ submissionData['created_utc'] | dateTimePipe: 'diff' }}</span>
+      </div>
+    </div>
+
+  </div>

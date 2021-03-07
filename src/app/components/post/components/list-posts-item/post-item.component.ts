@@ -44,16 +44,24 @@ export class PostItemComponent {
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
-    this.parseImgUrl();
     
     if (this.isGallery()) {
       this.getGalleryImages();
     }
+
+    this.formatThumbnail();
+   
   }
 
   ngAfterViewInit() {
     if (this.isEmbededLink() && this.isTwitterEmbedded()) {
       this.initTwitter();
+    }
+  }
+
+  formatThumbnail() {
+    if(this.post.data['thumbnail'] && !this.post.data['thumbnail'].includes('https://')) {
+      this.post.data['thumbnail'] = '';
     }
   }
 
@@ -154,14 +162,6 @@ export class PostItemComponent {
 
   isCrossPost() {
     return this.post.data['crosspost_parent'] && this.post.data['crosspost_parent_list'];
-  }
-
-  parseImgUrl() {
-    if (this.post.data['preview']) {
-      this.post.data['preview']['images'].forEach((image) => {
-        image.source.url = Utils.clearUrl(image.source.url);
-      })
-    }
   }
 
   vote(direction: number) {

@@ -42,7 +42,9 @@ export class SearchPageComponent {
             size: 50,
             after: '30d'
         }
-        this.submission$ = this.redditSearchService.searchSubmission(payload);
+        this.submission$ = this.redditSearchService.searchSubmission(payload).pipe(
+            tap(next => this.submissions = next)
+        );
     }
 
 }

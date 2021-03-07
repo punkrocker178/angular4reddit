@@ -29,7 +29,7 @@
 
     <ng-container *ngIf="hasImages()">
       <div [ngClass]="{'crop-height': !isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container">
-        <img (click)="viewDetail()" class="img-fluid center-img scale-img" src="{{getImage()}}">
+        <img (click)="viewDetail()" class="img-fluid center-img scale-img" [src]="getImage() | replacePipe">
       </div>
     </ng-container>
 

@@ -14,7 +14,6 @@ export class SubbredditItemComponent {
 
     ngOnInit() {
         this.icon = this.subredditData.data.community_icon || this.subredditData.data.icon_img;
-        console.log(this.icon);
     }
 
     isUserSubscriber() {

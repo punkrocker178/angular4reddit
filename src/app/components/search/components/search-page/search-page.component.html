@@ -5,5 +5,10 @@
         </div>
         <a>View more results</a>
     </div>
-    <div *ngIf="submission$ | async"></div>
+    <div *ngIf="submission$ | async">
+        <div *ngFor="let submission of submissions">
+            <submission-item [submissionData]="submission"></submission-item>
+        </div>
+        <a>View more results</a>
+    </div>
 </div>

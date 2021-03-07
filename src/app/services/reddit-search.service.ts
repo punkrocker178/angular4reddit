@@ -19,7 +19,7 @@ export class RedditSearchService {
     searchSubreddit(name: string, limit? : number) {
         const payload = {
             q: name,
-            show_users: true,
+            show_users: true
         }
 
         if (limit) {
@@ -82,6 +82,6 @@ export class RedditSearchService {
 
         return this.http.get(HeadersUtils.buildUrl(false, this.pushshiftSubmissionAPI, false), {
             params: queryParams
-        });
+        }).pipe(map((response: any) => response ? response.data : []));
     }
 }
