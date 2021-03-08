@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { SafePipe } from 'src/app/pipe/safe.pipe';
 import { DateTimePipe } from './date-time.pipe';
 import { DomParserPipe } from './dom-parser.pipe';
+import { FormatNumberPipe } from './format-number.pipe';
 import { ReplacePipe } from './replace.pipe';
 
 @NgModule({
@@ -9,13 +10,15 @@ import { ReplacePipe } from './replace.pipe';
         SafePipe,
         DateTimePipe,
         ReplacePipe,
-        DomParserPipe
+        DomParserPipe,
+        FormatNumberPipe
     ],
     exports: [
         SafePipe,
         DateTimePipe,
         ReplacePipe,
-        DomParserPipe
+        DomParserPipe,
+        FormatNumberPipe
     ]
   })
   export class PipeModule { }

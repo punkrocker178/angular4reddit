@@ -10,6 +10,7 @@ export class VoteComponent {
     @Input() score;
     @Input() id: string;
     @Input() liked: boolean;
+    @Input() isCompactView: boolean;
     isUpVoted = false;
     isDownVoted = false;
 

@@ -16,7 +16,7 @@
         <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
       </ng-container>
 
-      <h5 (click)="viewDetail()" class="card-title mb-2">{{post?.data['title']}}</h5>
+      <h5 (click)="viewDetail()" class="card-title mb-2">{{post?.data['title'] | replacePipe}}</h5>
 
       <div *ngIf="isOver18()" class="mb-2">
         <span class="nsfw-text">NSFW</span>

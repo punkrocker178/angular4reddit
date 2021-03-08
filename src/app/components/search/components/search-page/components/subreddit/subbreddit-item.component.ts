@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
  
 @Component({
     selector: 'subreddit-item',
@@ -10,7 +11,7 @@ export class SubbredditItemComponent {
     icon: string;
     @Input() subredditData;
 
-    constructor() {}
+    constructor(private router: Router) {}
 
     ngOnInit() {
         this.icon = this.subredditData.data.community_icon || this.subredditData.data.icon_img;
@@ -18,6 +19,10 @@ export class SubbredditItemComponent {
 
     isUserSubscriber() {
         return this.subredditData.data.user_is_subscriber;
+    }
+
+    navigateToSubreddit() {
+        this.router.navigateByUrl(`/${this.subredditData.data.display_name_prefixed}`);
     }
   
 }

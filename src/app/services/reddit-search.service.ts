@@ -16,7 +16,7 @@ export class RedditSearchService {
     /* https://github.com/pushshift/api */
     pushshiftSubmissionAPI = '/pushshift/reddit/search/submission';
 
-    searchSubreddit(name: string, limit? : number) {
+    searchSubreddit(name: string, limit?: number) {
         const payload = {
             q: name,
             show_users: true
@@ -37,7 +37,21 @@ export class RedditSearchService {
             headers: {
                 'Authorization': this.authenticateService.getToken()
             }
-        }).pipe(map((response: any) => response.data ? response.data.children : []));
+        }).pipe(map((response: any) => {
+            if (response.data) {
+                let subreddits = [];
+                for (let i = 0; i < response.data.children.length; i++) {
+                    const subreddit = response.data.children[i];
+                    if (subreddit.kind === 't5') {
+                        subreddits.push(subreddit);
+                    }
+                }
+                return subreddits;
+            } else {
+                return [];
+            }
+        }
+        ));
     }
 
     searchSubredditNames(name: string) {
@@ -47,11 +61,11 @@ export class RedditSearchService {
         }
 
         const payload = {
-                exact: false,
-                include_over_18: true,
-                include_unadvertisable: true,
-                query: name,
-                typeahead_active: false
+            exact: false,
+            include_over_18: true,
+            include_unadvertisable: true,
+            query: name,
+            typeahead_active: false
         };
 
         let params = new HttpParams();
@@ -66,7 +80,7 @@ export class RedditSearchService {
                 'Authorization': this.authenticateService.getToken()
             }
         }).pipe(map(response => {
-            if(response && response['names'].length > 0) {
+            if (response && response['names'].length > 0) {
                 return response['names'];
             } else {
                 return [];

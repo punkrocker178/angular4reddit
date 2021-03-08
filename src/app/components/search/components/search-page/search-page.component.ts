@@ -39,6 +39,7 @@ export class SearchPageComponent {
         const payload = {
             q: term,
             sort: 'desc',
+            sort_type: 'score',
             size: 50,
             after: '30d'
         }

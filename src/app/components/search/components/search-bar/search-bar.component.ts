@@ -12,7 +12,7 @@ import { RedditSearchService } from 'src/app/services/reddit-search.service';
 export class SearchBarComponent {
 
     constructor(private redditSearchService: RedditSearchService,
-        private router: Router) {}
+        private router: Router) { }
 
     model;
 
@@ -46,8 +46,10 @@ export class SearchBarComponent {
     }
 
     navigateToSearchComponent() {
-        const path = `/search/${this.model}`;
-        this.router.navigateByUrl(path);
+        if (this.model) {
+            const path = `/search/${this.model}`;
+            this.router.navigateByUrl(path);
+        }
     }
 
     resultFormatter = (result: string) => {
