@@ -23,6 +23,7 @@ export class MarkdownDirective {
   ngAfterViewInit() {
     this.textSubscription = this.text$.subscribe(text => {
       if (text) {
+        text = text.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
         this.parseMarkdown(text);
       }
     });
