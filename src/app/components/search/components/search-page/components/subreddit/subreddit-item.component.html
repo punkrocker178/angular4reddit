@@ -12,7 +12,7 @@
     <span>{{subredditData.data.display_name_prefixed}}</span>
     <span>{{subredditData.data.subscribers | formatNumber}} {{subredditData.data.subscribers > 0 ? 'Members' : 'Member'}}</span>
   </div>
-  <span style="flex-grow: 3; flex-basis: 0;">{{subredditData.data.public_description | replacePipe}}</span>
-  <button class="btn" [ngClass]="{'btn-light': !isUserSubscriber(), 'btn-success': isUserSubscriber()}">
+  <span *ngIf="!isMobile()" class="subreddit-item-description">{{subredditData.data.public_description | replacePipe}}</span>
+  <button class="btn subreddit-item-join-btn" [ngClass]="{'btn-light': !isUserSubscriber(), 'btn-success': isUserSubscriber()}">
     {{isUserSubscriber() ? 'Joined' : 'Join'}}</button>
 </div>

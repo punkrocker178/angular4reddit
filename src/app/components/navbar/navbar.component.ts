@@ -3,6 +3,7 @@ import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.
 import { UserService } from 'src/app/services/user.service';
 import { UserInterface } from 'src/app/model/user.interface';
 import { take, tap } from 'rxjs/operators';
+import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
 @Component({
     selector: 'navbar',
@@ -12,7 +13,8 @@ import { take, tap } from 'rxjs/operators';
 export class NavbarComponent implements OnInit{
 
     constructor(private authenService: RedditAuthenticateService,
-        private userService: UserService) { }
+        private userService: UserService,
+        private checkDeviceFeatureService: CheckDeviceFeatureService) { }
     user: UserInterface;
     userSubscribtion;
 
@@ -44,5 +46,9 @@ export class NavbarComponent implements OnInit{
                 }
             }
         );
+    }
+
+    isMobile() {
+        return this.checkDeviceFeatureService.isMobile();
     }
 }

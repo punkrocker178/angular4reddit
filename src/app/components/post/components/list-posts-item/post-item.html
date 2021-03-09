@@ -45,6 +45,7 @@
       </div>
     </ng-container>
 
+    <!-- Link & thumbnail -->
     <div class="card-side-padding" *ngIf="isEmbededLink() && !isVideo()">
       <a class="d-flex flex-row" [href]="post.data['url']" target="_blank">
         <span class="mr-auto">{{ post.data['url'] }}</span>

@@ -26,6 +26,10 @@ export class AwardComponent {
 
     constructor() {}
 
+    getAwardIcon(award, index) {
+      return award['resized_icons'] && award['resized_icons'][index] ? award['resized_icons'][index].url : award['icon_url']; 
+    }
+
     getNumbersRemain() {
         return this.awards.length - this.numberOfItems;
     }

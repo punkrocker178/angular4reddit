@@ -5,7 +5,7 @@
     </a>
     <span routerLink="/" class="text d-flex align-items-center mr-auto">Angular Reddit</span>
 
-    <div class="pt-2">
+    <div *ngIf="!isMobile()" class="pt-2">
       <search-bar></search-bar>
     </div>
     
@@ -13,7 +13,7 @@
     <ng-container *ngIf="userSubscribtion | async">
       <span [routerLink]="'u/'+ user.name" *ngIf="user?.name !== 'anonymous'"
         class="d-flex align-items-center mr-3 ml-auto">{{user.name}}</span>
-      <div class="d-flex align-items-center">
+      <div *ngIf="!isMobile()" class="d-flex align-items-center">
         <button *ngIf="user.name === 'anonymous'" (click)="login()" class="btn btn-success">Login</button>
         <button *ngIf="user?.name !== 'anonymous'" (click)="logout()" class="btn btn-danger">Log out</button>
       </div>

@@ -1,22 +1,16 @@
-<div class="d-flex flex-row p-2">
+<div *ngIf="!isMobile(); else submissionMobileView" class="d-flex flex-row p-md-2">
   <div class="submission-vote">
     <app-vote [id]="submissionData['id']" [isCompactView]="true" [score]="submissionData['score']"
-    [liked]="submissionData['likes']"></app-vote>
+      [liked]="submissionData['likes']"></app-vote>
   </div>
   <!-- Thumbnail  -->
   <div class="submission-thumbnail">
-    <img *ngIf="submissionData['thumbnail']; else placeholderIcon" class="thumbnail"
-      [src]="submissionData['thumbnail']">
-    <ng-template #placeholderIcon>
-      <div class="thumbnail">
-        <span class="icon-before icon-newspaper icon-thumbnail"></span>
-      </div>
-    </ng-template>
+    <ng-container *ngTemplateOutlet="thumbnail; context: {$implicit: submissionData.thumbnail}"></ng-container>
   </div>
 
   <!-- Title, subreddit, author -->
   <div class="d-flex flex-column submission-title">
-    <p>{{submissionData.title | replacePipe}}</p>
+    <div appMarkdown [selfText]="submissionData.title "></div>
     <div class="d-flex">
       <span>{{subredddit}}</span>
 
@@ -29,3 +23,38 @@
   </div>
 
 </div>
+
+<ng-template #submissionMobileView>
+  <div class="p-2">
+    <div class="d-flex flex-row">
+      <a class="mr-1" [routerLink]="'/u/' + submissionData['author']" [routerLinkActive]="'active'">Posted by
+        /u/{{submissionData['author']}}</a>
+
+      <span>•</span>
+
+      <span [title]="submissionData['created_utc'] | dateTimePipe: 'format'"
+        class="ml-1">{{ submissionData['created_utc'] | dateTimePipe: 'diff' }}</span>
+    </div>
+
+    <div class="d-flex flex-row">
+      <div class="submission-title" appMarkdown [selfText]="submissionData.title "></div>
+
+      <div class="submission-thumbnail">
+        <ng-container *ngTemplateOutlet="thumbnail; context: {$implicit: submissionData.thumbnail}"></ng-container>
+      </div>
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #thumbnail let-thumbnail>
+  <img *ngIf="thumbnail; else placeholderIcon" class="thumbnail"
+          [src]="thumbnail">
+</ng-template>
+
+<ng-template #placeholderIcon>
+  <div class="thumbnail">
+    <span class="icon-before icon-newspaper icon-thumbnail"></span>
+  </div>
+</ng-template>

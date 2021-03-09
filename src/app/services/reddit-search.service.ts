@@ -14,7 +14,7 @@ export class RedditSearchService {
     endpointSubreddit = '/subreddits/search';
 
     /* https://github.com/pushshift/api */
-    pushshiftSubmissionAPI = '/pushshift/reddit/search/submission';
+    pushshiftSubmissionAPI = '/reddit/search/submission';
 
     searchSubreddit(name: string, limit?: number) {
         const payload = {
@@ -94,7 +94,7 @@ export class RedditSearchService {
             queryParams = queryParams.set(prop, params[prop]);
         }
 
-        return this.http.get(HeadersUtils.buildUrl(false, this.pushshiftSubmissionAPI, false), {
+        return this.http.get(HeadersUtils.buildPushshiftUrl(this.pushshiftSubmissionAPI), {
             params: queryParams
         }).pipe(map((response: any) => response ? response.data : []));
     }
