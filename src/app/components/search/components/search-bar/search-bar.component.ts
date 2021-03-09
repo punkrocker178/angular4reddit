@@ -57,6 +57,6 @@ export class SearchBarComponent {
     }
 
     ngOnDestroy() {
-        this.keyEventSubscription.unsubscribe();
+        this.keyEventSubscription && this.keyEventSubscription.unsubscribe();
     }
 }
