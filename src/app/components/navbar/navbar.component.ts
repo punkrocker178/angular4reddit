@@ -15,6 +15,8 @@ export class NavbarComponent implements OnInit{
     constructor(private authenService: RedditAuthenticateService,
         private userService: UserService,
         private checkDeviceFeatureService: CheckDeviceFeatureService) { }
+
+    menuToggle = false;    
     user: UserInterface;
     userSubscribtion;
 
@@ -50,5 +52,9 @@ export class NavbarComponent implements OnInit{
 
     isMobile() {
         return this.checkDeviceFeatureService.isMobile();
+    }
+
+    toggleMenu() {
+        this.menuToggle = !this.menuToggle;
     }
 }

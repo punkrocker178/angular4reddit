@@ -18,7 +18,18 @@
         <button *ngIf="user?.name !== 'anonymous'" (click)="logout()" class="btn btn-danger">Log out</button>
       </div>
     </ng-container>
-
   </div>
+
+  <div [ngClass]="{'side-menu-show': menuToggle, 'side-menu': !menuToggle}">
+    <a *ngIf="user.name === 'anonymous'">Login</a>
+    <img class="banner-icon" [src]="user.icon_img | replacePipe">
+    <span [routerLink]="'u/'+ user.name" *ngIf="user?.name !== 'anonymous'">{{user.name}}</span>
+  </div>
+
+  <button *ngIf="isMobile()" (click)="toggleMenu()" [ngClass]="{'hamburger-btn-clicked': menuToggle}" class="hamburger-btn">
+    <div></div>
+    <div></div>
+    <div></div>
+  </button>
 
 </nav>
