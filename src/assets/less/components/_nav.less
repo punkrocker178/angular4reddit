@@ -1,3 +1,7 @@
+.pointer {
+  cursor: pointer;
+}
+
 .transform-side-menu(@translate) {
   transform: @translate
 }
@@ -6,7 +10,7 @@
   .transform-side-menu(translate(-100%));
   display: flex;
   flex-direction: column;
-  background: #EFFFFA;
+  background: #FFF;
   height: 100vh;
   text-align: left;
   padding: 2rem;
@@ -15,6 +19,8 @@
   left: 0;
   transition: transform 0.3s ease-in-out;
   z-index: 10;
+
+  align-items: center;
 
   @media (max-width: 576px) {
       width: 100%;
@@ -27,8 +33,8 @@
 
 .hamburger-btn {
   position: absolute;
-  top: 5%;
-  right: 2rem;
+  top: calc(5% - 24px);
+  right: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -48,7 +54,7 @@
   div {
     width: 2rem;
     height: 0.25rem;
-    background: orangered;
+    background: #212529;
     border-radius: 10px;
     position: relative;
     transform-origin: 1px;
@@ -57,4 +63,19 @@
 
 .hamburger-btn-clicked {
   transform: rotate(360deg);
+}
+
+.mobile-nav-item {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.mobile-about-btn {
+  flex-basis: 0;
+  flex-grow: 10;
+}
+
+.mobile-nav-text {
+  text-transform: uppercase;
+  font-weight: 500;
 }

@@ -1,28 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { UserService } from 'src/app/services/user.service';
 import { UserInterface } from 'src/app/model/user.interface';
-import { take, tap } from 'rxjs/operators';
+import { filter, take, takeUntil, tap } from 'rxjs/operators';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
+import { NavigationStart, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'navbar',
     templateUrl: './navbar.html'
 })
 
-export class NavbarComponent implements OnInit{
+export class NavbarComponent implements OnInit {
 
     constructor(private authenService: RedditAuthenticateService,
         private userService: UserService,
-        private checkDeviceFeatureService: CheckDeviceFeatureService) { }
+        private checkDeviceFeatureService: CheckDeviceFeatureService,
+        private router: Router,
+        private renderer2: Renderer2) { }
 
-    menuToggle = false;    
+    menuToggle = false;
     user: UserInterface;
     userSubscribtion;
+    destroy$ = new Subject();
 
     ngOnInit() {
-       this.userSubscribtion = this.userService.user$.pipe(
-           take(2),
+
+        this.router.events.pipe(
+            takeUntil(this.destroy$),
+            filter(event => event instanceof NavigationStart),
+            tap(_ => {
+                this.collapseMenu();
+            })
+        ).subscribe();
+
+        this.userSubscribtion = this.userService.user$.pipe(
+            take(2),
             tap(next => {
                 this.user = next;
             })
@@ -30,7 +44,7 @@ export class NavbarComponent implements OnInit{
     }
 
     isLoggedIn() {
-        return this.authenService.getIsLoggedIn();
+        return this.user.name !== 'anonymous';
     }
 
     login() {
@@ -56,5 +70,30 @@ export class NavbarComponent implements OnInit{
 
     toggleMenu() {
         this.menuToggle = !this.menuToggle;
+
+        if (this.menuToggle) {
+            this.renderer2.setStyle(document.body, 'overflow', 'hidden');
+        } else {
+            this.renderer2.removeStyle(document.body, 'overflow');
+        }
+    }
+
+    goToProfile() {
+
+        this.collapseMenu();
+
+        this.router.navigateByUrl(`/u/${this.user.name}`);
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    collapseMenu() {
+        if (this.menuToggle) {
+            this.menuToggle = false;
+            this.renderer2.removeStyle(document.body, 'overflow');
+        }
     }
 }
