@@ -6,21 +6,35 @@
     <span routerLink="/" class="d-flex align-items-center mr-auto pointer">Angular Reddit</span>
 
     <div *ngIf="!isMobile()" class="pt-2">
-      <search-bar></search-bar>
+      <search-bar [showSearchBtn]="true"></search-bar>
     </div>
 
 
     <ng-container *ngIf="userSubscribtion | async">
 
       <ng-container *ngIf="!isMobile()">
-        <div *ngIf="isLoggedIn()" ngbDropdown class="ml-auto d-flex align-items-center pointer">
+        <div *ngIf="isLoggedIn()" ngbDropdown class="ml-auto d-flex align-items-center pointer mr-4">
+          <img class="profile-img mr-1" [src]="user.icon_img | replacePipe">
           <span ngbDropdownToggle>{{user.name}}</span>
 
           <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
             <a ngbDropdownItem class="pointer" (click)="goToProfile()">My Profile</a>
-            <a ngbDropdownItem class="pointer" target="_blank" href="https://www.reddithelp.com/hc/en-us">Help</a>
-            <a ngbDropdownItem class="pointer">About</a>
-            <a ngbDropdownItem class="pointer" (click)="logout()">Logout</a>
+
+            <div ngbDropdownItem class="d-flex" (click)="openHelpPage()">
+              <span class="icon-before icon-question mr-1"></span>
+              <span class="pointer">Help</span>
+            </div>
+
+            <div ngbDropdownItem class="d-flex">
+              <span class="icon-before icon-info mr-1"></span>
+              <span class="pointer">About</span>
+            </div>
+
+            <div ngbDropdownItem class="d-flex" (click)="logout()">
+              <span class="icon-before icon-sign-out mr-1"></span>
+              <span class="pointer">Logout</span>
+            </div>
+
           </div>
         </div>
 
@@ -31,19 +45,21 @@
   </div>
 
   <div [ngClass]="{'side-menu-show': menuToggle, 'side-menu': !menuToggle}">
-    <div class="mobile-nav-item">
-      <search-bar></search-bar>
+    <div class="mt-5" [ngClass]="{'mobile-nav-item-2': isLoggedIn()}">
+      <search-bar [showSearchBtn]="false"></search-bar>
     </div>
-    
+
     <a class="mobile-nav-item mobile-nav-text" *ngIf="!isLoggedIn()" (click)="login()">Login</a>
     <ng-container *ngIf="isLoggedIn()">
       <div (click)="goToProfile()" class="mobile-nav-item">
-        <img class="banner-icon" [src]="user.icon_img | replacePipe">
+        <img class="profile-img-mobile" [src]="user.icon_img | replacePipe">
       </div>
-      
-      <span class="mobile-nav-item" (click)="goToProfile()" *ngIf="isLoggedIn()">{{user.name}}</span>
+
+      <span class="mobile-nav-item" (click)="goToProfile()" *ngIf="isLoggedIn()">/u/{{user.name}}</span>
+
+      <span class="mobile-nav-text" (click)="openHelpPage()">Help</span>
       <span class="mobile-about-btn mobile-nav-text">About</span>
-      <a class="mobile-nav-text" (click)="logout()">Log out</a>
+      <a class="mobile-nav-text icon-before icon-sign-out" (click)="logout()">Log out</a>
     </ng-container>
 
   </div>

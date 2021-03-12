@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
@@ -16,6 +16,7 @@ export class SearchBarComponent {
 
     model;
 
+    @Input() showSearchBtn;
     keyEventSubscription: Subscription;
     @ViewChild('inputEl') inputElement: ElementRef;
 

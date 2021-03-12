@@ -1,7 +1,7 @@
-.icon-mixin(@width) {
+.icon-mixin(@width, @background-color) {
     width: @width;
     border-radius: 50px;
-    background-color: rgb(0, 121, 211);
+    background-color: @background-color;
     fill: white;
 }
 
@@ -52,12 +52,12 @@
 }
 
 .banner-icon {
-    .icon-mixin(50px);
+    .icon-mixin(50px, rgb(0, 121, 211));
     height: 50px;
 }
 
 .navbar-icon {
-    .icon-mixin(50px);
+    .icon-mixin(50px, #fff);
     height: 50px;
 }
 
@@ -90,8 +90,18 @@
 }
 
 .banner-icon-small {
-    .icon-mixin(32px);
+    .icon-mixin(32px, rgb(0, 121, 211));
     height: 32px;
+}
+
+.profile-img {
+    .icon-mixin(32px, #fff);
+    height: 32px;
+}
+
+.profile-img-mobile {
+    .icon-mixin(64px, #fff);
+    height: 64px;
 }
 
 @media (min-width: 768px) { 
@@ -99,7 +109,7 @@
         max-height: 65vh;
     }
     .banner-icon {
-        .icon-mixin(90px);
+        .icon-mixin(90px, rgb(0, 121, 211));
         height: 90px;
     }
 }

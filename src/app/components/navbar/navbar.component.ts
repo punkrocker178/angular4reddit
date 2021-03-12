@@ -24,9 +24,10 @@ export class NavbarComponent implements OnInit {
     user: UserInterface;
     userSubscribtion;
     destroy$ = new Subject();
+    mainElement;
 
     ngOnInit() {
-
+        this.mainElement = document.getElementById('main');
         this.router.events.pipe(
             takeUntil(this.destroy$),
             filter(event => event instanceof NavigationStart),
@@ -72,9 +73,13 @@ export class NavbarComponent implements OnInit {
         this.menuToggle = !this.menuToggle;
 
         if (this.menuToggle) {
+            setTimeout(() => {
+                this.renderer2.setStyle(this.mainElement, 'filter', 'brightness(0.3)');
+            }, 300);
             this.renderer2.setStyle(document.body, 'overflow', 'hidden');
         } else {
             this.renderer2.removeStyle(document.body, 'overflow');
+            this.renderer2.removeStyle(this.mainElement, 'filter');
         }
     }
 
@@ -83,6 +88,10 @@ export class NavbarComponent implements OnInit {
         this.collapseMenu();
 
         this.router.navigateByUrl(`/u/${this.user.name}`);
+    }
+
+    openHelpPage() {
+        window.open('https://www.reddithelp.com/hc/en-us', '_blank');
     }
 
     ngOnDestroy() {
@@ -94,6 +103,7 @@ export class NavbarComponent implements OnInit {
         if (this.menuToggle) {
             this.menuToggle = false;
             this.renderer2.removeStyle(document.body, 'overflow');
+            this.renderer2.removeStyle(this.mainElement, 'filter');
         }
     }
 }
