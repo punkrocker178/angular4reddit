@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, QueryList, Renderer2, ViewChildren } from '@angular/core';
 declare var $: any;
 
 @Component({
@@ -7,13 +7,14 @@ declare var $: any;
 })
 export class GalleryComponent {
 
-    index = 0;
+    elementIndex = 0;
     source: string;
     positionClass: string;
+    @ViewChildren('item') galleryItems: QueryList<ElementRef>;
     @Input() configs;
     @Input() data;
 
-    constructor() {
+    constructor(private renderer2: Renderer2) {
 
     }
 
@@ -23,14 +24,33 @@ export class GalleryComponent {
     }
 
     next() {
-        if (this.index < this.data.items.length - 1) {
-            this.index += 1;
+        if (this.elementIndex < this.data.items.length - 1) {
+            const currEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
+            this.renderer2.removeClass(currEl, 'active');
+            this.renderer2.addClass(currEl, 'inactive-left');
+            
+            this.elementIndex += 1;
+
+            const newEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
+            this.renderer2.addClass(newEl, 'active');
+            this.renderer2.removeClass(newEl, 'inactive-right');
+
         }
     }
 
     previous() {
-        if (this.index > 0) {
-            this.index -= 1;
+        if (this.elementIndex > 0) {
+            
+            const currEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
+            this.renderer2.removeClass(currEl, 'active');
+            
+            this.renderer2.addClass(currEl, 'inactive-right');
+            this.elementIndex -= 1;
+
+            const newEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
+            this.renderer2.removeClass(newEl, 'inactive-left');
+            this.renderer2.addClass(newEl, 'active');
+            
         }
     }
 

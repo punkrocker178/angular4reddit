@@ -2,23 +2,18 @@
   <button class="btn btn-light previous-btn" (click)="previous()">
     <div class="icon-before icon-less-than"></div>
   </button>
-  <img class="img-fluid center-img scale-img"
-    [src]="(source ? data.items[index][source] : data.items[index]) | replacePipe">
+
+  <div #item class="gallery-item" [ngClass]="{'active': idx == 0, 'inactive-right': idx > 0}" *ngFor="let item of data.items; let idx = index">
+    <img class="img-fluid center-img scale-img"
+    [src]="(source ? item[source] : item) | replacePipe">
+  </div>
+
   <button class="btn btn-light next-btn" (click)="next()">
     <div class="icon-before icon-greater-than"></div>
   </button>
-  <!-- <div *ngIf="data.items.length < 6; else pageNumber">
-        <div *ngFor="let i of data.items" class="circle-dot"></div>
-    </div> -->
-
-  <!-- <ng-template #pageNumber>
-        <span>{{index + 1}} / {{data.items.length}}</span>
-    </ng-template> -->
 
   <div class="image-number-background" [ngClass]="positionClass">
-    <span class="image-number">{{index + 1}} / {{data.items.length}}</span>
+    <span class="image-number">{{elementIndex + 1}} / {{data.items.length}}</span>
   </div>
   
-
-
 </div>
