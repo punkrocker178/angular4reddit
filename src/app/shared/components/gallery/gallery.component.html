@@ -4,7 +4,7 @@
   </button>
 
   <div #item class="gallery-item" [ngClass]="{'active': idx == 0, 'inactive-right': idx > 0}" *ngFor="let item of data.items; let idx = index">
-    <img class="img-fluid center-img scale-img"
+    <img class="img-fluid center-img"
     [src]="(source ? item[source] : item) | replacePipe">
   </div>
 

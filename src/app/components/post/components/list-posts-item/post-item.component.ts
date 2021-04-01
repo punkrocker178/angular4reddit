@@ -29,7 +29,7 @@ export class PostItemComponent {
 
   galleryConfigs = {
     src: 'source',
-    position: 'top-left'
+    position: 'top-left',
   }
 
   galleryData = {
@@ -124,7 +124,14 @@ export class PostItemComponent {
       if (images[0]['variants'] && images[0]['variants']['gif']) {
         image = images[0]['variants']['gif']['source']['url'];
       } else {
-        image = images[0]['source']['url'];
+        const resolutions = images[0]['resolutions'];
+        
+        if (resolutions[resolutions.length - 1]['height'] < 300) {
+          image = images[0]['source']['url'];
+        } else {
+          image = resolutions[resolutions.length - 1]['url'];
+        }
+        
       }
 
     }
@@ -211,6 +218,9 @@ export class PostItemComponent {
   getGalleryImages() {
     
     this.galleryData.items = this.post.data['gallery_data']['items'];
+    const mediaResolutions = this.post.data['media_metadata'][this.galleryData.items[0]['media_id']]['p'];
+
+    const selectedResolution = mediaResolutions.length -1;
 
     this.galleryData.items.forEach(item => {
       const mediaId = item['media_id'];
@@ -218,7 +228,8 @@ export class PostItemComponent {
         ...this.post.data['media_metadata'][mediaId]
       };
 
-      item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
+      const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
+      item.source = media['u'];
     });
 
   }

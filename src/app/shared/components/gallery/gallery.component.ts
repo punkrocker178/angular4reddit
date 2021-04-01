@@ -27,14 +27,11 @@ export class GalleryComponent {
         if (this.elementIndex < this.data.items.length - 1) {
             const currEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
             this.renderer2.removeClass(currEl, 'active');
-            this.renderer2.addClass(currEl, 'inactive-left');
             
             this.elementIndex += 1;
 
             const newEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
             this.renderer2.addClass(newEl, 'active');
-            this.renderer2.removeClass(newEl, 'inactive-right');
-
         }
     }
 
@@ -44,11 +41,9 @@ export class GalleryComponent {
             const currEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
             this.renderer2.removeClass(currEl, 'active');
             
-            this.renderer2.addClass(currEl, 'inactive-right');
             this.elementIndex -= 1;
 
             const newEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
-            this.renderer2.removeClass(newEl, 'inactive-left');
             this.renderer2.addClass(newEl, 'active');
             
         }

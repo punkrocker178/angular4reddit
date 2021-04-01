@@ -47,13 +47,13 @@
 
     <!-- Link & thumbnail -->
     <div class="card-side-padding" *ngIf="isEmbededLink() && !isVideo()">
-      <a class="d-flex flex-row" [href]="post.data['url']" target="_blank">
-        <span class="mr-auto">{{ post.data['url'] }}</span>
+      <a class="d-flex flex-row flex-wrap" [href]="post.data['url']" target="_blank">
+        <span class="w-100 mr-auto">{{ post.data['url'] }}</span>
         <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
       </a>
     </div>
 
-    <div #twitterEmbed *ngIf="isEmbededLink() && isTwitterEmbedded()">
+    <div class="d-flex justify-content-center" #twitterEmbed *ngIf="isEmbededLink() && isTwitterEmbedded()">
     </div>
 
     <!-- Post text content -->
