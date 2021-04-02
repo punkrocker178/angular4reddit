@@ -46,7 +46,7 @@
     </ng-container>
 
     <!-- Link & thumbnail -->
-    <div class="card-side-padding" *ngIf="isEmbededLink() && !isVideo()">
+    <div class="card-side-padding" *ngIf="isEmbededLink() && !isTwitterEmbedded() && !isVideo()">
       <a class="d-flex flex-row flex-wrap" [href]="post.data['url']" target="_blank">
         <span class="w-100 mr-auto">{{ post.data['url'] }}</span>
         <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">

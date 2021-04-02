@@ -1,11 +1,14 @@
 <div class="container">
     <div class="mb-4" *ngIf="subreddit$ | async">
+        <h4 class="p-2">Communities</h4>
         <div *ngFor="let subreddit of subreddits">
             <subreddit-item [subredditData]="subreddit"></subreddit-item>
         </div>
         <a class="p-2">View more results</a>
     </div>
+
     <div *ngIf="submission$ | async">
+        <h4 class="p-2">Sumissions</h4>
         <div *ngFor="let submission of submissions">
             <submission-item [submissionData]="submission"></submission-item>
         </div>

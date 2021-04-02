@@ -27,8 +27,9 @@
 <ng-template #submissionMobileView>
   <div class="p-2">
     <div class="d-flex flex-row">
-      <a class="mr-1" [routerLink]="'/u/' + submissionData['author']" [routerLinkActive]="'active'">Posted by
-        /u/{{submissionData['author']}}</a>
+      <a [routerLink]="'/r/' + submissionData['subreddit']" [replaceUrl]="true" [routerLinkActive]="'active'"
+          class="mr-auto">r/{{submissionData['subreddit']}}</a>
+      <a class="mr-1" [routerLink]="'/u/' + submissionData['author']" [routerLinkActive]="'active'">u/{{submissionData['author']}}</a>
 
       <span>•</span>
 
