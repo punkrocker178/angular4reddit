@@ -1,8 +1,11 @@
 <div class="container">
-    <div class="mb-4" *ngIf="subreddit$ | async">
+    <div class="mb-4">
         <h4 class="p-2">Communities</h4>
-        <div *ngFor="let subreddit of subreddits">
+        <div *ngFor="let subreddit of subreddit$ | async">
             <subreddit-item [subredditData]="subreddit"></subreddit-item>
+        </div>
+        <div>
+            <span *ngIf="subredditLoading">Loading</span>
         </div>
         <a class="p-2" (click)="loadMoreSubreddits()">View more results</a>
     </div>

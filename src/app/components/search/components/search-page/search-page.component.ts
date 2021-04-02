@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
  
 @Component({
@@ -13,8 +13,9 @@ export class SearchPageComponent {
 
     searchTerm: string;
 
-    subreddit$: Observable<any>;
-    subreddits = [];
+    paramSubscription: Subscription;
+    subreddit$ = new BehaviorSubject([]);
+    subredditLoading = true;
     subredditAfter: string;
     submission$: Observable<any>;
     submissions;
@@ -23,9 +24,9 @@ export class SearchPageComponent {
         private activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
-        this.activatedRoute.paramMap.subscribe(params => {
+        this.paramSubscription = this.activatedRoute.paramMap.subscribe(params => {
             this.searchTerm = params.get('term');
-            this.searchSubreddits(this.searchTerm);
+            this.searchSubreddits(this.searchTerm).subscribe();
             this.searchSubmissions(this.searchTerm);
         });
         
@@ -38,10 +39,12 @@ export class SearchPageComponent {
             after: after
         };
 
-        this.subreddit$ = this.redditSearchService.searchSubreddit(payload).pipe(
+        return this.redditSearchService.searchSubreddit(payload).pipe(
             tap((next:any) => {
-                this.subreddits = [...this.subreddits, ...next.children];
+                const currentSubreddits = this.subreddit$.getValue();
+                this.subreddit$.next([...currentSubreddits, ...next.children]);
                 this.subredditAfter = next.after;
+                this.subredditLoading = false;
             })
         );
     }
@@ -60,7 +63,12 @@ export class SearchPageComponent {
     }
 
     loadMoreSubreddits() {
-        this.searchSubreddits(this.searchTerm, this.subredditAfter, 25);
+        this.subredditLoading = true;
+        this.searchSubreddits(this.searchTerm, this.subredditAfter, 25).subscribe();
+    }
+
+    ngOnDestroy() {
+        this.paramSubscription.unsubscribe();
     }
 
 }
