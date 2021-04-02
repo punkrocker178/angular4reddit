@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
  
@@ -11,9 +11,12 @@ import { RedditSearchService } from 'src/app/services/reddit-search.service';
 
 export class SearchPageComponent {
 
-    subreddit$;
-    subreddits;
-    submission$;
+    searchTerm: string;
+
+    subreddit$: Observable<any>;
+    subreddits = [];
+    subredditAfter: string;
+    submission$: Observable<any>;
     submissions;
 
     constructor(private redditSearchService: RedditSearchService,
@@ -21,17 +24,25 @@ export class SearchPageComponent {
 
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe(params => {
-            const term = params.get('term');
-            this.searchSubreddits(term);
-            this.searchSubmissions(term);
+            this.searchTerm = params.get('term');
+            this.searchSubreddits(this.searchTerm);
+            this.searchSubmissions(this.searchTerm);
         });
         
     }
 
-    searchSubreddits(name: string) {
-        const limit = 5;
-        this.subreddit$ = this.redditSearchService.searchSubreddit(name, limit).pipe(
-            tap(next => this.subreddits = next)
+    searchSubreddits(name: string, after?: string, limit?: number) {
+        const payload  = {
+            name: name,
+            limit: limit ? limit : 5,
+            after: after
+        };
+
+        this.subreddit$ = this.redditSearchService.searchSubreddit(payload).pipe(
+            tap((next:any) => {
+                this.subreddits = [...this.subreddits, ...next.children];
+                this.subredditAfter = next.after;
+            })
         );
     }
 
@@ -46,6 +57,10 @@ export class SearchPageComponent {
         this.submission$ = this.redditSearchService.searchSubmission(payload).pipe(
             tap(next => this.submissions = next)
         );
+    }
+
+    loadMoreSubreddits() {
+        this.searchSubreddits(this.searchTerm, this.subredditAfter, 25);
     }
 
 }

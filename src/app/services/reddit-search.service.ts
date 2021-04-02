@@ -16,14 +16,18 @@ export class RedditSearchService {
     /* https://github.com/pushshift/api */
     pushshiftSubmissionAPI = '/reddit/search/submission';
 
-    searchSubreddit(name: string, limit?: number) {
+    searchSubreddit(data) {
         const payload = {
-            q: name,
+            q: data.name,
             show_users: true
         }
 
-        if (limit) {
-            payload['limit'] = limit;
+        if (data.limit) {
+            payload['limit'] = data.limit;
+        }
+
+        if (data.after) {
+            payload['after'] = data.after;
         }
 
         let params = new HttpParams();
@@ -46,7 +50,10 @@ export class RedditSearchService {
                         subreddits.push(subreddit);
                     }
                 }
-                return subreddits;
+                return {
+                    after: response.data.after,
+                    children: subreddits
+                };
             } else {
                 return [];
             }
