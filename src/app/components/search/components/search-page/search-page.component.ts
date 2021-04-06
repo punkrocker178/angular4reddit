@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
+import { DateTime } from 'luxon';
  
 @Component({
     selector: 'app-search',
@@ -14,11 +15,14 @@ export class SearchPageComponent {
     searchTerm: string;
 
     paramSubscription: Subscription;
+
     subreddit$ = new BehaviorSubject([]);
     subredditLoading = true;
     subredditAfter: string;
-    submission$: Observable<any>;
-    submissions;
+
+    submission$ = new BehaviorSubject([]);
+    submissionLoading = true;
+    submissionBefore;
 
     constructor(private redditSearchService: RedditSearchService,
         private activatedRoute: ActivatedRoute) {}
@@ -27,7 +31,7 @@ export class SearchPageComponent {
         this.paramSubscription = this.activatedRoute.paramMap.subscribe(params => {
             this.searchTerm = params.get('term');
             this.searchSubreddits(this.searchTerm).subscribe();
-            this.searchSubmissions(this.searchTerm);
+            this.searchSubmissions(this.searchTerm).subscribe();
         });
         
     }
@@ -49,22 +53,36 @@ export class SearchPageComponent {
         );
     }
 
-    searchSubmissions(term: string) {
+    searchSubmissions(term: string, before?: number, limit?: number) {
         const payload = {
             q: term,
             sort: 'desc',
-            sort_type: 'score',
-            size: 50,
-            after: '30d'
+            sort_type: 'created_utc',
+            size: limit? limit : 25,
         }
-        this.submission$ = this.redditSearchService.searchSubmission(payload).pipe(
-            tap(next => this.submissions = next)
+        
+        if (before) {
+            payload['before'] = before;
+        }
+
+        return this.redditSearchService.searchSubmission(payload).pipe(
+            tap(next => {
+                this.submissionLoading = false;
+                const currentSubmissions = this.submission$.getValue();
+                this.submission$.next([...currentSubmissions, ...next]);
+                this.submissionBefore = next[next.length - 1]['created_utc'];
+            })
         );
     }
 
     loadMoreSubreddits() {
         this.subredditLoading = true;
         this.searchSubreddits(this.searchTerm, this.subredditAfter, 25).subscribe();
+    }
+
+    loadMoreSubmissions() {
+        this.submissionLoading = true;
+        this.searchSubmissions(this.searchTerm, this.submissionBefore, 25).subscribe();
     }
 
     ngOnDestroy() {

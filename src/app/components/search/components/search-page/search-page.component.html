@@ -12,9 +12,12 @@
 
     <div *ngIf="submission$ | async">
         <h4 class="p-2">Sumissions</h4>
-        <div *ngFor="let submission of submissions">
+        <div *ngFor="let submission of submission$ | async">
             <submission-item [submissionData]="submission"></submission-item>
         </div>
-        <a class="p-2">View more results</a>
+        <div>
+            <span *ngIf="submissionLoading">Loading</span>
+        </div>
+        <a class="p-2" (click)="loadMoreSubmissions()">View more results</a>
     </div>
 </div>
