@@ -33,7 +33,7 @@ export class SearchPageComponent {
         this.paramSubscription = this.activatedRoute.paramMap.subscribe(params => {
             this.searchTerm = params.get('term');
             this.searchSubreddits(this.searchTerm).subscribe();
-            this.searchSubmissions(this.searchTerm, null, 50).subscribe();
+            this.searchSubmissions(this.searchTerm, null, null, 50).subscribe();
         });
         
     }
@@ -60,7 +60,7 @@ export class SearchPageComponent {
         );
     }
 
-    searchSubmissions(term: string, before?: number, limit?: number) {
+    searchSubmissions(term: string, before?: number, after?, limit?: number) {
         const payload = {
             q: term,
             sort: 'desc',
@@ -68,10 +68,15 @@ export class SearchPageComponent {
             size: limit? limit : 25,
         }
         
+        if (after) {
+            payload['after'] = after;
+        }
+
         if (before) {
             payload['before'] = before;
-            payload['after'] = before - 86400;
-        } else if (!before) {
+        }
+        
+        if (!before && !after) {
             payload['after'] = '14d';
         }
 
@@ -97,7 +102,7 @@ export class SearchPageComponent {
 
     loadMoreSubmissions() {
         this.submissionLoading = true;
-        this.searchSubmissions(this.searchTerm, this.submissionBefore, 100).subscribe();
+        this.searchSubmissions(this.searchTerm, this.submissionBefore, null, 100).subscribe();
     }
 
     ngOnDestroy() {
@@ -112,6 +117,12 @@ export class SearchPageComponent {
             }
         });
         return oldestDate;
+    }
+
+    getHotSubmission(date: string) {
+        this.submissionLoading = true;
+        this.submission$.next([]);
+        this.searchSubmissions(this.searchTerm, null, date, 100).subscribe()
     }
 
 }

@@ -1,36 +1,44 @@
 <div class="container">
-    <div class="mb-4">
+    <div class="mb-5">
         <h4 class="p-2">Communities</h4>
         <div *ngFor="let subreddit of subreddit$ | async">
             <subreddit-item [subredditData]="subreddit"></subreddit-item>
         </div>
-        <div>
-            <span *ngIf="subredditLoading">Loading</span>
+
+        <div *ngIf="subredditLoading" class="d-flex justify-content-center">
+            <i class="fa-3x fas fa-sync-alt fa-spin"></i>
         </div>
-        <a *ngIf="!allSubredditResults && !subredditLoading" class="p-2" (click)="loadMoreSubreddits()">View more results</a>
+
+        <button *ngIf="!allSubredditResults && !subredditLoading" class="mt-3 ml-2 btn btn-dark"
+            (click)="loadMoreSubreddits()">More results</button>
+        <span *ngIf="allSubredditResults" class="p-2">No more subreddits</span>
     </div>
 
-    <div *ngIf="submission$ | async">
-        <div class="d-flex flex-row mb-4">
+    <div class="mb-4" *ngIf="submission$ | async">
+        <div class="d-block d-md-flex flex-row mb-4">
             <h4 class="p-2 mr-auto">Sumissions</h4>
             <div class="d-flex flex-column">
-                <p>🔥 Hot Post in</p>
-                <div class="btn-group">
-                    <button class="btn btn-success">7 Days</button>
-                    <button class="btn btn-success">1 Month</button>
-                    <button class="btn btn-success">1 Year</button>
+                <p class="p-2">🔥 Hot Post in</p>
+                <div class="btn-group p-2">
+                    <button (click)="getHotSubmission('7d')" class="btn btn-success">7 Days</button>
+                    <button (click)="getHotSubmission('30d')" class="btn btn-success">1 Month</button>
+                    <button (click)="getHotSubmission('182d')" class="btn btn-success">6 Months</button>
+                    <button (click)="getHotSubmission('1y')" class="btn btn-success">1 Year</button>
                 </div>
             </div>
-            
+
         </div>
 
         <div *ngFor="let submission of submission$ | async">
             <submission-item [submissionData]="submission"></submission-item>
         </div>
-        <div>
-            <span *ngIf="submissionLoading">Loading</span>
+
+        <div *ngIf="submissionLoading" class="d-flex justify-content-center">
+            <i class="fa-3x fas fa-sync-alt fa-spin"></i>
         </div>
-        <a *ngIf="!allResults && !submissionLoading" class="p-2" (click)="loadMoreSubmissions()">View more results</a>
+
+        <button *ngIf="!allResults && !submissionLoading" class="mt-3 ml-2 btn btn-dark"
+            (click)="loadMoreSubmissions()">More results</button>
         <span *ngIf="allResults" class="p-2">No more posts</span>
     </div>
 </div>
