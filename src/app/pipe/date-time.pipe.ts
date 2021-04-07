@@ -43,7 +43,7 @@ export class DateTimePipe implements PipeTransform {
         diffTime = diffMonths.months;
       }
 
-      if (diffDays.months > 12) {
+      if (diffMonths.months > 12) {
         timeLabel = 'y';
         diffTime = diffYears.years;
       }

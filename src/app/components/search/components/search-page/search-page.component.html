@@ -7,17 +7,30 @@
         <div>
             <span *ngIf="subredditLoading">Loading</span>
         </div>
-        <a class="p-2" (click)="loadMoreSubreddits()">View more results</a>
+        <a *ngIf="!allSubredditResults && !subredditLoading" class="p-2" (click)="loadMoreSubreddits()">View more results</a>
     </div>
 
     <div *ngIf="submission$ | async">
-        <h4 class="p-2">Sumissions</h4>
+        <div class="d-flex flex-row mb-4">
+            <h4 class="p-2 mr-auto">Sumissions</h4>
+            <div class="d-flex flex-column">
+                <p>🔥 Hot Post in</p>
+                <div class="btn-group">
+                    <button class="btn btn-success">7 Days</button>
+                    <button class="btn btn-success">1 Month</button>
+                    <button class="btn btn-success">1 Year</button>
+                </div>
+            </div>
+            
+        </div>
+
         <div *ngFor="let submission of submission$ | async">
             <submission-item [submissionData]="submission"></submission-item>
         </div>
         <div>
             <span *ngIf="submissionLoading">Loading</span>
         </div>
-        <a class="p-2" (click)="loadMoreSubmissions()">View more results</a>
+        <a *ngIf="!allResults && !submissionLoading" class="p-2" (click)="loadMoreSubmissions()">View more results</a>
+        <span *ngIf="allResults" class="p-2">No more posts</span>
     </div>
 </div>

@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
-import { DateTime } from 'luxon';
  
 @Component({
     selector: 'app-search',
@@ -19,10 +18,13 @@ export class SearchPageComponent {
     subreddit$ = new BehaviorSubject([]);
     subredditLoading = true;
     subredditAfter: string;
+    allSubredditResults = false;
 
     submission$ = new BehaviorSubject([]);
     submissionLoading = true;
     submissionBefore;
+
+    allResults = false;
 
     constructor(private redditSearchService: RedditSearchService,
         private activatedRoute: ActivatedRoute) {}
@@ -31,7 +33,7 @@ export class SearchPageComponent {
         this.paramSubscription = this.activatedRoute.paramMap.subscribe(params => {
             this.searchTerm = params.get('term');
             this.searchSubreddits(this.searchTerm).subscribe();
-            this.searchSubmissions(this.searchTerm).subscribe();
+            this.searchSubmissions(this.searchTerm, null, 50).subscribe();
         });
         
     }
@@ -47,7 +49,12 @@ export class SearchPageComponent {
             tap((next:any) => {
                 const currentSubreddits = this.subreddit$.getValue();
                 this.subreddit$.next([...currentSubreddits, ...next.children]);
-                this.subredditAfter = next.after;
+                if (next.after) {
+                    this.subredditAfter = next.after;
+                } else {
+                    this.allSubredditResults = true;
+                }
+                
                 this.subredditLoading = false;
             })
         );
@@ -57,20 +64,28 @@ export class SearchPageComponent {
         const payload = {
             q: term,
             sort: 'desc',
-            sort_type: 'created_utc',
+            sort_type: 'score',
             size: limit? limit : 25,
         }
         
         if (before) {
             payload['before'] = before;
+            payload['after'] = before - 86400;
+        } else if (!before) {
+            payload['after'] = '14d';
         }
 
         return this.redditSearchService.searchSubmission(payload).pipe(
             tap(next => {
+
+                if (next.length === 0) {
+                    this.allResults = true;
+                }
+
                 this.submissionLoading = false;
                 const currentSubmissions = this.submission$.getValue();
                 this.submission$.next([...currentSubmissions, ...next]);
-                this.submissionBefore = next[next.length - 1]['created_utc'];
+                this.submissionBefore = this.getOldestSubmission(next);
             })
         );
     }
@@ -82,11 +97,21 @@ export class SearchPageComponent {
 
     loadMoreSubmissions() {
         this.submissionLoading = true;
-        this.searchSubmissions(this.searchTerm, this.submissionBefore, 25).subscribe();
+        this.searchSubmissions(this.searchTerm, this.submissionBefore, 100).subscribe();
     }
 
     ngOnDestroy() {
         this.paramSubscription.unsubscribe();
+    }
+
+    getOldestSubmission(submissions: []) {
+        let oldestDate = Number.MAX_SAFE_INTEGER;
+        submissions.forEach(submission => {
+            if (oldestDate > submission['created_utc']) {
+                oldestDate = submission['created_utc']
+            }
+        });
+        return oldestDate;
     }
 
 }
