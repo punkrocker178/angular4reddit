@@ -102,7 +102,7 @@ export class SearchPageComponent {
 
     loadMoreSubmissions() {
         this.submissionLoading = true;
-        this.searchSubmissions(this.searchTerm, this.submissionBefore, null, 100).subscribe();
+        this.searchSubmissions(this.searchTerm, this.submissionBefore, null, 50).subscribe();
     }
 
     ngOnDestroy() {
