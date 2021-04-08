@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { environment } from 'src/environments/environment';
+import { HeadersUtils } from '../class/HeadersUtils';
 
 @Injectable()
 export class SubredditService {
@@ -17,6 +18,28 @@ export class SubredditService {
                 { 
                     'Authorization': this.authenticateService.getToken()
                 } 
+            });
+    }
+
+    subscribeSubreddit(action: string, fullname: string) {
+        let payload = {
+            action: action,
+            action_source: 'o',
+            sr: fullname
+        }
+
+        let body = new HttpParams();
+        for (const field in payload) {
+            body = body.set(field, payload[field]);
+        }
+
+        return this.http.post(HeadersUtils.buildUrl(true, '/api/subscribe'), body.toString(),
+            {
+                headers:
+                {
+                    'Authorization': this.authenticateService.getToken(),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             });
     }
 }
