@@ -22,9 +22,12 @@ export class SearchPageComponent {
 
     submission$ = new BehaviorSubject([]);
     submissionLoading = true;
-    submissionBefore;
+    oldestSubmission;
 
     allResults = false;
+
+    subredditFilter: string;
+    timeOffset: string;
 
     constructor(private redditSearchService: RedditSearchService,
         private activatedRoute: ActivatedRoute) {}
@@ -33,9 +36,19 @@ export class SearchPageComponent {
         this.paramSubscription = this.activatedRoute.paramMap.subscribe(params => {
             this.searchTerm = params.get('term');
             this.searchSubreddits(this.searchTerm).subscribe();
-            this.searchSubmissions(this.searchTerm, null, null, 50).subscribe();
+            this.searchSubmissions(this.getSearchSubmissionPayload(this.searchTerm, null, null, null, 50)).subscribe();
         });
         
+    }
+
+    getSearchSubmissionPayload(term: string, subreddit?: string, before?, after?, limit?: number) {
+        return  {
+            term: term,
+            subredditFilter: subreddit,
+            before: before ? before: undefined,
+            after: after ? after : undefined,
+            limit: limit ? limit : undefined
+        }
     }
 
     searchSubreddits(name: string, after?: string, limit?: number) {
@@ -60,23 +73,27 @@ export class SearchPageComponent {
         );
     }
 
-    searchSubmissions(term: string, before?: number, after?, limit?: number) {
+    searchSubmissions(searchPayload: any) {
         const payload = {
-            q: term,
+            q: searchPayload.term,
             sort: 'desc',
             sort_type: 'score',
-            size: limit? limit : 25,
-        }
-        
-        if (after) {
-            payload['after'] = after;
+            size: searchPayload.limit? searchPayload.limit : 25,
         }
 
-        if (before) {
-            payload['before'] = before;
+        if (searchPayload.subredditFilter) {
+            payload['subreddit'] = searchPayload.subredditFilter;
         }
         
-        if (!before && !after) {
+        if (searchPayload.after) {
+            payload['after'] = searchPayload.after;
+        }
+
+        if (searchPayload.before) {
+            payload['before'] = searchPayload.before;
+        }
+        
+        if (!searchPayload.before && !searchPayload.after) {
             payload['after'] = '14d';
         }
 
@@ -90,7 +107,7 @@ export class SearchPageComponent {
                 this.submissionLoading = false;
                 const currentSubmissions = this.submission$.getValue();
                 this.submission$.next([...currentSubmissions, ...next]);
-                this.submissionBefore = this.getOldestSubmission(next);
+                this.oldestSubmission = this.getOldestSubmission(next);
             })
         );
     }
@@ -102,11 +119,26 @@ export class SearchPageComponent {
 
     loadMoreSubmissions() {
         this.submissionLoading = true;
-        this.searchSubmissions(this.searchTerm, this.submissionBefore, null, 50).subscribe();
-    }
+        let after;
+        switch(this.timeOffset) {
+            case '1 Day':
+                after = this.oldestSubmission - 86400;
+                break;
+            case '1 Month':
+                after = this.oldestSubmission - 2628000;
+                break;
+            case '1 Year':
+                after = this.oldestSubmission - 31536000;
+                break;
+        }
 
-    ngOnDestroy() {
-        this.paramSubscription.unsubscribe();
+        if (after < 0) {
+            after = 0;
+        }
+        
+        const searchPayload = this.getSearchSubmissionPayload(this.searchTerm, this.subredditFilter, this.oldestSubmission, after, 50);
+
+        this.searchSubmissions(searchPayload).subscribe();
     }
 
     getOldestSubmission(submissions: []) {
@@ -119,10 +151,19 @@ export class SearchPageComponent {
         return oldestDate;
     }
 
+    
+
+    ngOnDestroy() {
+        this.paramSubscription.unsubscribe();
+    }
+
     getHotSubmission(date: string) {
         this.submissionLoading = true;
         this.submission$.next([]);
-        this.searchSubmissions(this.searchTerm, null, date, 100).subscribe();
+        this.allResults = false;
+        
+        const searchPayload = this.getSearchSubmissionPayload(this.searchTerm, null, null, date, 50);
+        this.searchSubmissions(searchPayload).subscribe();
     }
 
 }

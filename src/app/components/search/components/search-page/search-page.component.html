@@ -45,15 +45,16 @@
     <div ngbDropdown placement="top-right" class="advanced-search">
         <button class="btn btn-success icon-before icon-search-plus advanced-search-btn" ngbDropdownToggle></button>
         <div ngbDropdownMenu aria-labelledby="advancedSearchDropdown" class="p-3 advanced-search-dropdown">
-            <span>Time range</span>
-            <select class="form-control">
+            <h4>Advanced Search</h4>
+            <label for="timeOffset">Time range</label>
+            <select id="timeOffset" class="form-control" [(ngModel)]="timeOffset">
                 <option>1 Day</option>
                 <option>1 Month</option>
                 <option>1 Year</option>
             </select>
-            <div>
-                <label>Subreddit</label>
-                <input class="form-control">    
+            <div class="mt-2">
+                <label for="subredditFilter">Subreddit</label>
+                <input [(ngModel)]="subredditFilter" class="form-control" id="subredditFilter">    
             </div>
             
         </div>
