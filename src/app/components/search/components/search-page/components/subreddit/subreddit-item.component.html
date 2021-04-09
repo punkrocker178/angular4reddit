@@ -13,6 +13,6 @@
     <span>{{subredditData.data.subscribers | formatNumber}} {{subredditData.data.subscribers > 0 ? 'Members' : 'Member'}}</span>
   </div>
   <span *ngIf="!isMobile()" class="subreddit-item-description">{{subredditData.data.public_description | replacePipe}}</span>
-  <button class="btn subreddit-item-join-btn" [ngClass]="{'btn-light': !isUserSubscriber(), 'btn-success': isUserSubscriber()}">
+  <button (click)="subscribe()" class="btn subreddit-item-join-btn" [ngClass]="{'btn-light': !isUserSubscriber(), 'btn-success': isUserSubscriber()}">
     {{isUserSubscriber() ? 'Joined' : 'Join'}}</button>
 </div>
