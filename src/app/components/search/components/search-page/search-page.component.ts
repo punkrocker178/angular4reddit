@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
  
@@ -122,7 +122,7 @@ export class SearchPageComponent {
     getHotSubmission(date: string) {
         this.submissionLoading = true;
         this.submission$.next([]);
-        this.searchSubmissions(this.searchTerm, null, date, 100).subscribe()
+        this.searchSubmissions(this.searchTerm, null, date, 100).subscribe();
     }
 
 }

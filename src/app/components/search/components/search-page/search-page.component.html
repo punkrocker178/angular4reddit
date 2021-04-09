@@ -42,8 +42,21 @@
         <span *ngIf="allResults" class="p-2">No more posts</span>
     </div>
 
-    <div class="advanced-search">
-        <button class="btn btn-success icon-before icon-search-plus"></button>
+    <div ngbDropdown placement="top-right" class="advanced-search">
+        <button class="btn btn-success icon-before icon-search-plus advanced-search-btn" ngbDropdownToggle></button>
+        <div ngbDropdownMenu aria-labelledby="advancedSearchDropdown" class="p-3 advanced-search-dropdown">
+            <span>Time range</span>
+            <select class="form-control">
+                <option>1 Day</option>
+                <option>1 Month</option>
+                <option>1 Year</option>
+            </select>
+            <div>
+                <label>Subreddit</label>
+                <input class="form-control">    
+            </div>
+            
+        </div>
     </div>
 
 </div>
