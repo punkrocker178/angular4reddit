@@ -103,18 +103,34 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         if (!this.isRefreshing) {
             this.isRefreshing = true;
             this.refreshTokenSubject.next(null);
-            return this.authenService.refreshToken().pipe(
-                switchMap((res: any) => {
-                    this.isRefreshing = false; 
-                    this.refreshTokenSubject.next(res.access_token);
-                    req = req.clone({
-                        headers: req.headers.set('Authorization', 'Bearer ' + res.access_token)
-                    });
-                    this.localStorage.set('initTime', Date.now().toString());
-                    this.localStorage.set('userToken', res.access_token);
-                    return next.handle(req);
-                })
-            );
+            if (this.authenService.getIsLoggedIn()) {
+                return this.authenService.refreshToken().pipe(
+                    switchMap((res: any) => {
+                        this.isRefreshing = false; 
+                        this.refreshTokenSubject.next(res.access_token);
+                        req = req.clone({
+                            headers: req.headers.set('Authorization', 'Bearer ' + res.access_token)
+                        });
+                        this.localStorage.set('initTime', Date.now().toString());
+                        this.localStorage.set('userToken', res.access_token);
+                        return next.handle(req);
+                    })
+                );
+            } else {
+                return this.authenService.loginAppOnly().pipe(
+                    switchMap((res: any) => {
+                        this.isRefreshing = false; 
+                        this.refreshTokenSubject.next(res.access_token);
+                        req = req.clone({
+                            headers: req.headers.set('Authorization', 'Bearer ' + res.access_token)
+                        });
+                        this.localStorage.set('initTime', Date.now().toString());
+                        this.localStorage.set('userToken', res.access_token);
+                        return next.handle(req);
+                    })
+                );
+            }
+            
         } else {
             return this.refreshTokenSubject.pipe(
                 filter(token => token != null),

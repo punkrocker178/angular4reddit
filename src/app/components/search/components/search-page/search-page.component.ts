@@ -28,6 +28,7 @@ export class SearchPageComponent {
 
     subredditFilter: string;
     timeOffset: string;
+    resultsLimit;
 
     constructor(private redditSearchService: RedditSearchService,
         private activatedRoute: ActivatedRoute) {}
@@ -36,9 +37,17 @@ export class SearchPageComponent {
         this.paramSubscription = this.activatedRoute.paramMap.subscribe(params => {
             this.searchTerm = params.get('term');
             this.searchSubreddits(this.searchTerm).subscribe();
-            this.searchSubmissions(this.getSearchSubmissionPayload(this.searchTerm, null, null, null, 50)).subscribe();
+            this.searchSubmissions(this.getSearchSubmissionPayload(this.searchTerm, null, null, null, this.getResultsLimit())).subscribe();
         });
         
+    }
+
+    getResultsLimit() {
+        if (this.resultsLimit) {
+            return parseInt(this.resultsLimit);
+        }
+
+        return 25;
     }
 
     getSearchSubmissionPayload(term: string, subreddit?: string, before?, after?, limit?: number) {
@@ -121,14 +130,15 @@ export class SearchPageComponent {
         this.submissionLoading = true;
         let after;
         switch(this.timeOffset) {
-            case '1 Day':
-                after = this.oldestSubmission - 86400;
-                break;
             case '1 Month':
                 after = this.oldestSubmission - 2628000;
                 break;
             case '1 Year':
                 after = this.oldestSubmission - 31536000;
+                break;
+            case '1 Day' :
+            default:    
+                after = this.oldestSubmission - 86400;
                 break;
         }
 
@@ -136,7 +146,7 @@ export class SearchPageComponent {
             after = 0;
         }
         
-        const searchPayload = this.getSearchSubmissionPayload(this.searchTerm, this.subredditFilter, this.oldestSubmission, after, 50);
+        const searchPayload = this.getSearchSubmissionPayload(this.searchTerm, this.subredditFilter, this.oldestSubmission, after, this.getResultsLimit());
 
         this.searchSubmissions(searchPayload).subscribe();
     }

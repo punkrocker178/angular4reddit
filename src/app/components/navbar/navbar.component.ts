@@ -45,7 +45,7 @@ export class NavbarComponent implements OnInit {
     }
 
     isLoggedIn() {
-        return this.user.name !== 'anonymous';
+        return this.authenService.getIsLoggedIn();
     }
 
     login() {

@@ -8,7 +8,7 @@ import { HeadersUtils } from '../class/HeadersUtils';
 import { Utils } from '../class/Utils';
 import { User } from '../model/user';
 import { Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class RedditAuthenticateService {
@@ -18,16 +18,16 @@ export class RedditAuthenticateService {
     private getAccessTokenAPI = environment.functionUrl + '/api/v1/access_token';
     private getRevokeTokenAPI = environment.functionUrl + '/api/v1/revoke_token';
 
-    private basicAuth: string =  'Basic ' + window.btoa(environment.clientId + ':' + environment.secret);
+    private basicAuth: string = 'Basic ' + window.btoa(environment.clientId + ':' + environment.secret);
 
     constructor(
-        private http: HttpClient, 
+        private http: HttpClient,
         private localStorage: LocalStorageService,
-        private router: Router) { 
+        private router: Router) {
     }
 
     getIsLoggedIn() {
-        return this.localStorage.get('userObject') && this.localStorage.get('userObject').name !== 'anonymous';
+        return this.localStorage.get('isLoggedIn');
     }
 
     storeUserDetail(user: any) {
@@ -39,13 +39,27 @@ export class RedditAuthenticateService {
         this.localStorage.set('state', state);
         let scope = ['read', 'identity', 'history', 'vote', 'account', 'submit', 'subscribe'];
         let httParams = new HttpParams()
-        .set('response_type', 'code')
-        .set('duration', 'permanent')
-        .set('redirect_uri', this.getRedirectUri())
-        .set('state', state)
-        .set('scope', scope.join(','));
-        
+            .set('response_type', 'code')
+            .set('duration', 'permanent')
+            .set('redirect_uri', this.getRedirectUri())
+            .set('state', state)
+            .set('scope', scope.join(','));
+
         window.location.href = environment.loginUrl + '?' + httParams.toString();
+    }
+
+    loginAppOnly() {
+        let body = new HttpParams().set('grant_type', 'client_credentials');
+        return this.http.post(this.getAccessTokenAPI, body.toString(),
+            {
+                headers:
+                {
+                    'Authorization': this.basicAuth,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).pipe(tap(next => {
+                this.localStorage.set('userToken', next['access_token']);
+            }));
     }
 
     logout() {
@@ -53,52 +67,58 @@ export class RedditAuthenticateService {
         this.localStorage.remove('refreshToken');
         this.localStorage.remove('userObject');
         this.localStorage.remove('state');
-        
+        this.localStorage.set('isLoggedIn', false);
+
         // Will improve this later 
         window.location.reload();
     }
 
     getBearerAPI(code: string) {
         let body = new HttpParams()
-        .set('grant_type', 'authorization_code')
-        .set('code', code)
-        .set('redirect_uri', this.getRedirectUri());
-        
+            .set('grant_type', 'authorization_code')
+            .set('code', code)
+            .set('redirect_uri', this.getRedirectUri());
+
         return this.http.post(this.getAccessTokenAPI, body.toString(),
-            { headers: 
-                { 
+            {
+                headers:
+                {
                     'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
-                } 
-            });
+                }
+            }).pipe(tap(_ => {
+                this.localStorage.set('isLoggedIn', true)
+            }));
     }
 
     refreshToken() {
         let body = new HttpParams()
-        .set('grant_type', 'refresh_token')
-        .set('refresh_token', this.localStorage.get('refreshToken'));
+            .set('grant_type', 'refresh_token')
+            .set('refresh_token', this.localStorage.get('refreshToken'));
 
         return this.http.post(this.getAccessTokenAPI, body.toString(),
-            { headers: 
-                { 
+            {
+                headers:
+                {
                     'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
-                } 
+                }
             });
     }
 
     revokeToken() {
         let body = new HttpParams()
-        .set('token', this.localStorage.get('refreshToken'))
-        .set('token_type_hint', 'refresh_token');
-        
+            .set('token', this.localStorage.get('refreshToken'))
+            .set('token_type_hint', 'refresh_token');
+
         return this.http.post(this.getRevokeTokenAPI, body.toString(),
-            { headers: 
-                { 
+            {
+                headers:
+                {
                     'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-              observe: 'response' 
+                observe: 'response'
             });
     }
 
@@ -115,7 +135,7 @@ export class RedditAuthenticateService {
     }
 
     getToken() {
-        if(this.localStorage.get('userToken')) {
+        if (this.localStorage.get('userToken')) {
             return 'Bearer ' + this.localStorage.get('userToken');
         }
         return '';
