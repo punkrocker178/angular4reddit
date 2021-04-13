@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Login to Reddit</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Login to upvote and posts comments to Reddit ! ( ͡ᵔ ͜ʖ ͡ᵔ )</p>
+    <p>When you Log In, you will be redirected to Reddit's login page</p>
+    <p *ngIf="timer">Redirect in {{ timer }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary" (click)="close('Login click')">Log In</button>
+    <button type="button" class="btn btn-danger" (click)="dismiss('Cancel click')">Cancel</button>
+  </div>

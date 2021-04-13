@@ -171,43 +171,6 @@ export class PostItemComponent {
     return this.post.data['crosspost_parent'] && this.post.data['crosspost_parent_list'];
   }
 
-  vote(direction: number) {
-
-    switch (direction) {
-      case 1:
-        if (this.isDownVoted) {
-          this.post.data['score'] += direction + 1;
-          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
-          this.isDownVoted = false;
-        } else if (this.isUpVoted) {
-          this.post.data['score'] -= 1;
-          this.votingService.vote(this.post.data['name'], '0').subscribe();
-        } else {
-          this.post.data['score'] += direction;
-          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
-        }
-
-        this.isUpVoted = !this.isUpVoted;
-        break;
-      case -1:
-        if (this.isUpVoted) {
-          this.post.data['score'] += direction - 1;
-          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
-          this.isUpVoted = false;
-        } else if (this.isDownVoted) {
-          this.post.data['score'] += 1;
-          this.votingService.vote(this.post.data['name'], '0').subscribe();
-        } else {
-          this.post.data['score'] += direction;
-          this.votingService.vote(this.post.data['name'], direction.toString()).subscribe();
-        }
-
-        this.isDownVoted = !this.isDownVoted;
-        break;
-    }
-
-  }
-
   initTwitter() {
     let html = DomParserPipe.prototype.transform(this.post.data['media']['oembed']['html']);
     html = ReplacePipe.prototype.transform(html, '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>', '');

@@ -25,15 +25,14 @@ import { DirectivesModule } from './directives/directives.module';
 import { UserService } from './services/user.service';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SharedDirectivesModule } from './shared/directives/directives.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NsfwPopupComponent } from './components/modals/nsfw/nsfw-popup.component';
+import { NgbDropdownModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
 import { TrumbowygService } from './services/trumbowyg.service';
 import { RedditSubmitService } from './services/reddit-submit.service';
 import { CheckDeviceFeatureService } from './services/check-device-feature.service';
 import { SearchModule } from './components/search/search.module';
 import { RedditSearchService } from './services/reddit-search.service';
-import { SearchPageComponent } from './components/search/components/search-page/search-page.component';
+import { ModalModule } from './components/modals/modal.module';
 
 @NgModule({
   declarations: [
@@ -58,8 +57,10 @@ import { SearchPageComponent } from './components/search/components/search-page/
     DirectivesModule,
     SharedDirectivesModule,
     SharedComponentsModule,
-    NgbModule,
-    SearchModule
+    NgbModalModule,
+    NgbDropdownModule,
+    SearchModule,
+    ModalModule
   ],
   providers: [
     RedditListingService,
@@ -73,9 +74,6 @@ import { SearchPageComponent } from './components/search/components/search-page/
     RedditSearchService,
     CheckDeviceFeatureService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
-  ],
-  entryComponents: [
-    NsfwPopupComponent
   ],
   bootstrap: [AppComponent]
 })

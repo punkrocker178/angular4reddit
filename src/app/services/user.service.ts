@@ -10,7 +10,7 @@ import { HeadersUtils } from '../class/HeadersUtils';
 @Injectable()
 export class UserService {
 
-    private preferencesAPI = 'api/v1/me/prefs';
+    private preferencesAPI = '/api/v1/me/prefs';
 
     private allowNSFW: BehaviorSubject<boolean> = new BehaviorSubject(false);
     allowNSFW$ = this.allowNSFW.asObservable();
@@ -78,7 +78,7 @@ export class UserService {
     }
 
     getUserPreference() {
-        return this.http.get(this.preferencesAPI,
+        return this.http.get(HeadersUtils.buildUrl(this.preferencesAPI),
             {
                 headers:
                 {
@@ -88,7 +88,7 @@ export class UserService {
     }
 
     updateUserPreference(body) {
-        return this.http.patch(this.preferencesAPI, body,
+        return this.http.patch(HeadersUtils.buildUrl(this.preferencesAPI), body,
             {
                 headers:
                 {

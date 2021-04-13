@@ -44,7 +44,6 @@ export class RedditAuthenticateService {
             .set('redirect_uri', this.getRedirectUri())
             .set('state', state)
             .set('scope', scope.join(','));
-
         window.location.href = environment.loginUrl + '?' + httParams.toString();
     }
 

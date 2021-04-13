@@ -27,38 +27,35 @@ export class VoteComponent {
 
     vote(direction: number) {
 
+        let undo;
         switch (direction) {
             case 1:
                 if (this.isDownVoted) {
                     this.score += direction + 1;
-                    this.votingService.vote(this.id, direction.toString()).subscribe();
                     this.isDownVoted = false;
                 } else if (this.isUpVoted) {
                     this.score -= 1;
-                    this.votingService.vote(this.id, '0').subscribe();
+                    undo = true;
                 } else {
                     this.score += direction;
-                    this.votingService.vote(this.id, direction.toString()).subscribe();
                 }
-
                 this.isUpVoted = !this.isUpVoted;
                 break;
             case -1:
                 if (this.isUpVoted) {
                     this.score += direction - 1;
-                    this.votingService.vote(this.id, direction.toString()).subscribe();
                     this.isUpVoted = false;
                 } else if (this.isDownVoted) {
                     this.score += 1;
-                    this.votingService.vote(this.id, '0').subscribe();
+                    undo = true;
                 } else {
                     this.score += direction;
-                    this.votingService.vote(this.id, direction.toString()).subscribe();
                 }
-
                 this.isDownVoted = !this.isDownVoted;
                 break;
         }
+
+        this.votingService.vote(this.id,undo ? '0' : direction.toString()).subscribe();
 
     }
 }
