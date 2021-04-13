@@ -29,9 +29,6 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
                 this.authenService.getBearerAPI(params['code']).subscribe(res => {
 
                     if (res['token_type'] === 'bearer') {
-                        this.localStorage.set('userToken', res['access_token']);
-                        this.localStorage.set('refreshToken', res['refresh_token']);
-                        this.localStorage.set('initTime', Date.now().toString());
                         this.authenService.getUserInfo()
                         .pipe(takeUntil(this.ngUnsubscribe))
                         .subscribe(res => {
@@ -39,7 +36,6 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
                             this.userService.setUser(res);
                             this.router.navigateByUrl('/home');
                         });
-
                     }
 
                 });

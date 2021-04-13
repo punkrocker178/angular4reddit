@@ -2,8 +2,8 @@ import { environment } from 'src/environments/environment';
 
 export class HeadersUtils {
 
-    public static buildUrl(isLoggedIn, segment: string, requestJson?: boolean) {
-        const url = `${environment.functionUrl}${(isLoggedIn ? '/oauth' + segment: segment)}${ !isLoggedIn || requestJson ? '/.json' : ''}`;
+    public static buildUrl(segment: string, requestJson?: boolean) {
+        const url = `${environment.functionUrl}/oauth${segment}`;
         return url;
     }
 

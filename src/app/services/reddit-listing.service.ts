@@ -22,7 +22,7 @@ export class RedditListingService {
             params: params
         }
 
-        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), segment);
+        let url = HeadersUtils.buildUrl(segment);
 
         let ob = this.http.get(url, options);
         return ob.pipe(map((data: any) => {
@@ -39,7 +39,7 @@ export class RedditListingService {
             params: params
         }
 
-        let url = HeadersUtils.buildUrl(!!this.authenticateService.getToken(), path);
+        let url = HeadersUtils.buildUrl(path);
 
         let ob = this.http.get(url, options);
         return ob.pipe(map((data: any) => {

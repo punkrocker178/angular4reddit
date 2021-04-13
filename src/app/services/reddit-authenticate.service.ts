@@ -59,6 +59,7 @@ export class RedditAuthenticateService {
                 }
             }).pipe(tap(next => {
                 this.localStorage.set('userToken', next['access_token']);
+                this.localStorage.set('initTime', Date.now().toString());
             }));
     }
 
@@ -86,8 +87,13 @@ export class RedditAuthenticateService {
                     'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-            }).pipe(tap(_ => {
-                this.localStorage.set('isLoggedIn', true)
+            }).pipe(tap(next => {
+                if (next['token_type'] === 'bearer') {
+                    this.localStorage.set('userToken', next['access_token']);
+                    this.localStorage.set('refreshToken', next['refresh_token']);
+                    this.localStorage.set('initTime', Date.now().toString());
+                    this.localStorage.set('isLoggedIn', true);
+                }
             }));
     }
 
@@ -123,7 +129,7 @@ export class RedditAuthenticateService {
     }
 
     getUserInfo() {
-        const url = HeadersUtils.buildUrl(this.getToken(), ApiList.USER_INFO);
+        const url = HeadersUtils.buildUrl(ApiList.USER_INFO);
         return this.http.get(url);
     }
 

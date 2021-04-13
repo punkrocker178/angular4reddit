@@ -33,7 +33,7 @@ export class SubredditService {
             body = body.set(field, payload[field]);
         }
 
-        return this.http.post(HeadersUtils.buildUrl(true, '/api/subscribe'), body.toString(),
+        return this.http.post(HeadersUtils.buildUrl('/api/subscribe'), body.toString(),
             {
                 headers:
                 {

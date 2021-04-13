@@ -46,7 +46,7 @@ export class UserService {
 
     getUserAbout(user) {
         const aboutAPI = `/u/${user}/about`;
-        return this.http.get(HeadersUtils.buildUrl(this.authenticateService.getIsLoggedIn(), aboutAPI),
+        return this.http.get(HeadersUtils.buildUrl(aboutAPI),
             {
                 headers:
                 {
@@ -57,7 +57,7 @@ export class UserService {
 
     getUserOverview(user) {
         const overviewAPI = `/u/${user}/overview`;
-        return this.http.get(HeadersUtils.buildUrl(this.authenticateService.getIsLoggedIn(), overviewAPI),
+        return this.http.get(HeadersUtils.buildUrl(overviewAPI),
             {
                 headers:
                 {
@@ -68,7 +68,7 @@ export class UserService {
 
     getUserComments(user) {
         const commentsAPI = `/u/${user}/comments`;
-        return this.http.get(HeadersUtils.buildUrl(this.authenticateService.getIsLoggedIn(), commentsAPI),
+        return this.http.get(HeadersUtils.buildUrl(commentsAPI),
             {
                 headers:
                 {

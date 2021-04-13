@@ -36,7 +36,7 @@ export class RedditSearchService {
             params = params.set(prop, payload[prop]);
         }
 
-        return this.http.get(HeadersUtils.buildUrl(true, this.endpointSubreddit, false), {
+        return this.http.get(HeadersUtils.buildUrl(this.endpointSubreddit), {
             params: params,
             headers: {
                 'Authorization': this.authenticateService.getToken()
@@ -81,7 +81,7 @@ export class RedditSearchService {
             params = params.set(prop, payload[prop]);
         }
 
-        return this.http.get(HeadersUtils.buildUrl(true, this.endpointSubredditNames, false), {
+        return this.http.get(HeadersUtils.buildUrl(this.endpointSubredditNames), {
             params: params,
             headers: {
                 'Authorization': this.authenticateService.getToken()

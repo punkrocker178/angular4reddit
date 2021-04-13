@@ -34,7 +34,7 @@ export class RedditSubmitService {
             body = body.set(field, payload[field]);
         }
 
-        return this.http.post(HeadersUtils.buildUrl(true, '/api/comment'), body.toString(),
+        return this.http.post(HeadersUtils.buildUrl('/api/comment'), body.toString(),
             {
                 headers:
                 {
