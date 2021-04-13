@@ -8,6 +8,7 @@ import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { CommentEditorComponent } from '../comment/components/comment-editor/comment-editor.component';
+import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 
 @Component({
   selector: 'post-detail',
@@ -28,6 +29,7 @@ export class PostDetailComponent {
 
   constructor(
     private router: Router,
+    private authenticateService: RedditAuthenticateService,
     private listingService: RedditListingService,
     private checkDeviceFeatureService: CheckDeviceFeatureService,
     private redditSubmitService: RedditSubmitService,
@@ -74,6 +76,10 @@ export class PostDetailComponent {
 
   displayCommentButton(value: boolean) {
     this.disableCommentBtn = value;
+  }
+
+  showCommentEditor() {
+    return this.authenticateService.getIsLoggedIn();
   }
 
 }

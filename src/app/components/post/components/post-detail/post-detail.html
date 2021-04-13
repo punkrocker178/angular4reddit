@@ -11,9 +11,17 @@
 
       <ng-container *ngIf="!isArchived() && !isLoading">
 
-        <comment-editor (triggerCommentButton)="displayCommentButton($event)" ></comment-editor>
+        <div *ngIf="!showCommentEditor(); else commentEditor" class="d-flex comment-login">
+          <span class="mr-3 align-self-center">Log in or sign up to leave a comment (~˘▾˘)~</span>
+          <button class="btn btn-outline-primary">Log In</button>
+        </div>
 
-        <div class="d-flex flex-row-reverse">
+        <ng-template #commentEditor>
+          <comment-editor (triggerCommentButton)="displayCommentButton($event)" ></comment-editor>
+        </ng-template>
+        
+
+        <div *ngIf="showCommentEditor()" class="d-flex flex-row-reverse">
           <button [disabled]="disableCommentBtn" class="btn btn-dark" (click)="comment()">Comment</button>
         </div>
         
