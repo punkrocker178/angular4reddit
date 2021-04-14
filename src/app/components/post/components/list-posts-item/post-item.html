@@ -39,19 +39,26 @@
 
     <ng-container *ngIf="isVideo()">
       <div [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
-        <video *ngIf="!isEmbededLink()" controls class="embed-responsive-item media letter-box-color">
+        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" controls class="embed-responsive-item media letter-box-color">
           <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video>
-        <iframe *ngIf="isEmbededLink()" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
+        <iframe *ngIf="isEmbededLink() || isMediaEmbed()" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
       </div>
     </ng-container>
 
     <!-- Link & thumbnail -->
-    <div class="card-side-padding" *ngIf="isEmbededLink() && !isTwitterEmbedded() && !isVideo()">
+    <div class="card-side-padding" *ngIf="isEmbededLink() || noSelfText">
       <a class="d-flex flex-row flex-wrap" [href]="post.data['url']" target="_blank">
         <span class="w-100 mr-auto">{{ post.data['url'] }}</span>
         <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
       </a>
     </div>
+
+  <ng-container *ngIf="isTwitchEmbedded() && !noSelfText">
+    <div class="embed-responsive scale-media">
+      <iframe class="embedly-embed" allowfullscreen="true" [src]="embedSrc | safe: 'resourceUrl'"></iframe>
+    </div>
+  </ng-container>
+    
 
     <div class="d-flex justify-content-center" #twitterEmbed *ngIf="isEmbededLink() && isTwitterEmbedded()">
     </div>

@@ -26,6 +26,10 @@ export class PostItemComponent {
   isDownVoted = false;
   liked: boolean;
   over18_consent: boolean;
+  embedSrc: string;
+
+  // Posts that don't have selft text, images, videos
+  noSelfText: boolean;
 
   galleryConfigs = {
     src: 'source',
@@ -44,13 +48,31 @@ export class PostItemComponent {
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
-    
+
     if (this.isGallery()) {
       this.getGalleryImages();
     }
 
+    if (this.isTwitchEmbedded()) {
+      const src = this.getVideo();
+      if (src) {
+        const srcArr = src.split('src=');
+        let twitchSrc;
+
+        if (srcArr.length > 0 && srcArr[0]) {
+          twitchSrc = srcArr[1];
+        } else {
+          twitchSrc = srcArr[0];
+        }
+
+        this.embedSrc = decodeURIComponent(twitchSrc) + '&parent=localhost';
+      } else {
+        this.noSelfText = true;
+      }
+    }
+
     this.formatThumbnail();
-   
+
   }
 
   ngAfterViewInit() {
@@ -60,23 +82,23 @@ export class PostItemComponent {
   }
 
   formatThumbnail() {
-    if(this.post.data['thumbnail'] && !this.post.data['thumbnail'].includes('https://')) {
+    if (this.post.data['thumbnail'] && !this.post.data['thumbnail'].includes('https://')) {
       this.post.data['thumbnail'] = '';
     }
   }
 
   hasImages() {
     return !!this.post.data['preview'] && this.post.data['preview']['enabled']
-    && Domains.imagesDomains.includes(this.post.data['domain']);
+      && Domains.imagesDomains.includes(this.post.data['domain']);
   }
 
   isVideo() {
-    return (this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded();
+    return (this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded() && !this.isTwitchEmbedded();
   }
 
   isGallery() {
     return this.post.data['is_gallery'] &&
-     this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
+      this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
   }
 
   isComment() {
@@ -87,13 +109,24 @@ export class PostItemComponent {
   isEmbededLink() {
     return !this.post.data['is_self']
       && !this.post.data['selftext']
-      && !this.post.data['is_reddit_media_domain'] 
+      && !this.post.data['is_reddit_media_domain']
       && !this.hasImages()
+      && !this.isTwitterEmbedded()
+      && !this.isTwitchEmbedded()
+      && !this.isVideo()
       && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
   }
 
   isTwitterEmbedded() {
     return this.post.data['domain'] === Domains.twitterDomain;
+  }
+
+  isMediaEmbed() {
+    return Domains.mediaEmbed.includes(this.post.data['domain']);
+  }
+
+  isTwitchEmbedded() {
+    return this.post.data['domain'] === Domains.twitchDomain;
   }
 
   isOver18() {
@@ -102,7 +135,7 @@ export class PostItemComponent {
 
   getVideo() {
     //  Get embeded link from iframe element returned
-    if (!this.post.data['is_video']) {
+    if (!this.post.data['is_video'] && this.post.data['media']) {
       const iframeHtml = this.post.data['media']['oembed']['html'];
       const srcAttr = iframeHtml.match(/src="(.*?)"/g)[0];
       const srcValue = Utils.clearUrl(srcAttr.match(/"(.*?)"/g)[0]);
@@ -111,6 +144,10 @@ export class PostItemComponent {
       const url = srcValue.substring(1, srcValue.length - 1);
 
       return decodeURI(url);
+    }
+
+    if (!this.post.data['media']) {
+      return null; 
     }
 
     return this.post.data['media']['reddit_video']['fallback_url'];
@@ -125,13 +162,13 @@ export class PostItemComponent {
         image = images[0]['variants']['gif']['source']['url'];
       } else {
         const resolutions = images[0]['resolutions'];
-        
+
         if (resolutions[resolutions.length - 1]['height'] < 300) {
           image = images[0]['source']['url'];
         } else {
           image = resolutions[resolutions.length - 1]['url'];
         }
-        
+
       }
 
     }
@@ -161,7 +198,7 @@ export class PostItemComponent {
       } else {
         path += `${this.post.data['id']}`;
       }
-      
+
       this.router.navigateByUrl(path);
     }
 
@@ -179,11 +216,11 @@ export class PostItemComponent {
   }
 
   getGalleryImages() {
-    
+
     this.galleryData.items = this.post.data['gallery_data']['items'];
     const mediaResolutions = this.post.data['media_metadata'][this.galleryData.items[0]['media_id']]['p'];
 
-    const selectedResolution = mediaResolutions.length -1;
+    const selectedResolution = mediaResolutions.length - 1;
 
     this.galleryData.items.forEach(item => {
       const mediaId = item['media_id'];
