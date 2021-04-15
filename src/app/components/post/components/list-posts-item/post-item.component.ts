@@ -10,6 +10,8 @@ import { UserService } from 'src/app/services/user.service';
 import { DomParserPipe } from 'src/app/pipe/dom-parser.pipe';
 import { Domains } from 'src/app/constants/domains';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
+import Hls from 'hls.js';
+import dashjs from 'dashjs';
 
 declare var twttr: any;
 
@@ -21,12 +23,16 @@ export class PostItemComponent {
   @Input() post: Post;
   @Input() isDetail: boolean;
   @ViewChild('twitterEmbed') tweet: ElementRef;
+  @ViewChild('videoPlayer') videoPlayer: ElementRef;
 
   isUpVoted = false;
   isDownVoted = false;
   liked: boolean;
   over18_consent: boolean;
   embedSrc: string;
+
+  hlsPlayer: Hls;
+  dashPlayer: dashjs.MediaPlayerClass;
 
   // Posts that don't have selft text, images, videos
   noSelfText: boolean;
@@ -44,7 +50,7 @@ export class PostItemComponent {
     private votingService: VotingService,
     private modalService: NgbModal,
     private userService: UserService,
-    private renderer2: Renderer2) { }
+    private renderer2: Renderer2) {}
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
@@ -79,6 +85,23 @@ export class PostItemComponent {
     if (this.isEmbededLink() && this.isTwitterEmbedded()) {
       this.initTwitter();
     }
+
+    if (!this.isEmbededLink() && !this.isMediaEmbed() && this.isVideo()) {
+      this.initVideo();
+    }
+    
+  }
+
+  initVideo() {
+    let src = this.getVideo('dash');
+
+    src = ReplacePipe.prototype.transform(src);
+    this.dashPlayer = dashjs.MediaPlayer().create();
+    this.dashPlayer.initialize();
+    this.dashPlayer.setAutoPlay(false);
+    this.dashPlayer.attachSource(src);
+    this.dashPlayer.attachView(this.videoPlayer.nativeElement);
+    this.dashPlayer.setVolume(0.5);
   }
 
   formatThumbnail() {
@@ -122,7 +145,10 @@ export class PostItemComponent {
   }
 
   isMediaEmbed() {
-    return Domains.mediaEmbed.includes(this.post.data['domain']);
+    if (!this.post.data['media']) {
+      return false;
+    }
+    return Domains.mediaEmbed.includes(this.post.data['media']['type']);
   }
 
   isTwitchEmbedded() {
@@ -133,7 +159,7 @@ export class PostItemComponent {
     return this.post.data['over_18'];
   }
 
-  getVideo() {
+  getVideo(type?: string) {
     //  Get embeded link from iframe element returned
     if (!this.post.data['is_video'] && this.post.data['media']) {
       const iframeHtml = this.post.data['media']['oembed']['html'];
@@ -150,7 +176,15 @@ export class PostItemComponent {
       return null; 
     }
 
-    return this.post.data['media']['reddit_video']['fallback_url'];
+    const hlsUrl = this.post.data['media']['reddit_video']['hls_url'];
+    const dashUrl = this.post.data['media']['reddit_video']['dash_url'];
+    const fallbackUrl = this.post.data['media']['reddit_video']['fallback_url'];
+
+    const src = this.post.data['media'] ? 
+      (type === 'dash' ? dashUrl : hlsUrl) :
+      this.post.data['media']['reddit_video']['fallback_url']; 
+
+    return src;
   }
 
   getImage() {
@@ -232,6 +266,10 @@ export class PostItemComponent {
       item.source = media['u'];
     });
 
+  }
+
+  ngOnDestroy() {
+    this.dashPlayer.destroy();
   }
 
 }
