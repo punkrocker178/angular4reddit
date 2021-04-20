@@ -269,7 +269,9 @@ export class PostItemComponent {
   }
 
   ngOnDestroy() {
-    this.dashPlayer.destroy();
+    if (this.dashPlayer) {
+      this.dashPlayer.destroy();
+    }
   }
 
 }
