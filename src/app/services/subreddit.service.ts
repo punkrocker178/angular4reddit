@@ -13,12 +13,7 @@ export class SubredditService {
 
     getSubredditAbout(subbreddit) {
         const aboutAPI = `${this.path}${subbreddit}/about`;
-        return this.http.get(aboutAPI,
-            { headers: 
-                { 
-                    'Authorization': this.authenticateService.getToken()
-                } 
-            });
+        return this.http.get(aboutAPI);
     }
 
     subscribeSubreddit(action: string, fullname: string) {
@@ -37,7 +32,6 @@ export class SubredditService {
             {
                 headers:
                 {
-                    'Authorization': this.authenticateService.getToken(),
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });

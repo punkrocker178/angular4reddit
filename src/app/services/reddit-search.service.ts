@@ -37,10 +37,7 @@ export class RedditSearchService {
         }
 
         return this.http.get(HeadersUtils.buildUrl(this.endpointSubreddit), {
-            params: params,
-            headers: {
-                'Authorization': this.authenticateService.getToken()
-            }
+            params: params
         }).pipe(map((response: any) => {
             if (response.data) {
                 let subreddits = [];
@@ -82,10 +79,7 @@ export class RedditSearchService {
         }
 
         return this.http.get(HeadersUtils.buildUrl(this.endpointSubredditNames), {
-            params: params,
-            headers: {
-                'Authorization': this.authenticateService.getToken()
-            }
+            params: params
         }).pipe(map(response => {
             if (response && response['names'].length > 0) {
                 return response['names'];

@@ -25,7 +25,6 @@ export class VotingService {
             {
                 headers:
                 {
-                    'Authorization': this.authenticateService.getToken(),
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).pipe(map(_ =>  true ));

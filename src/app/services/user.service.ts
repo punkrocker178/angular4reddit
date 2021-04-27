@@ -46,55 +46,25 @@ export class UserService {
 
     getUserAbout(user) {
         const aboutAPI = `/u/${user}/about`;
-        return this.http.get(HeadersUtils.buildUrl(aboutAPI),
-            {
-                headers:
-                {
-                    'Authorization': this.authenticateService.getToken()
-                }
-            });
+        return this.http.get(HeadersUtils.buildUrl(aboutAPI));
     }
 
     getUserOverview(user) {
         const overviewAPI = `/u/${user}/overview`;
-        return this.http.get(HeadersUtils.buildUrl(overviewAPI),
-            {
-                headers:
-                {
-                    'Authorization': this.authenticateService.getToken()
-                }
-            });
+        return this.http.get(HeadersUtils.buildUrl(overviewAPI));
     }
 
     getUserComments(user) {
         const commentsAPI = `/u/${user}/comments`;
-        return this.http.get(HeadersUtils.buildUrl(commentsAPI),
-            {
-                headers:
-                {
-                    'Authorization': this.authenticateService.getToken()
-                }
-            });
+        return this.http.get(HeadersUtils.buildUrl(commentsAPI));
     }
 
     getUserPreference() {
-        return this.http.get(HeadersUtils.buildUrl(this.preferencesAPI),
-            {
-                headers:
-                {
-                    'Authorization': this.authenticateService.getToken()
-                }
-            });
+        return this.http.get(HeadersUtils.buildUrl(this.preferencesAPI));
     }
 
     updateUserPreference(body) {
-        return this.http.patch(HeadersUtils.buildUrl(this.preferencesAPI), body,
-            {
-                headers:
-                {
-                    'Authorization': this.authenticateService.getToken()
-                }
-            });
+        return this.http.patch(HeadersUtils.buildUrl(this.preferencesAPI), body);
     }
 
     updateNSFW(flag: boolean) {

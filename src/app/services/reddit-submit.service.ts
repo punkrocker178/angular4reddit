@@ -28,6 +28,15 @@ export class RedditSubmitService {
         }
     }
 
+    moreCommentsPayload(postId, children) {
+        return {
+            link_id: postId,
+            children: children.join(','),
+            sort: 'top',
+            api_type: 'json'
+        }
+    }
+
     submitComment(payload): Observable<Object> {
         let body = new HttpParams();
         for (const field in payload) {
@@ -38,9 +47,23 @@ export class RedditSubmitService {
             {
                 headers:
                 {
-                    'Authorization': this.authenticateService.getToken(),
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).pipe(tap(_ => this.trumbowygService.clearPostEditor()));
+    }
+
+    loadMoreComments(payload) {
+        let params = new HttpParams();
+        for (const field in payload) {
+            params = params.set(field, payload[field]);
+        }
+
+        return this.http.get(HeadersUtils.buildUrl('/api/morechildren'), {
+            params: params,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+
     }
 }

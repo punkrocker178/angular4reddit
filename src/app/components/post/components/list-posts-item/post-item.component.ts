@@ -252,15 +252,16 @@ export class PostItemComponent {
   getGalleryImages() {
 
     this.galleryData.items = this.post.data['gallery_data']['items'];
-    const mediaResolutions = this.post.data['media_metadata'][this.galleryData.items[0]['media_id']]['p'];
-
-    const selectedResolution = mediaResolutions.length - 1;
+    let mediaResolutions, selectedResolution;
 
     this.galleryData.items.forEach(item => {
       const mediaId = item['media_id'];
       item.metadata = {
         ...this.post.data['media_metadata'][mediaId]
       };
+      
+      mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
+      selectedResolution = mediaResolutions.length - 1;
 
       const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
       item.source = media['u'];
