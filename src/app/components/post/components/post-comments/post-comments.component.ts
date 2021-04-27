@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { tap } from 'rxjs/operators';
+import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 @Component({
     selector: 'post-comments',
     templateUrl: './post-comments.html',
@@ -16,7 +18,7 @@ export class PostCommentsComponent {
     isComment: true
   }
   
-  constructor() {}
+  constructor(private submitService: RedditSubmitService) {}
   
   ngOnInit() {
     if (typeof this.comments === 'object') {
@@ -33,8 +35,20 @@ export class PostCommentsComponent {
     comment.data['replies']['data']['children'].length > 0;
   }
 
+  isComment(comment) {
+    return comment.kind === 't1';
+  }
+
   pushComment(comment) {
     this.comments.push(comment);
+  }
+
+  loadMoreReplies(event, comment) {
+    event.preventDefault();
+    const payload = this.submitService.moreCommentsPayload(comment.data['name'], comment.data['children']);
+    this.submitService.loadMoreComments(payload).pipe(
+      tap(next => console.log(next))
+    ).subscribe();
   }
 
 }

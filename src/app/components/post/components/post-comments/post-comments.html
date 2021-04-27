@@ -15,6 +15,12 @@
       </post-comments>
     </div>
 
+    <ng-template #moreReplies>
+      <div class="d-flex justify-content-start">
+        <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">{{comment.data['count']}} More Replies</a>
+      </div>
+    </ng-template>
+
   </div>
 
 </ng-container>
@@ -25,8 +31,4 @@
   </div>
 </ng-template>
 
-<ng-template #moreReplies>
-  <div class="d-flex justify-content-start">
-    <span class="post-buttons">More Replies</span>
-  </div>
-</ng-template>
+

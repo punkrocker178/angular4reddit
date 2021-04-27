@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { TrumbowygConstants } from '../constants/trymbowyg-constants';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
@@ -63,7 +63,8 @@ export class RedditSubmitService {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
-        })
+        }).pipe(map(res => res['json']['data'] && res['json']['data']['things'] ? res['json']['data']['things'] : []));
+        
 
     }
 }
