@@ -29,7 +29,7 @@
 
       <ng-container *ngIf="comments && !isLoading">
         <div class="comments-section">
-          <post-comments [comments]="comments"></post-comments>
+          <post-comments [postId]="post.data['name']" [comments]="comments"></post-comments>
         </div>
       </ng-container>
 

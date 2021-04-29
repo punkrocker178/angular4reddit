@@ -11,12 +11,12 @@
 
 
     <div *ngIf="hasReplies(comment)" class="children">
-      <post-comments [isReplies]="true" [comments]="comment.data['replies']">
+      <post-comments [postId]="postId" [isReplies]="true" [comments]="comment.data['replies']">
       </post-comments>
     </div>
 
     <ng-template #moreReplies>
-      <div class="d-flex justify-content-start">
+      <div *ngIf="showMoreReplies" class="d-flex justify-content-start">
         <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">{{comment.data['count']}} More Replies</a>
       </div>
     </ng-template>

@@ -10,8 +10,10 @@ export class PostCommentsComponent {
 
   @Input() comments;
   @Input() isReplies;
+  @Input() postId;
 
-  moreComments;
+  moreRepliesLoading: boolean;
+  showMoreReplies = true;
   enableEditor: boolean;
 
   trumbowygConfigs = {
@@ -45,9 +47,19 @@ export class PostCommentsComponent {
 
   loadMoreReplies(event, comment) {
     event.preventDefault();
-    const payload = this.submitService.moreCommentsPayload(comment.data['name'], comment.data['children']);
+    
+    if (this.moreRepliesLoading) {
+      return;
+    }
+
+    this.moreRepliesLoading = true;
+    const payload = this.submitService.moreCommentsPayload(this.postId, comment.data['children']);
     this.submitService.loadMoreComments(payload).pipe(
-      tap(next => console.log(next))
+      tap(next => {
+        this.comments = [...this.comments, ...next];
+        this.showMoreReplies = false;
+        this.moreRepliesLoading = false;
+      })
     ).subscribe();
   }
 
