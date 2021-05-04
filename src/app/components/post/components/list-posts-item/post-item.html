@@ -98,19 +98,27 @@
     </div>
 
     <div class="p-2 post-buttons align-self-center flex-fill">
-      <button class="btn custom-btn">
-        <i class="fas fa-gift"></i>
-        <span class="d-none d-md-inline">Give Award</span>
+      <button *ngIf="!isSaved; else unsaveBtn"
+       (click)="save()" class="btn custom-btn">
+        <i class="far fa-bookmark mr-1"></i>
+        <span class="d-none d-md-inline">Save</span>
       </button>
 
     </div>
 
     <div class="p-2 post-buttons align-self-center flex-fill">
       <button class="btn custom-btn">
-        <i class="fas fa-share"></i>
+        <i class="fas fa-share-alt mr-1"></i>
         <span class="d-none d-md-inline">Share</span>
       </button>
     </div>
+
+<ng-template #unsaveBtn>
+  <button (click)="unsave()" class="btn custom-btn">
+    <i class="fas fa-bookmark mr-1"></i>
+    <span class="d-none d-md-inline">Unsave</span>
+  </button>
+</ng-template>
 
   </div>
 </div>

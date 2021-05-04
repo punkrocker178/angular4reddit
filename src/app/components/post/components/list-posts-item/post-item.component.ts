@@ -12,6 +12,8 @@ import { Domains } from 'src/app/constants/domains';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
 import Hls from 'hls.js';
 import dashjs from 'dashjs';
+import { RedditListingService } from 'src/app/services/reddit-listing.service';
+import { tap } from 'rxjs/operators';
 
 declare var twttr: any;
 
@@ -27,6 +29,8 @@ export class PostItemComponent {
 
   isUpVoted = false;
   isDownVoted = false;
+  isSaved: boolean;
+  isSaving: boolean;
   liked: boolean;
   over18_consent: boolean;
   embedSrc: string;
@@ -47,13 +51,14 @@ export class PostItemComponent {
   };
 
   constructor(private router: Router,
-    private votingService: VotingService,
+    private listingService: RedditListingService,
     private modalService: NgbModal,
     private userService: UserService,
     private renderer2: Renderer2) {}
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
+    this.isSaved = this.post.data['saved'];
 
     if (this.isGallery()) {
       this.getGalleryImages();
@@ -272,6 +277,30 @@ export class PostItemComponent {
   
     });
 
+  }
+
+  save() {
+    if (this.isSaving) {
+      return;
+    }
+
+    this.isSaving = true;
+    this.listingService.savePost(this.post.data['name']).pipe(tap(next => {
+      this.isSaved = true;
+      this.isSaving = false;
+    })).subscribe();
+  }
+
+  unsave() {
+    if (this.isSaving) {
+      return;
+    }
+
+    this.isSaving = true;
+    this.listingService.unsavePost(this.post.data['name']).pipe(tap(next => {
+      this.isSaved = false;
+      this.isSaving = false;
+    })).subscribe();
   }
 
   ngOnDestroy() {

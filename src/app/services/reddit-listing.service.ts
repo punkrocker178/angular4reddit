@@ -55,4 +55,26 @@ export class RedditListingService {
         ));
     }
 
+    savePost(postId: string) {
+        const body = new HttpParams().set('id', postId);
+        const url = HeadersUtils.buildUrl('/api/save');
+        return this.http.post(url, body.toString(),{
+            headers:
+            {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+    }
+
+    unsavePost(postId: string) {
+        const body = new HttpParams().set('id', postId);
+        const url = HeadersUtils.buildUrl('/api/unsave');
+        return this.http.post(url, body.toString(),{
+            headers:
+            {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+    }
+
 }
