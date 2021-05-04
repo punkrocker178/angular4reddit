@@ -34,14 +34,13 @@
     </ng-container>
 
     <ng-container *ngIf="isGallery()">
-      <app-gallery [data]="galleryData" [configs]="galleryConfigs"></app-gallery>
+        <app-gallery [data]="galleryData" [configs]="galleryConfigs"></app-gallery>   
     </ng-container>
 
     <ng-container *ngIf="isVideo()">
       <div [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
-        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls class="embed-responsive-item media letter-box-color"></video>
-        <!-- <video *ngIf="!isEmbededLink() && !isMediaEmbed()" controls class="embed-responsive-item media letter-box-color">
-          <source [src]="getVideo() | safe: 'resourceUrl'" type="video/mp4"></video> -->
+        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls class="embed-responsive-item media letter-box-color">
+        </video>
         <iframe *ngIf="isEmbededLink() || isMediaEmbed()" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
       </div>
     </ng-container>

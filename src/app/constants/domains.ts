@@ -4,6 +4,7 @@ export class Domains {
     public static giphyDomain = 'media0.giphy.com';
     public static gfycatDomain = 'gfycat.com';
     public static imgurDomain = 'i.imgur.com';
+    public static imgurDomain2 = 'imgur.com';
     public static twitchDomain = 'clips.twitch.tv';
     public static youtubeDomain = 'youtube.com';
 
@@ -18,5 +19,6 @@ export class Domains {
         Domains.gfycatDomain,
         Domains.twitchDomain,
         Domains.youtubeDomain,
+        Domains.imgurDomain2
     ]
 }

@@ -259,12 +259,17 @@ export class PostItemComponent {
       item.metadata = {
         ...this.post.data['media_metadata'][mediaId]
       };
-      
-      mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
-      selectedResolution = mediaResolutions.length - 1;
 
-      const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
-      item.source = media['u'];
+      item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
+
+      if (!this.isDetail) {
+        mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
+        selectedResolution = mediaResolutions.length - 1;
+
+        const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
+        item.source = media['u'];
+      }
+  
     });
 
   }
