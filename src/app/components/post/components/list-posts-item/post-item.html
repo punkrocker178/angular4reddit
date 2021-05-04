@@ -107,7 +107,7 @@
     </div>
 
     <div class="p-2 post-buttons align-self-center flex-fill">
-      <button class="btn custom-btn">
+      <button (click)="share(toastClipboardCopied)" class="btn custom-btn">
         <i class="fas fa-share-alt mr-1"></i>
         <span class="d-none d-md-inline">Share</span>
       </button>
@@ -122,3 +122,7 @@
 
   </div>
 </div>
+
+<ng-template #toastClipboardCopied>
+  Link copied to clipboard (ᵔᴥᵔ)
+</ng-template>

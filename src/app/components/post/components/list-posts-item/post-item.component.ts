@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, Input, ElementRef, Renderer2, ViewChild, TemplateRef } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { Router } from '@angular/router';
 import { VotingService } from 'src/app/services/vote.service';
@@ -14,6 +14,7 @@ import Hls from 'hls.js';
 import dashjs from 'dashjs';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { tap } from 'rxjs/operators';
+import { ToastService } from 'src/app/services/toast.service';
 
 declare var twttr: any;
 
@@ -54,7 +55,8 @@ export class PostItemComponent {
     private listingService: RedditListingService,
     private modalService: NgbModal,
     private userService: UserService,
-    private renderer2: Renderer2) {}
+    private renderer2: Renderer2,
+    private toastService: ToastService) {}
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
@@ -301,6 +303,49 @@ export class PostItemComponent {
       this.isSaved = false;
       this.isSaving = false;
     })).subscribe();
+  }
+
+  share(toastTemplate) {
+    const url = `https://www.reddit.com${this.post.data['permalink']}`;
+
+    if (!navigator.clipboard) {
+      this.fallbackCopyTextToClipboard(url);
+      return;
+    }
+
+    navigator.clipboard.writeText(url)
+    .then(() => {
+      this.toastService.show(toastTemplate, {classname: 'bg-success text-light', delay: 2500});
+    });
+
+  }
+
+  /**
+   * Reference: https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+   */
+
+  fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+  
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+  
+    try {
+      const successful = document.execCommand('copy');
+      const msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+  
+    document.body.removeChild(textArea);
   }
 
   ngOnDestroy() {

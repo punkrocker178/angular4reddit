@@ -25,7 +25,7 @@ import { DirectivesModule } from './directives/directives.module';
 import { UserService } from './services/user.service';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SharedDirectivesModule } from './shared/directives/directives.module';
-import { NgbDropdownModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModalModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
 import { TrumbowygService } from './services/trumbowyg.service';
 import { RedditSubmitService } from './services/reddit-submit.service';
@@ -33,6 +33,8 @@ import { CheckDeviceFeatureService } from './services/check-device-feature.servi
 import { SearchModule } from './components/search/search.module';
 import { RedditSearchService } from './services/reddit-search.service';
 import { ModalModule } from './components/modals/modal.module';
+import { ToastService } from './services/toast.service';
+import { ToastsContainer } from './components/toast/toast-container/toast-container.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { ModalModule } from './components/modals/modal.module';
     ListingsComponent,
     NavbarComponent,
     AuthenticateComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ToastsContainer
   ],
   imports: [
     CommonModule,
@@ -59,6 +62,7 @@ import { ModalModule } from './components/modals/modal.module';
     SharedComponentsModule,
     NgbModalModule,
     NgbDropdownModule,
+    NgbToastModule,
     SearchModule,
     ModalModule
   ],
@@ -73,6 +77,7 @@ import { ModalModule } from './components/modals/modal.module';
     RedditSubmitService,
     RedditSearchService,
     CheckDeviceFeatureService,
+    ToastService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
