@@ -7,8 +7,8 @@
         <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
           class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
         <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
-        <span [title]="post.data['created_utc'] | dateTimePipe: 'format'"
-          class="ml-2">{{ post.data['created_utc'] | dateTimePipe: 'diff' }}</span>
+        <span [title]="post.data['created_utc'] | dateTimePipe: 'format'" class="ml-2">{{ post.data['created_utc'] |
+          dateTimePipe: 'diff' }}</span>
       </div>
 
       <!-- Awards -->
@@ -16,10 +16,26 @@
         <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
       </ng-container>
 
-      <h5 (click)="viewDetail()" class="card-title mb-2">{{post?.data['title'] | replacePipe}}</h5>
+      <div class="mb-3">
+        <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block mr-2">{{post?.data['title'] | replacePipe}}</h5>
 
-      <div *ngIf="isOver18()" class="mb-2">
-        <span class="nsfw-text">NSFW</span>
+        <ng-container *ngIf="hasFlair()">
+          <div *ngIf="!flairHasEmoji(); else emojiFlair" class="flair-text">
+            <span>{{getFlair()}}</span>
+          </div>
+
+          <ng-template #emojiFlair>
+            <div class="flair-text">
+              <img class="emoji-flair" [src]="getEmojiFlair()">
+              <span>{{getFlair()}}</span>
+            </div>
+          </ng-template>
+          
+        </ng-container>
+
+        <div *ngIf="isOver18()">
+          <span class="nsfw-text">NSFW</span>
+        </div>
       </div>
 
       <ng-container *ngIf="isCrossPost()">
@@ -34,12 +50,13 @@
     </ng-container>
 
     <ng-container *ngIf="isGallery()">
-        <app-gallery [data]="galleryData" [configs]="galleryConfigs"></app-gallery>   
+      <app-gallery [data]="galleryData" [configs]="galleryConfigs"></app-gallery>
     </ng-container>
 
     <ng-container *ngIf="isVideo()">
       <div [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
-        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls class="embed-responsive-item media letter-box-color">
+        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls
+          class="embed-responsive-item media letter-box-color">
         </video>
         <iframe *ngIf="isEmbededLink() || isMediaEmbed()" [src]="getVideo() | safe: 'resourceUrl'"></iframe>
       </div>
@@ -53,19 +70,20 @@
       </a>
     </div>
 
-  <ng-container *ngIf="isTwitchEmbedded() && !noSelfText">
-    <div class="embed-responsive scale-media">
-      <iframe class="embedly-embed" allowfullscreen="true" [src]="embedSrc | safe: 'resourceUrl'"></iframe>
-    </div>
-  </ng-container>
-    
+    <ng-container *ngIf="isTwitchEmbedded() && !noSelfText">
+      <div class="embed-responsive scale-media">
+        <iframe class="embedly-embed" allowfullscreen="true" [src]="embedSrc | safe: 'resourceUrl'"></iframe>
+      </div>
+    </ng-container>
+
 
     <div class="d-flex justify-content-center" #twitterEmbed *ngIf="isEmbededLink() && isTwitterEmbedded()">
     </div>
 
     <!-- Post text content -->
     <ng-container *ngIf="!isComment(); else commentBlock">
-      <div (click)="viewDetail()" class="parsed-html card-side-padding" appHTML [selfText]="post?.data['selftext_html']">
+      <div (click)="viewDetail()" class="parsed-html card-side-padding" appHTML
+        [selfText]="post?.data['selftext_html']">
       </div>
     </ng-container>
 
@@ -98,8 +116,7 @@
     </div>
 
     <div class="p-2 post-buttons align-self-center flex-fill">
-      <button *ngIf="!isSaved; else unsaveBtn"
-       (click)="save()" class="btn custom-btn">
+      <button *ngIf="!isSaved; else unsaveBtn" (click)="save()" class="btn custom-btn">
         <i class="far fa-bookmark mr-1"></i>
         <span class="d-none d-md-inline">Save</span>
       </button>
@@ -113,12 +130,12 @@
       </button>
     </div>
 
-<ng-template #unsaveBtn>
-  <button (click)="unsave()" class="btn custom-btn">
-    <i class="fas fa-bookmark mr-1"></i>
-    <span class="d-none d-md-inline">Unsave</span>
-  </button>
-</ng-template>
+    <ng-template #unsaveBtn>
+      <button (click)="unsave()" class="btn custom-btn">
+        <i class="fas fa-bookmark mr-1"></i>
+        <span class="d-none d-md-inline">Unsave</span>
+      </button>
+    </ng-template>
 
   </div>
 </div>

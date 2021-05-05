@@ -281,6 +281,34 @@ export class PostItemComponent {
 
   }
 
+  hasFlair() {
+    return this.post.data['link_flair_text'] || this.post.data['link_flair_richtext'].length > 0;
+  }
+
+  getFlair() {
+    if (this.post.data['link_flair_richtext'].length > 0) {
+      const flair = (this.post.data['link_flair_richtext'].length > 0 && this.post.data['link_flair_richtext']);
+      return flair.filter(part => part['e'] === 'text')[0]['t'];
+    }
+    
+    return this.post.data['link_flair_text'];
+  }
+
+  getEmojiFlair() {
+    return (this.post.data['link_flair_richtext'][0] && this.post.data['link_flair_richtext'][0]['u']);
+  }
+
+  flairHasEmoji() {
+    if (this.post.data['link_flair_richtext'].length == 0) {
+      return false;
+    }
+
+    const flair = this.post.data['link_flair_richtext'];
+    return flair &&
+    flair.length > 1 &&
+    flair[0]['e'] === 'emoji';
+  }
+
   save() {
     if (this.isSaving) {
       return;

@@ -2,6 +2,12 @@
     justify-items: center;
 }
 
+.flair-tag-mixin(@font-size, @padding) {
+    padding: @padding;
+    font-size: @font-size;
+    border-radius: 6px;
+}
+
 .custom-card {
     max-height: 100vh;
 }
@@ -140,11 +146,16 @@
 }
 
 .nsfw-text {
-    font-size: 10px;
+    .flair-tag-mixin(10px, 2px 6px);
     color: red;
     border: 1px solid red;
-    border-radius: 6px;
-    padding: 2px 4px;
+}
+
+.flair-text {
+    .flair-tag-mixin(11px, 2px 6px);
+    border: 1px solid black;
+    display: inline-block;
+    background-color: #f8f9fa;
 }
 
 @media (min-width: 360px) {
