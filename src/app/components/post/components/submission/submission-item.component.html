@@ -10,7 +10,7 @@
 
   <!-- Title, subreddit, author -->
   <div class="d-flex flex-column submission-title">
-    <div appMarkdown [selfText]="submissionData.title "></div>
+    <div appHTML [selfText]="submissionData.title "></div>
     <div class="d-flex">
       <span>{{subredddit}}</span>
 
@@ -38,7 +38,7 @@
     </div>
 
     <div class="d-flex flex-row">
-      <div class="submission-title" appMarkdown [selfText]="submissionData.title "></div>
+      <div class="submission-title" appHTML [selfText]="submissionData.title "></div>
 
       <div class="submission-thumbnail">
         <ng-container *ngTemplateOutlet="thumbnail; context: {$implicit: submissionData.thumbnail}"></ng-container>

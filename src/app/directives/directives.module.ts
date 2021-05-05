@@ -1,16 +1,19 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { MarkdownDirective } from './markdown.directive';
+import { ParseHtmlDirective } from "./html/parse-html.directive";
+import { MarkdownDirective } from './markdown/markdown.directive';
 
 @NgModule({
     imports:[
         CommonModule
     ],
     declarations: [
-        MarkdownDirective
+        MarkdownDirective,
+        ParseHtmlDirective
     ],
     exports: [
-        MarkdownDirective
+        MarkdownDirective,
+        ParseHtmlDirective
     ]
   })
   export class DirectivesModule { }

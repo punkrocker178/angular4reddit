@@ -1,11 +1,10 @@
 import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
-import marked from 'marked';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[appMarkdown]'
+  selector: '[appHTML]'
 })
-export class MarkdownDirective {
+export class ParseHtmlDirective {
 
   private text$: BehaviorSubject<string> = new BehaviorSubject('');
   textSubscription: Subscription;
@@ -20,23 +19,27 @@ export class MarkdownDirective {
     private el: ElementRef,
     private renderer2: Renderer2) { }
 
+    private replaceChars = {
+        '&lt;':'<' ,
+        '&gt;':'>',
+        '&apos;': "'",
+        '&quot;': '"',
+        '&amp;': '&'
+    };
+
   ngAfterViewInit() {
     this.textSubscription = this.text$.subscribe(text => {
       if (text) {
-        text = text.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-        this.parseMarkdown(text);
+
+        let regex = new RegExp(Object.keys(this.replaceChars).join('|'), 'g');
+        text = text.replace(regex,(match) => {
+            return this.replaceChars[match];
+        });
+
+        this.renderer2.setProperty(this.el.nativeElement, 'innerHTML', text);
       }
     });
 
-  }
-
-  parseMarkdown(text: string) {
-    this.parsed = marked(text, {
-      gfm: true,
-      smartypants: true,
-      smartLists: true
-    });
-    this.renderer2.setProperty(this.el.nativeElement, 'innerHTML', this.parsed);
   }
 
   ngOnDestroy() {

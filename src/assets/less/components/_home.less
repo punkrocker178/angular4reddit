@@ -31,13 +31,12 @@ main {
     }
 }
 
-@media(min-width: 992px) {
+@media(min-width: 768px) {
     .contents {
-        max-width: 65%;
+        max-width: clamp(65%, 75%, 100%);
     }
 
     .row {
         justify-content: center;
     }
 }
-

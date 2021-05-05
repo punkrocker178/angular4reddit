@@ -7,7 +7,7 @@
   <app-award [isDetail]="false" [awards]="commentData.data['all_awardings']"></app-award>
 </ng-container>
 
-<div class="post-comments markdown-comments" appMarkdown [selfText]="commentData.data.body"></div>
+<div class="post-comments parsed-html-comments" appHTML [selfText]="commentData.data.body_html"></div>
 <ng-container *ngIf="enableEditor">
 
   <comment-editor 

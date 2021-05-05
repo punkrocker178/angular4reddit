@@ -13,7 +13,7 @@
              </ng-template>
              <div class="d-flex flex-column p-lg-3 pl-2">
                 <h4 class="mb-2">{{subredditData?.title}}</h4>
-                <div appMarkdown [selfText]="subredditData.public_description"></div>
+                <div appHTML [selfText]="subredditData.public_description_html"></div>
                 <span class="icon-before icon-cake">
                     <span class="ml-2">{{subredditData.created_utc | dateTimePipe: 'format'}}</span>
                 </span>

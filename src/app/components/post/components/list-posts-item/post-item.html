@@ -65,7 +65,7 @@
 
     <!-- Post text content -->
     <ng-container *ngIf="!isComment(); else commentBlock">
-      <div (click)="viewDetail()" class="markdown card-side-padding" appMarkdown [selfText]="post?.data['selftext']">
+      <div (click)="viewDetail()" class="parsed-html card-side-padding" appHTML [selfText]="post?.data['selftext_html']">
       </div>
     </ng-container>
 
@@ -73,8 +73,8 @@
       <div class="card-side-padding">
         <span>Commented on <a target="_blank" [href]="post.data['link_url']"
             class="font-weight-bold">{{post.data['link_title']}}</a></span>
-        <div (click)="viewDetail(true)" class="post-comments markdown-comments" appMarkdown
-          [selfText]="post?.data['body']"></div>
+        <div (click)="viewDetail(true)" class="post-comments parsed-html-comments" appHTML
+          [selfText]="post?.data['body_html']"></div>
       </div>
 
     </ng-template>
