@@ -40,6 +40,13 @@ export class PostItemComponent {
   hlsPlayer: Hls;
   dashPlayer: dashjs.MediaPlayerClass;
 
+  flairText: string;
+  flairEmoji: string;
+
+  imageSrc: string;
+  videoSrc: string;
+
+
   // Posts that don't have selft text, images, videos
   noSelfText: boolean;
 
@@ -87,6 +94,20 @@ export class PostItemComponent {
 
     this.formatThumbnail();
 
+    if (this.hasImages()) {
+      this.imageSrc = this.getImage();
+    }
+    
+    this.videoSrc = this.getVideo();
+    
+    if (this.hasFlair()) {
+      this.flairText = this.getFlair();
+    }
+
+    if (this.flairHasEmoji()) {
+      this.flairEmoji = this.getEmojiFlair();
+    }
+    
   }
 
   ngAfterViewInit() {
@@ -195,8 +216,7 @@ export class PostItemComponent {
     const fallbackUrl = this.post.data['media']['reddit_video']['fallback_url'];
 
     const src = this.post.data['media'] ? 
-      (type === 'dash' ? dashUrl : hlsUrl) :
-      this.post.data['media']['reddit_video']['fallback_url']; 
+      (type === 'dash' ? dashUrl : hlsUrl) : fallbackUrl; 
 
     return src;
   }
