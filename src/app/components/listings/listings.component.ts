@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription, of, combineLatest } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
-import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { tap, debounceTime, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SubredditService } from 'src/app/services/subreddit.service';
 
 @Component({
   selector: 'listings-component',
@@ -14,7 +14,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   @Input() type: string;
   @Input() username: string;
-  @Input() subreddit: string;
+  subreddit: string;
+  flairFilter: string;
 
   sort = ApiList.LISTINGS_HOT;
   posts$ = new BehaviorSubject([]);
@@ -22,20 +23,33 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   scrollSubscription: Subscription;
   paramSubscription: Subscription;
+  queryParamSubscription: Subscription;
 
   after: string;
   isLoading: boolean = true;
 
   constructor(
     private redditService: RedditListingService,
+    private subredditService: SubredditService,
     private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    const queryParamOb = this.activatedRoute.queryParamMap;
+    const paramOb = this.activatedRoute.paramMap;
+  
+    combineLatest([paramOb, queryParamOb]).pipe(
+      switchMap(value => {
+        const pathParam = value[0];
+        const queryParam = value[1];
 
-    this.paramSubscription = this.activatedRoute.paramMap.pipe(
-      tap((param) => {
-        this.subreddit = param.get('subreddit');
-      }), switchMap(_ => {
+        if (pathParam.has('subreddit')) {
+          this.subreddit = pathParam.get('subreddit');
+        }
+
+        if (queryParam.has('flair')) {
+          this.flairFilter = queryParam.get('flair');
+        }
+        
         if (this.posts$.getValue().length > 0) {
           return this.fetchData(null, true)
         } else {
@@ -72,12 +86,20 @@ export class ListingsComponent implements OnInit, OnDestroy {
       queryParams['after'] = this.after
     }
 
-    return this.redditService.getListigs(this.defaultListingsTypeApi(), queryParams).pipe(
-      tap(next => {
+    const updateData = (next: any) => {
         this.after = next.after;
         const currentPosts = this.posts$.getValue();
         this.posts$.next([...currentPosts, ...next.children]);
-      }));
+    };
+
+    if(this.flairFilter) {
+      const searchTerm = `flair_name:"${this.flairFilter}"`;
+      return this.subredditService.searchInSubreddit(searchTerm, this.subreddit, this.after).pipe(
+        tap(updateData));
+    }
+
+    return this.redditService.getListigs(this.defaultListingsTypeApi(), queryParams).pipe(
+      tap(updateData));
 
   }
 
@@ -101,7 +123,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.paramSubscription.unsubscribe();
     this.scrollSubscription.unsubscribe();
   }
 

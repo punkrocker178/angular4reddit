@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { environment } from 'src/environments/environment';
 import { HeadersUtils } from '../class/HeadersUtils';
+import { Observable } from 'rxjs';
+import { Listings } from '../model/listings';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class SubredditService {
@@ -35,5 +38,31 @@ export class SubredditService {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
+    }
+
+    searchInSubreddit(term, subreddit, after?): Observable<Listings> {
+        let payload = {
+            q: term,
+            restrict_sr: true,
+        }
+
+        if (after) {
+            payload['after'] = after;
+        }
+
+        let param = new HttpParams();
+        for (const field in payload) {
+            param = param.set(field, payload[field]);
+        }
+
+        return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/search`), {
+            params: param
+        }).pipe(map((data: any) => {
+            return {
+                kind: data.kind,
+                after: data.data.after,
+                children: data.data.children
+            }
+        }));
     }
 }

@@ -305,9 +305,12 @@ export class PostItemComponent {
 
     let flairText;
 
-    if (this.post.data['link_flair_richtext'].length > 0) {
-      const flairRichText = (this.post.data['link_flair_richtext'].length > 0 && this.post.data['link_flair_richtext']);
-      flairText = flairRichText.filter(part => part['e'] === 'text')[0]['t'].replace(regex, (match) => replaceObj[match]);
+    if (this.post.data['link_flair_richtext'].length > 1) {
+      const flairRichText = this.post.data['link_flair_richtext'];
+      const flairArr = flairRichText.filter(part => part['e'] === 'text');
+      if (flairArr.length > 0) {
+        flairText = flairArr[0]['t'].replace(regex, (match) => replaceObj[match]);
+      }
       return flairText;
     }
 
@@ -328,6 +331,11 @@ export class PostItemComponent {
     return flair &&
     flair.length > 1 &&
     flair[0]['e'] === 'emoji';
+  }
+
+  filterByFlair() {
+    this.router.navigate([`${this.post.data['subreddit_name_prefixed']}/`],
+     {queryParams: {flair: this.post.data['link_flair_text']}});
   }
 
   save() {

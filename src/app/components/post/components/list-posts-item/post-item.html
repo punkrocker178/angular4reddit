@@ -19,8 +19,9 @@
       <div class="mb-3">
         <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block mr-2">{{post?.data['title'] | replacePipe}}</h5>
 
+        <!-- Flair -->
         <ng-container *ngIf="hasFlair()">
-          <div #flairElement class="flair-text">
+          <div (click)="filterByFlair()" #flairElement class="flair-text">
             <img *ngIf="flairHasEmoji()" class="emoji-flair" [src]="getEmojiFlair()">
             <span>{{getFlair()}}</span>
           </div>
