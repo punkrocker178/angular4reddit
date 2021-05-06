@@ -20,16 +20,10 @@
         <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block mr-2">{{post?.data['title'] | replacePipe}}</h5>
 
         <ng-container *ngIf="hasFlair()">
-          <div *ngIf="!flairHasEmoji(); else emojiFlair" class="flair-text">
+          <div #flairElement class="flair-text">
+            <img *ngIf="flairHasEmoji()" class="emoji-flair" [src]="getEmojiFlair()">
             <span>{{getFlair()}}</span>
           </div>
-
-          <ng-template #emojiFlair>
-            <div class="flair-text">
-              <img class="emoji-flair" [src]="getEmojiFlair()">
-              <span>{{getFlair()}}</span>
-            </div>
-          </ng-template>
           
         </ng-container>
 

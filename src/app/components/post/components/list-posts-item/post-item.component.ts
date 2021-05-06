@@ -27,6 +27,7 @@ export class PostItemComponent {
   @Input() isDetail: boolean;
   @ViewChild('twitterEmbed') tweet: ElementRef;
   @ViewChild('videoPlayer') videoPlayer: ElementRef;
+  @ViewChild('flairElement') flairEl: ElementRef
 
   isUpVoted = false;
   isDownVoted = false;
@@ -95,6 +96,12 @@ export class PostItemComponent {
 
     if (!this.isEmbededLink() && !this.isMediaEmbed() && this.isVideo()) {
       this.initVideo();
+    }
+
+    if (this.hasFlair() && this.post.data['link_flair_background_color']) {
+      this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', this.post.data['link_flair_background_color']);
+      this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.post.data['link_flair_background_color']);
+      this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
     }
     
   }
@@ -286,12 +293,26 @@ export class PostItemComponent {
   }
 
   getFlair() {
-    if (this.post.data['link_flair_richtext'].length > 0) {
-      const flair = (this.post.data['link_flair_richtext'].length > 0 && this.post.data['link_flair_richtext']);
-      return flair.filter(part => part['e'] === 'text')[0]['t'];
+    // Replace encoded special characters
+    const replaceObj = {
+      '&amp;': '&',
+      '&gt;': '>',
+      '&lt;': '<',
+      '&quot': '"'
     }
-    
-    return this.post.data['link_flair_text'];
+
+    const regex = new RegExp(Object.keys(replaceObj).join('|'), 'g');
+
+    let flairText;
+
+    if (this.post.data['link_flair_richtext'].length > 0) {
+      const flairRichText = (this.post.data['link_flair_richtext'].length > 0 && this.post.data['link_flair_richtext']);
+      flairText = flairRichText.filter(part => part['e'] === 'text')[0]['t'].replace(regex, (match) => replaceObj[match]);
+      return flairText;
+    }
+
+    flairText = this.post.data['link_flair_text'].replace(regex, (match) => replaceObj[match]);
+    return flairText;
   }
 
   getEmojiFlair() {
