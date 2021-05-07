@@ -1,7 +1,6 @@
 import { Component, Input, ElementRef, Renderer2, ViewChild, TemplateRef } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { Router } from '@angular/router';
-import { VotingService } from 'src/app/services/vote.service';
 import { Utils } from 'src/app/class/Utils';
 import { HttpParams } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +14,8 @@ import dashjs from 'dashjs';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { tap } from 'rxjs/operators';
 import { ToastService } from 'src/app/services/toast.service';
+import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
+import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 
 declare var twttr: any;
 
@@ -64,7 +65,8 @@ export class PostItemComponent {
     private modalService: NgbModal,
     private userService: UserService,
     private renderer2: Renderer2,
-    private toastService: ToastService) {}
+    private toastService: ToastService,
+    private authenticateService: RedditAuthenticateService) { }
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
@@ -97,9 +99,9 @@ export class PostItemComponent {
     if (this.hasImages()) {
       this.imageSrc = this.getImage();
     }
-    
+
     this.videoSrc = this.getVideo();
-    
+
     if (this.hasFlair()) {
       this.flairText = this.getFlair();
     }
@@ -107,7 +109,7 @@ export class PostItemComponent {
     if (this.flairHasEmoji()) {
       this.flairEmoji = this.getEmojiFlair();
     }
-    
+
   }
 
   ngAfterViewInit() {
@@ -124,7 +126,7 @@ export class PostItemComponent {
       this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.post.data['link_flair_background_color']);
       this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
     }
-    
+
   }
 
   initVideo() {
@@ -208,15 +210,15 @@ export class PostItemComponent {
     }
 
     if (!this.post.data['media']) {
-      return null; 
+      return null;
     }
 
     const hlsUrl = this.post.data['media']['reddit_video']['hls_url'];
     const dashUrl = this.post.data['media']['reddit_video']['dash_url'];
     const fallbackUrl = this.post.data['media']['reddit_video']['fallback_url'];
 
-    const src = this.post.data['media'] ? 
-      (type === 'dash' ? dashUrl : hlsUrl) : fallbackUrl; 
+    const src = this.post.data['media'] ?
+      (type === 'dash' ? dashUrl : hlsUrl) : fallbackUrl;
 
     return src;
   }
@@ -303,7 +305,7 @@ export class PostItemComponent {
         const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
         item.source = media['u'];
       }
-  
+
     });
 
   }
@@ -349,13 +351,13 @@ export class PostItemComponent {
 
     const flair = this.post.data['link_flair_richtext'];
     return flair &&
-    flair.length > 1 &&
-    flair[0]['e'] === 'emoji';
+      flair.length > 1 &&
+      flair[0]['e'] === 'emoji';
   }
 
   filterByFlair() {
     this.router.navigate([`${this.post.data['subreddit_name_prefixed']}/`],
-     {queryParams: {flair: this.post.data['link_flair_text']}});
+      { queryParams: { flair: this.post.data['link_flair_text'] } });
   }
 
   save() {
@@ -363,11 +365,15 @@ export class PostItemComponent {
       return;
     }
 
-    this.isSaving = true;
-    this.listingService.savePost(this.post.data['name']).pipe(tap(next => {
-      this.isSaved = true;
-      this.isSaving = false;
-    })).subscribe();
+    if (!this.authenticateService.getIsLoggedIn()) {
+      this.modalService.open(LoginPromptComponent);
+    } else {
+      this.isSaving = true;
+      this.listingService.savePost(this.post.data['name']).pipe(tap(next => {
+        this.isSaved = true;
+        this.isSaving = false;
+      })).subscribe();
+    }
   }
 
   unsave() {
@@ -391,9 +397,9 @@ export class PostItemComponent {
     }
 
     navigator.clipboard.writeText(url)
-    .then(() => {
-      this.toastService.show(toastTemplate, {classname: 'bg-success text-light', delay: 2500});
-    });
+      .then(() => {
+        this.toastService.show(toastTemplate, { classname: 'bg-success text-light', delay: 2500 });
+      });
 
   }
 
@@ -404,16 +410,16 @@ export class PostItemComponent {
   fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
-    
+
     // Avoid scrolling to bottom
     textArea.style.top = "0";
     textArea.style.left = "0";
     textArea.style.position = "fixed";
-  
+
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-  
+
     try {
       const successful = document.execCommand('copy');
       const msg = successful ? 'successful' : 'unsuccessful';
@@ -421,7 +427,7 @@ export class PostItemComponent {
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err);
     }
-  
+
     document.body.removeChild(textArea);
   }
 
