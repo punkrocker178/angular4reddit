@@ -311,7 +311,8 @@ export class PostItemComponent {
   }
 
   hasFlair() {
-    return this.post.data['link_flair_text'] || this.post.data['link_flair_richtext'].length > 0;
+    return this.post.data['link_flair_text'] || 
+    (this.post.data['link_flair_richtext'] && this.post.data['link_flair_richtext'].length > 0);
   }
 
   getFlair() {
