@@ -346,7 +346,7 @@ export class PostItemComponent {
   }
 
   flairHasEmoji() {
-    if (this.post.data['link_flair_richtext'].length == 0) {
+    if (this.post.data['link_flair_richtext'] && this.post.data['link_flair_richtext'].length == 0) {
       return false;
     }
 
