@@ -47,6 +47,8 @@ export class PostItemComponent {
   imageSrc: string;
   videoSrc: string;
 
+  isInitVideo: boolean;
+  isInitVideoErr: boolean;
 
   // Posts that don't have selft text, images, videos
   noSelfText: boolean;
@@ -117,10 +119,6 @@ export class PostItemComponent {
       this.initTwitter();
     }
 
-    if (!this.isEmbededLink() && !this.isMediaEmbed() && this.isVideo()) {
-      this.initVideo();
-    }
-
     if (this.hasFlair() && this.post.data['link_flair_background_color']) {
       this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', this.post.data['link_flair_background_color']);
       this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.post.data['link_flair_background_color']);
@@ -129,16 +127,30 @@ export class PostItemComponent {
 
   }
 
-  initVideo() {
-    let src = this.getVideo('dash');
+  playVideo() {
+    if (!this.isEmbededLink() && !this.isMediaEmbed() && this.isVideo()) {
+      this.initVideo();
+    }
+  }
 
-    src = ReplacePipe.prototype.transform(src);
-    this.dashPlayer = dashjs.MediaPlayer().create();
-    this.dashPlayer.initialize();
-    this.dashPlayer.setAutoPlay(false);
-    this.dashPlayer.attachSource(src);
-    this.dashPlayer.attachView(this.videoPlayer.nativeElement);
-    this.dashPlayer.setVolume(0.5);
+  initVideo() {
+    try {
+      let src = this.getVideo('dash');
+
+      src = ReplacePipe.prototype.transform(src);
+      this.dashPlayer = dashjs.MediaPlayer().create();
+      this.dashPlayer.initialize();
+      this.dashPlayer.setAutoPlay(false);
+      this.dashPlayer.attachSource(src);
+      this.dashPlayer.attachView(this.videoPlayer.nativeElement);
+      this.dashPlayer.setVolume(0.5);
+      this.isInitVideo = true;
+
+    } catch (err) {
+      console.log(err);
+      this.isInitVideoErr = true;
+    }
+    
   }
 
   formatThumbnail() {
@@ -311,8 +323,8 @@ export class PostItemComponent {
   }
 
   hasFlair() {
-    return this.post.data['link_flair_text'] || 
-    (this.post.data['link_flair_richtext'] && this.post.data['link_flair_richtext'].length > 0);
+    return this.post.data['link_flair_text'] ||
+      (this.post.data['link_flair_richtext'] && this.post.data['link_flair_richtext'].length > 0);
   }
 
   getFlair() {

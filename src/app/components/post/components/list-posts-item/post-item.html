@@ -17,7 +17,8 @@
       </ng-container>
 
       <div class="mb-3">
-        <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block mr-2">{{post?.data['title'] | replacePipe}}</h5>
+        <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block mr-2">{{post?.data['title'] | replacePipe}}
+        </h5>
 
         <!-- Flair -->
         <ng-container *ngIf="flairText">
@@ -25,7 +26,7 @@
             <img *ngIf="flairEmoji" class="emoji-flair" [src]="flairEmoji">
             <span>{{flairText}}</span>
           </div>
-          
+
         </ng-container>
 
         <div *ngIf="isOver18()">
@@ -49,12 +50,26 @@
     </ng-container>
 
     <ng-container *ngIf="isVideo()">
-      <div [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
-        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls
+
+      <ng-container *ngIf="!isInitVideoErr">
+        <div (click)="playVideo()" *ngIf="!isInitVideo"
+          class="letter-box-color scale-media d-flex video-thumbnail-container">
+          <span class="icon-before icon-play play-video-btn"></span>
+          <img class="video-thumbnail" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
+        </div>
+      </ng-container>
+
+      <div *ngIf="isInitVideoErr" class="letter-box-color scale-media d-flex">
+        <span class="video-thumbnail">Unable to load video :( </span>
+      </div>
+
+      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
+        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
           class="embed-responsive-item media letter-box-color">
         </video>
         <iframe *ngIf="isEmbededLink() || isMediaEmbed()" [src]="videoSrc | safe: 'resourceUrl'"></iframe>
       </div>
+
     </ng-container>
 
     <!-- Link & thumbnail -->
