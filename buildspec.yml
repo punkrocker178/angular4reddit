@@ -5,17 +5,17 @@ environment_variables:
         S3_BUCKET: "angular-reddit-deployment"
 
 phases:
-    # install:
-    #     commands:
-    #         - echo Executing install
-    #         - npm i
-    # pre_build:
-    #     commands:
-    #     - echo Executing pre_build
-    # build:
-    #     commands:
-    #     - echo Build
-    #     - npm run build
+    install:
+        commands:
+            - echo Executing install
+            - npm i
+    pre_build:
+        commands:
+        - echo Executing pre_build
+    build:
+        commands:
+        - echo Build
+        - npm run build
     post_build:
         commands:
         - echo Build completed on `date`
