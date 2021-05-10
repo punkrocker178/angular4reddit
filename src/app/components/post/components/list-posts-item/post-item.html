@@ -51,18 +51,21 @@
 
     <ng-container *ngIf="isVideo()">
 
+      <!-- Video thumbnail container -->
       <ng-container *ngIf="!isInitVideoErr">
         <div (click)="playVideo()" *ngIf="!isInitVideo"
-          class="letter-box-color scale-media d-flex video-thumbnail-container">
+          class="letter-box-color d-flex video-thumbnail-container">
           <span class="icon-before icon-play play-video-btn"></span>
           <img class="video-thumbnail" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
         </div>
       </ng-container>
 
+      <!-- Video error message -->
       <div *ngIf="isInitVideoErr" class="letter-box-color scale-media d-flex">
-        <span class="video-thumbnail">Unable to load video :( </span>
+        <span class="video-thumbnail">{{videoPlayerError}}</span>
       </div>
 
+      <!-- Video player/Iframe -->
       <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
         <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
           class="embed-responsive-item media letter-box-color">

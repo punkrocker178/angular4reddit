@@ -16,6 +16,7 @@ import { tap } from 'rxjs/operators';
 import { ToastService } from 'src/app/services/toast.service';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
+import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
 declare var twttr: any;
 
@@ -49,6 +50,7 @@ export class PostItemComponent {
 
   isInitVideo: boolean;
   isInitVideoErr: boolean;
+  videoPlayerError: string;
 
   // Posts that don't have selft text, images, videos
   noSelfText: boolean;
@@ -68,7 +70,8 @@ export class PostItemComponent {
     private userService: UserService,
     private renderer2: Renderer2,
     private toastService: ToastService,
-    private authenticateService: RedditAuthenticateService) { }
+    private authenticateService: RedditAuthenticateService,
+    private checkDeviceFeatureService: CheckDeviceFeatureService) { }
 
   ngOnInit() {
     this.over18_consent = this.userService.isNSFWAllowed();
@@ -79,7 +82,7 @@ export class PostItemComponent {
     }
 
     if (this.isTwitchEmbedded()) {
-      const src = this.getVideo();
+      const src = this.getVideoSource();
       if (src) {
         const srcArr = src.split('src=');
         let twitchSrc;
@@ -102,7 +105,7 @@ export class PostItemComponent {
       this.imageSrc = this.getImage();
     }
 
-    this.videoSrc = this.getVideo();
+    this.videoSrc = this.getVideoSource();
 
     if (this.hasFlair()) {
       this.flairText = this.getFlair();
@@ -135,7 +138,25 @@ export class PostItemComponent {
 
   initVideo() {
     try {
-      let src = this.getVideo('dash');
+      if (this.checkDeviceFeatureService.isAppleDevices()) {
+        this.initHlsPlayer();
+      } else {
+        this.initDashPlayer();
+      }
+
+      this.isInitVideo = true;
+
+    } catch (err) {
+      console.error(err);
+      this.isInitVideoErr = true;
+      this.videoPlayerError = 'Unable to load video :(';
+    }
+
+  }
+
+  initDashPlayer() {
+    try {
+      let src = this.getVideoSource('dash');
 
       src = ReplacePipe.prototype.transform(src);
       this.dashPlayer = dashjs.MediaPlayer().create();
@@ -144,13 +165,28 @@ export class PostItemComponent {
       this.dashPlayer.attachSource(src);
       this.dashPlayer.attachView(this.videoPlayer.nativeElement);
       this.dashPlayer.setVolume(0.5);
-      this.isInitVideo = true;
-
-    } catch (err) {
-      console.log(err);
-      this.isInitVideoErr = true;
+    } catch(err) {
+      throw err;
+      
     }
-    
+  }
+
+  initHlsPlayer() {
+    try {
+      let src = this.getVideoSource('dash');
+      /**
+       * First check for native browser HLS support else use Hls.js
+       */
+      if (this.videoPlayer.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
+        this.videoPlayer.nativeElement.src = src;
+      } else if (Hls.isSupported()) {
+        this.hlsPlayer = new Hls();
+        this.hlsPlayer.loadSource(src);
+        this.hlsPlayer.attachMedia(this.videoPlayer.nativeElement);
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 
   formatThumbnail() {
@@ -208,7 +244,7 @@ export class PostItemComponent {
     return this.post.data['over_18'];
   }
 
-  getVideo(type?: string) {
+  getVideoSource(type?: string) {
     //  Get embeded link from iframe element returned
     if (!this.post.data['is_video'] && this.post.data['media']) {
       const iframeHtml = this.post.data['media']['oembed']['html'];

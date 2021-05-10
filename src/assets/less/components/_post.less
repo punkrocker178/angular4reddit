@@ -1,3 +1,5 @@
+@import (less) "./_table.less";
+
 .justify-center-mixin() {
     justify-items: center;
 }
@@ -86,6 +88,10 @@
     p {
         margin-bottom: 0;
     }
+}
+
+div.md table {
+    &:extend(.table);
 }
 
 .comments-section {

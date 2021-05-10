@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { RedditAuthenticateService } from './reddit-authenticate.service';
-import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class CheckDeviceFeatureService {
@@ -40,5 +37,9 @@ export class CheckDeviceFeatureService {
             }
         }
             
+    }
+
+    isAppleDevices() {
+        return /apple/i.test(navigator['vendor']);
     }
 }
