@@ -5,6 +5,7 @@ import { ApiList } from 'src/app/constants/api-list';
 import { tap, debounceTime, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
+import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
 @Component({
   selector: 'listings-component',
@@ -31,7 +32,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
   constructor(
     private redditService: RedditListingService,
     private subredditService: SubredditService,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private checkDeviceFeatureService: CheckDeviceFeatureService) { }
 
   ngOnInit(): void {
     const queryParamOb = this.activatedRoute.queryParamMap;
@@ -81,6 +83,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
     let queryParams = {
       limit: 25
     }
+
+    if (this.checkDeviceFeatureService.isMobile()) {
+      queryParams.limit = 15;
+    } 
 
     if (after) {
       queryParams['after'] = this.after

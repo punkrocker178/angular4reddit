@@ -47,6 +47,7 @@ export class PostItemComponent {
 
   imageSrc: string;
   videoSrc: string;
+  videoThumbnailSrc: string;
 
   isInitVideo: boolean;
   isInitVideoErr: boolean;
@@ -102,10 +103,11 @@ export class PostItemComponent {
     this.formatThumbnail();
 
     if (this.hasImages()) {
-      this.imageSrc = this.getImage();
+      this.imageSrc = this.getImageSource();
     }
 
     this.videoSrc = this.getVideoSource();
+    this.videoThumbnailSrc = this.getThumbnailSource();
 
     if (this.hasFlair()) {
       this.flairText = this.getFlair();
@@ -165,9 +167,9 @@ export class PostItemComponent {
       this.dashPlayer.attachSource(src);
       this.dashPlayer.attachView(this.videoPlayer.nativeElement);
       this.dashPlayer.setVolume(0.5);
-    } catch(err) {
+    } catch (err) {
       throw err;
-      
+
     }
   }
 
@@ -271,27 +273,59 @@ export class PostItemComponent {
     return src;
   }
 
-  getImage() {
+  getThumbnailSource() {
+
+    if(this.post.data['preview'] && this.post.data['preview']['images'].length > 0) {
+      const images = this.post.data['preview']['images'];
+      const resolutionIndex = Math.floor(images[0]['resolutions'].length / 2);
+      return this.getSmallerImage(images[0]['resolutions'], resolutionIndex);
+    }
+
+    if (this.post.data['thumbnail']) {
+      return this.post.data['thumbnail'];
+    }
+  }
+
+  getImageSource() {
     const images = this.post.data['preview']['images'];
     let image = '';
     if (images.length > 0) {
-
       if (images[0]['variants'] && images[0]['variants']['gif']) {
-        image = images[0]['variants']['gif']['source']['url'];
+        image = this.getImage(images[0]['variants']['gif']);
       } else {
-        const resolutions = images[0]['resolutions'];
-
-        if (resolutions[resolutions.length - 1]['height'] < 300) {
-          image = images[0]['source']['url'];
-        } else {
-          image = resolutions[resolutions.length - 1]['url'];
-        }
-
+        image = this.getImage(images);
       }
-
     }
 
     return image;
+  }
+
+  getImage(data) {
+    let image, resolutions, images;
+    
+    // GIFs
+    if (data['resolutions']) {
+      resolutions = data['resolutions'];
+      images = data;
+    }
+
+    // Images
+    if (data[0] && data[0]['resolutions']) {
+      resolutions = data[0]['resolutions'];
+      images = data[0];
+    }
+
+    if (resolutions[resolutions.length - 1]['height'] < 300 || this.isDetail) {
+      image = images['source']['url'];
+    } else {
+      image = this.getSmallerImage(resolutions, resolutions.length - 1);
+    }
+
+    return image;
+  }
+
+  getSmallerImage(resolutionArr, resolutionIndex) {
+    return resolutionArr[resolutionIndex]['url'];
   }
 
   // Needs refactor

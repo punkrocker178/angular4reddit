@@ -56,7 +56,7 @@
         <div (click)="playVideo()" *ngIf="!isInitVideo"
           class="letter-box-color d-flex video-thumbnail-container">
           <span class="icon-before icon-play play-video-btn"></span>
-          <img class="video-thumbnail" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
+          <img class="video-thumbnail" *ngIf="videoThumbnailSrc" [src]="videoThumbnailSrc | replacePipe">
         </div>
       </ng-container>
 
