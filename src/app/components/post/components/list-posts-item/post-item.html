@@ -52,7 +52,7 @@
     <ng-container *ngIf="isVideo()">
 
       <!-- Video thumbnail container -->
-      <ng-container *ngIf="!isInitVideoErr">
+      <ng-container *ngIf="!isInitVideoErr && (!isMediaEmbed() && !isEmbededLink())">
         <div (click)="playVideo()" *ngIf="!isInitVideo"
           class="letter-box-color d-flex video-thumbnail-container">
           <span class="icon-before icon-play play-video-btn"></span>
@@ -65,12 +65,16 @@
         <span class="video-thumbnail">{{videoPlayerError}}</span>
       </div>
 
-      <!-- Video player/Iframe -->
+      <!-- Video player -->
       <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
         <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
           class="embed-responsive-item media letter-box-color">
         </video>
-        <iframe *ngIf="isEmbededLink() || isMediaEmbed()" [src]="videoSrc | safe: 'resourceUrl'"></iframe>
+      </div>
+
+      <!-- Iframe -->
+      <div *ngIf="isEmbededLink() || isMediaEmbed()" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
+        <iframe [src]="videoSrc | safe: 'resourceUrl'"></iframe>
       </div>
 
     </ng-container>

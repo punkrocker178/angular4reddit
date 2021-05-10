@@ -230,7 +230,7 @@ export class PostItemComponent {
   isTwitterEmbedded() {
     return this.post.data['domain'] === Domains.twitterDomain;
   }
-
+  
   isMediaEmbed() {
     if (!this.post.data['media']) {
       return false;
