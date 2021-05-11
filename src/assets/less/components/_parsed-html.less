@@ -1,0 +1,60 @@
+@import (less) "./_table.less";
+
+div.md h1 {
+    font-size: 2em;
+}
+
+div.md h2 {
+    font-size: 1.75em;
+}
+
+div.md h3 {
+    font-size: 1.5em;
+}
+
+div.md h4 {
+    font-size: 1.25em;
+}
+
+div.md h5 {
+    font-size: 1em;
+}
+
+.parsed-html > div.md {
+    p {
+        margin-bottom: 0.5rem;
+    }
+    
+}
+
+.parsed-html-comments > div.md {
+
+    h1 {
+        font-size: 1.25em;
+    }
+
+    h2 {
+        font-size: 1.0em;
+    }
+
+    h3 {
+        font-size: 0.975em;
+    }
+
+    h4 {
+        font-size: 0.95em;
+    }
+
+    h5 {
+        font-size: 0.925em;
+    }
+
+    p {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+}
+
+div.md table {
+    &:extend(.table);
+}

@@ -128,6 +128,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         break;
     }
     this.posts$.next([]);
+    this.after = null;
     this.fetchData().subscribe(_ => this.isLoading = false);
   }
 

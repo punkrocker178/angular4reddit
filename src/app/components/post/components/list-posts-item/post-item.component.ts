@@ -530,6 +530,10 @@ export class PostItemComponent {
     if (this.dashPlayer) {
       this.dashPlayer.destroy();
     }
+
+    if (this.hlsPlayer) {
+      this.hlsPlayer.destroy();
+    }
   }
 
 }

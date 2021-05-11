@@ -40,7 +40,7 @@ export class SubredditService {
             });
     }
 
-    searchInSubreddit(term, subreddit, after?): Observable<Listings> {
+    searchInSubreddit(term, subreddit, after?, sort?): Observable<Listings> {
         let payload = {
             q: term,
             restrict_sr: true,
@@ -48,6 +48,10 @@ export class SubredditService {
 
         if (after) {
             payload['after'] = after;
+        }
+
+        if (sort) {
+            payload['sort'] = sort
         }
 
         let param = new HttpParams();
