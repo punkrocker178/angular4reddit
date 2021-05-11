@@ -16,6 +16,7 @@ import { SharedComponentsModule } from 'src/app/shared/components/shared-compone
 import { CommentComponent } from './components/comment/components/comment-detail/comment.component';
 import { CommentEditorComponent } from './components/comment/components/comment-editor/comment-editor.component';
 import { SubmissionItemComponent } from './components/submission/submission-item.component';
+import { GalleryComponent } from '../gallery/gallery.component';
 
 @NgModule({
     imports:[
@@ -37,7 +38,8 @@ import { SubmissionItemComponent } from './components/submission/submission-item
         VoteComponent,
         SortComponent,
         AwardComponent,
-        CommentEditorComponent
+        CommentEditorComponent,
+        GalleryComponent
     ],
     exports: [
         PostItemComponent,

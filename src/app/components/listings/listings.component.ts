@@ -41,6 +41,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   
     combineLatest([paramOb, queryParamOb]).pipe(
       switchMap(value => {
+        this.after = null;
         const pathParam = value[0];
         const queryParam = value[1];
 
@@ -50,6 +51,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         if (queryParam.has('flair')) {
           this.flairFilter = queryParam.get('flair');
+        } else {
+          this.flairFilter = null;
         }
         
         if (this.posts$.getValue().length > 0) {
@@ -72,7 +75,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   fetchData(after?: string, refreshData?: boolean) {
 
     if (this.after == null && this.posts$.getValue().length > 0 && !refreshData) {
-      return;
+      return of([]);
     }
 
     if (refreshData) {

@@ -315,16 +315,25 @@ export class PostItemComponent {
       images = data[0];
     }
 
-    if (resolutions[resolutions.length - 1]['height'] < 300 || this.isDetail) {
+    if ((resolutions[resolutions.length - 1] && resolutions[resolutions.length - 1]['height'] < 300) || this.isDetail) {
       image = images['source']['url'];
     } else {
-      image = this.getSmallerImage(resolutions, resolutions.length - 1);
+        try {
+          image = this.getSmallerImage(resolutions, resolutions.length - 1);
+        } catch(err) {
+          image = this.getSmallerImage(resolutions, Math.ceil(resolutions.length / 2));
+        }
     }
 
     return image;
   }
 
   getSmallerImage(resolutionArr, resolutionIndex) {
+
+    if (resolutionArr.length === 0) {
+      return '';
+    }
+
     return resolutionArr[resolutionIndex]['url'];
   }
 
@@ -383,9 +392,12 @@ export class PostItemComponent {
       if (!this.isDetail) {
         mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
         selectedResolution = mediaResolutions.length - 1;
-
         const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
-        item.source = media['u'];
+
+        if (media) {
+          item.source = media['u'];
+        }
+
       }
 
     });
