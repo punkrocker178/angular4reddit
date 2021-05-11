@@ -3,28 +3,68 @@
         <div *ngIf="subredditData.banner_background_image" class="crop-banner-img">
             <img class="img-fluid" [src]="subredditData.banner_background_image">
         </div>
-        
+
         <div class="banner">
             <img *ngIf="(subredditData.community_icon || subredditData.icon_img || subredditData.header_img); else defaultSnoo"
-             class="banner-icon" [src]="subredditData.community_icon || subredditData.icon_img || subredditData.header_img">
+                class="banner-icon"
+                [src]="subredditData.community_icon || subredditData.icon_img || subredditData.header_img">
 
-             <ng-template #defaultSnoo>
+            <ng-template #defaultSnoo>
                 <img class="banner-icon" src="/assets/images/snoo.png">
-             </ng-template>
-             <div class="d-flex flex-column p-lg-3 pl-2">
-                <h4 class="mb-2">{{subredditData?.title}}</h4>
-                <div appHTML [selfText]="subredditData.public_description_html"></div>
-                <span class="icon-before icon-cake">
-                    <span class="ml-2">{{subredditData.created_utc | dateTimePipe: 'format'}}</span>
-                </span>
-                
-             </div>
-            
+            </ng-template>
+            <div class="d-flex flex-column p-lg-3 pl-2">
+
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[0]}" (click)="changeTab($event, 0)">Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[1]}" (click)="changeTab($event, 1)">Description</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[2]}" (click)="changeTab($event, 2)">Rules</a>
+                    </li>
+                </ul>
+
+                <ng-container [ngSwitch]="activeBannerTab">
+                    <ng-container *ngSwitchCase="1">
+                        <h4>Description</h4>
+                        <div appHTML [selfText]="subredditData.description_html"></div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="2">
+                        <div *ngIf="(!subredditRulesData && rulesSubscription | async) || subredditRulesData">
+                            <h4>Rules</h4>
+                            <div *ngFor="let rule of subredditRulesData; let indexOfelement = index">
+                                <a
+                                    data-bs-toggle="collapse"
+                                    role="button"
+                                    aria-expanded="false"
+                                    (click)="$event.preventDefault(); toggleCollapseElement(indexOfelement)"
+                                    >{{rule.short_name}}</a>
+                                <div #collapseText class="collapse" [id]="(rule.priority + rule.violation_reason) | replacePipe: replaceWhitespaceRegex" 
+                                appHTML [selfText]="rule.description_html"></div>
+                            </div>
+
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchDefault>
+                        <h4 class="mb-2">{{subredditData?.title}}</h4>
+                        <div appHTML [selfText]="subredditData.public_description_html"></div>
+                        <span class="icon-before icon-cake">
+                            <span class="ml-2">{{subredditData.created_utc | dateTimePipe: 'format'}}</span>
+                        </span>
+                    </ng-container>
+                </ng-container>
+
+            </div>
+
         </div>
-        
+
     </div>
     <listings-component [type]="listingType"></listings-component>
     <div class="float-right">
-        
+
     </div>
 </div>

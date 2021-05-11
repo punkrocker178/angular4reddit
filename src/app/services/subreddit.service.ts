@@ -69,4 +69,8 @@ export class SubredditService {
             }
         }));
     }
+
+    getSubredditRules(subreddit) {
+        return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/about/rules`));
+    }
 }
