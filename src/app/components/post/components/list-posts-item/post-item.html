@@ -5,9 +5,9 @@
       <!-- Subreddit - author - post date -->
       <div (click)="viewDetail()" class="d-flex flex-row post-author">
         <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
-          class="mr-auto">{{post?.data['subreddit_name_prefixed']}}</a>
+          class="me-auto">{{post?.data['subreddit_name_prefixed']}}</a>
         <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
-        <span [title]="post.data['created_utc'] | dateTimePipe: 'format'" class="ml-2">{{ post.data['created_utc'] |
+        <span [title]="post.data['created_utc'] | dateTimePipe: 'format'" class="ms-2">{{ post.data['created_utc'] |
           dateTimePipe: 'diff' }}</span>
       </div>
 
@@ -17,7 +17,7 @@
       </ng-container>
 
       <div class="mb-3">
-        <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block mr-2">{{post?.data['title'] | replacePipe}}
+        <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block me-2">{{post?.data['title'] | replacePipe}}
         </h5>
 
         <!-- Flair -->
@@ -66,14 +66,14 @@
       </div>
 
       <!-- Video player -->
-      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
+      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="scale-media">
         <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
-          class="embed-responsive-item media letter-box-color">
+          class="letter-box-color">
         </video>
       </div>
 
       <!-- Iframe -->
-      <div *ngIf="isEmbededLink() || isMediaEmbed()" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="embed-responsive scale-media">
+      <div *ngIf="isEmbededLink() || isMediaEmbed()" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="scale-media">
         <iframe [src]="videoSrc | safe: 'resourceUrl'"></iframe>
       </div>
 
@@ -82,13 +82,13 @@
     <!-- Link & thumbnail -->
     <div class="card-side-padding" *ngIf="isEmbededLink() || noSelfText">
       <a class="d-flex flex-row flex-wrap" [href]="post.data['url']" target="_blank">
-        <span class="w-100 mr-auto">{{ post.data['url'] }}</span>
+        <span class="w-100 me-auto">{{ post.data['url'] }}</span>
         <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
       </a>
     </div>
 
     <ng-container *ngIf="isTwitchEmbedded() && !noSelfText">
-      <div class="embed-responsive scale-media">
+      <div class="scale-media">
         <iframe class="embedly-embed" allowfullscreen="true" [src]="embedSrc | safe: 'resourceUrl'"></iframe>
       </div>
     </ng-container>
@@ -122,7 +122,7 @@
 
     <div (click)="viewDetail()" class="p-2 post-buttons align-self-center flex-fill">
       <button class="btn custom-btn d-md-none">
-        <span class="font-weight-bold mr-2">{{post?.data['num_comments']}}</span>
+        <span class="font-weight-bold me-2">{{post?.data['num_comments']}}</span>
         <i class="fas fa-comment-dots"></i>
       </button>
 
@@ -134,7 +134,7 @@
 
     <div class="p-2 post-buttons align-self-center flex-fill">
       <button *ngIf="!isSaved; else unsaveBtn" (click)="save()" class="btn custom-btn">
-        <i class="far fa-bookmark mr-1"></i>
+        <i class="far fa-bookmark me-1"></i>
         <span class="d-none d-md-inline">Save</span>
       </button>
 
@@ -142,14 +142,14 @@
 
     <div class="p-2 post-buttons align-self-center flex-fill">
       <button (click)="share(toastClipboardCopied)" class="btn custom-btn">
-        <i class="fas fa-share-alt mr-1"></i>
+        <i class="fas fa-share-alt me-1"></i>
         <span class="d-none d-md-inline">Share</span>
       </button>
     </div>
 
     <ng-template #unsaveBtn>
       <button (click)="unsave()" class="btn custom-btn">
-        <i class="fas fa-bookmark mr-1"></i>
+        <i class="fas fa-bookmark me-1"></i>
         <span class="d-none d-md-inline">Unsave</span>
       </button>
     </ng-template>

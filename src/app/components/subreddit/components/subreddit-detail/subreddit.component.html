@@ -48,7 +48,7 @@
                     <!-- Rules Tab -->
                     <ng-container *ngSwitchCase="2">
 
-                        <div *ngIf="isRuleLoading" class="mr-auto ml-auto mt-3 mb-3">
+                        <div *ngIf="isRuleLoading" class="me-auto ms-auto mt-3 mb-3">
                             <i class="fa-3x fas fa-sync-alt fa-spin"></i>
                         </div>
 
@@ -61,7 +61,7 @@
                                     <span class="rule-short-name">{{rule.short_name}}</span>
                                     <span *ngIf="rule.description_html"
                                         [ngClass]="{'caret-rotate-down': collapseElementStatusArr[indexOfelement]}"
-                                        class="ml-auto icon-before icon-caret rules-caret"></span>
+                                        class="ms-auto icon-before icon-caret rules-caret"></span>
                                 </div>
 
                                 <div [ngClass]="{'show': collapseElementStatusArr[indexOfelement]}"
@@ -80,9 +80,9 @@
                         <h4 class="mb-2">{{subredditData?.title}}</h4>
                         <div appHTML [selfText]="subredditData.public_description_html"></div>
                         <span class="icon-before icon-cake">
-                            <span class="ml-2">{{subredditData.created_utc | dateTimePipe: 'format'}}</span>
+                            <span class="ms-2">{{subredditData.created_utc | dateTimePipe: 'format'}}</span>
                         </span>
-                        <div class="ml-auto">
+                        <div class="ms-auto">
                             <subsribe-subreddit-btn [subredditData]="subredditData"></subsribe-subreddit-btn>
                         </div>
                     </ng-container>

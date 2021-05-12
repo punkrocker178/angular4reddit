@@ -4,5 +4,5 @@
   [(ngModel)]="model" [ngbTypeahead]="search" (selectItem)=navigateToSubreddit($event)
   [resultFormatter]="resultFormatter" [focusFirst]="false"
   >
-  <button *ngIf="showSearchBtn" (click)="navigateToSearchComponent()" class="btn btn-success icon-before icon-search ml-1"></button>
+  <button *ngIf="showSearchBtn" (click)="navigateToSearchComponent()" class="btn btn-success icon-before icon-search ms-1"></button>
 </div>

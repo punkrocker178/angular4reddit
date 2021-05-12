@@ -9,14 +9,14 @@
             <i class="fa-3x fas fa-sync-alt fa-spin"></i>
         </div>
 
-        <button *ngIf="!allSubredditResults && !subredditLoading" class="mt-3 ml-2 btn btn-dark"
+        <button *ngIf="!allSubredditResults && !subredditLoading" class="mt-3 ms-2 btn btn-dark"
             (click)="loadMoreSubreddits()">More results</button>
         <span *ngIf="allSubredditResults" class="p-2">No more subreddits</span>
     </div>
 
     <div class="mb-4" *ngIf="submission$ | async">
         <div class="d-block d-md-flex flex-row mb-4">
-            <h4 class="p-2 mr-auto">Sumissions</h4>
+            <h4 class="p-2 me-auto">Sumissions</h4>
             <div class="d-flex flex-column">
                 <p class="p-2">🔥 Hot Post in</p>
                 <div class="btn-group p-2">
@@ -37,7 +37,7 @@
             <i class="fa-3x fas fa-sync-alt fa-spin"></i>
         </div>
 
-        <button *ngIf="!allResults && !submissionLoading" class="mt-3 ml-2 btn btn-dark"
+        <button *ngIf="!allResults && !submissionLoading" class="mt-3 ms-2 btn btn-dark"
             (click)="loadMoreSubmissions()">More results</button>
         <span *ngIf="allResults" class="p-2">No more posts</span>
     </div>
