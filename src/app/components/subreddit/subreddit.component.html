@@ -1,10 +1,12 @@
 <div>
-    <div *ngIf="(subscription | async)" class="subreddit-header">
+    <div *ngIf="(subredditAboutOb | async)" class="subreddit-header">
+        <!-- Background banner image -->
         <div *ngIf="subredditData.banner_background_image" class="crop-banner-img">
-            <img class="img-fluid" [src]="subredditData.banner_background_image">
+            <img class="img-fluid center-img" [src]="subredditData.banner_background_image">
         </div>
 
         <div class="banner">
+            <!-- Subreddit icon -->
             <img *ngIf="(subredditData.community_icon || subredditData.icon_img || subredditData.header_img); else defaultSnoo"
                 class="banner-icon"
                 [src]="subredditData.community_icon || subredditData.icon_img || subredditData.header_img">
@@ -12,43 +14,58 @@
             <ng-template #defaultSnoo>
                 <img class="banner-icon" src="/assets/images/snoo.png">
             </ng-template>
-            <div class="d-flex flex-column p-lg-3 pl-2">
 
-                <ul class="nav nav-tabs">
+            <!-- Subreddit info tabs -->
+            <div class="d-flex flex-column p-lg-3 pl-2 flex-grow-1">
+
+                <ul class="nav nav-tabs mb-2">
                     <li class="nav-item">
-                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[0]}" (click)="changeTab($event, 0)">Info</a>
+                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[0]}"
+                            (click)="changeTab($event, 0)">Info</a>
                     </li>
                     <li class="nav-item">
-                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[1]}" (click)="changeTab($event, 1)">Description</a>
+                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[1]}"
+                            (click)="changeTab($event, 1)">Description</a>
                     </li>
                     <li class="nav-item">
-                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[2]}" (click)="changeTab($event, 2)">Rules</a>
+                        <a href class="nav-link" [ngClass]="{'active': bannerTabActiveStatus[2]}"
+                            (click)="changeTab($event, 2)">Rules</a>
                     </li>
                 </ul>
 
                 <ng-container [ngSwitch]="activeBannerTab">
+
+                    <!-- Descriptions tab -->
                     <ng-container *ngSwitchCase="1">
                         <h4>Description</h4>
                         <div appHTML [selfText]="subredditData.description_html"></div>
                     </ng-container>
 
+                    <!-- Rules Tab -->
                     <ng-container *ngSwitchCase="2">
-                        <div *ngIf="(!subredditRulesData && rulesSubscription | async) || subredditRulesData">
+
+                        <div *ngIf="isRuleLoading" class="mr-auto ml-auto mt-3 mb-3">
+                            <i class="fa-3x fas fa-sync-alt fa-spin"></i>
+                        </div>
+
+                        <div *ngIf="(!subredditRulesData && subredditRulesOb | async) || subredditRulesData">
                             <h4>Rules</h4>
-                            <div *ngFor="let rule of subredditRulesData; let indexOfelement = index">
-                                <a
-                                    data-bs-toggle="collapse"
-                                    role="button"
-                                    aria-expanded="false"
-                                    (click)="$event.preventDefault(); toggleCollapseElement(indexOfelement)"
-                                    >{{rule.short_name}}</a>
-                                <div #collapseText class="collapse" [id]="(rule.priority + rule.violation_reason) | replacePipe: replaceWhitespaceRegex" 
-                                appHTML [selfText]="rule.description_html"></div>
+                            <div class="rule-container" *ngFor="let rule of subredditRulesData; let indexOfelement = index">
+                                <div class="d-flex flex-row p-1 p-md-2" (click)="rule.description_html && toggleCollapseElement(indexOfelement) ">
+                                    <span class="rule-short-name">{{rule.short_name}}</span>
+                                    <span *ngIf="rule.description_html" 
+                                    [ngClass]="{'caret-rotate-down': collapseElementStatusArr[indexOfelement]}"
+                                    class="ml-auto icon-before icon-caret rules-caret"></span>
+                                </div>
+
+                                <div [ngClass]="{'show': collapseElementStatusArr[indexOfelement]}"
+                                class="collapse rule-description pl-2 pr-2 pl-md-4 pr-md-4 pb-1" appHTML [selfText]="rule.description_html"></div>
                             </div>
 
                         </div>
                     </ng-container>
 
+                    <!-- Info tab -->
                     <ng-container *ngSwitchDefault>
                         <h4 class="mb-2">{{subredditData?.title}}</h4>
                         <div appHTML [selfText]="subredditData.public_description_html"></div>

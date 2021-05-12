@@ -13,15 +13,14 @@ import { Utils } from '../../class/Utils';
 
 export class SubredditComponent implements OnInit {
 
-    subscription;
-    rulesSubscription;
+    subredditAboutOb;
+    subredditRulesOb;
+    isRuleLoading: boolean;
     listingType = 'subreddit';
     subreddit = '';
     subredditData: any;
     subredditRulesData: any;
     activeBannerTab = 0;
-
-    replaceWhitespaceRegex = new RegExp('\\s+', 'g');
 
     bannerTabActiveStatus = [
         true,
@@ -29,15 +28,16 @@ export class SubredditComponent implements OnInit {
         false,
     ];
 
+    collapseElementStatusArr;
+
     @ViewChildren('collapseText') collapseTextList!: QueryList<ElementRef>;
 
     constructor(private activatedRoute: ActivatedRoute,
-                private subredditService: SubredditService,
-                private renderer2: Renderer2,
-                private changeDetector: ChangeDetectorRef) { }
+                private subredditService: SubredditService) { }
 
     ngOnInit() {
-         this.subscription = this.activatedRoute.paramMap.pipe(
+        this.isRuleLoading = true;
+         this.subredditAboutOb = this.activatedRoute.paramMap.pipe(
             switchMap((param) => {
                 this.subreddit = param.get('subreddit');
                 return this.subredditService.getSubredditAbout(`r/${this.subreddit}`);
@@ -45,10 +45,10 @@ export class SubredditComponent implements OnInit {
             tap((next:any) => {
                 this.subredditData = next.data;
                 this.clearImages();
-                this.rulesSubscription = this.subredditService.getSubredditRules(this.subreddit).pipe(tap((next: any) => {
+                this.subredditRulesOb = this.subredditService.getSubredditRules(this.subreddit).pipe(tap((next: any) => {
+                    this.isRuleLoading = false;
                     this.subredditRulesData = next.rules;
-                    this.changeDetector.detectChanges();
-                    this.setCollapseElements();
+                    this.collapseElementStatusArr = new Array(this.subredditRulesData.length);
                 }));
             }));
     }
@@ -83,12 +83,11 @@ export class SubredditComponent implements OnInit {
     }
 
     toggleCollapseElement(index) {
-        console.log(index);
-        const collaspeEl = this.collapseTextList.toArray();
-    }
-
-    setCollapseElements() {
-        
+        if (!this.collapseElementStatusArr[index]) {
+            this.collapseElementStatusArr[index] = true;
+        } else {
+            this.collapseElementStatusArr[index] = false;
+        }    
     }
 
 }
