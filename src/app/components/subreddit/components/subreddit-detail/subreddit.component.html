@@ -38,7 +38,11 @@
                     <!-- Descriptions tab -->
                     <ng-container *ngSwitchCase="1">
                         <h4>Description</h4>
-                        <div appHTML [selfText]="subredditData.description_html"></div>
+                        <div *ngIf="subredditData.description_html; else noDescription" appHTML
+                            [selfText]="subredditData.description_html"></div>
+                        <ng-template #noDescription>
+                            <span>No information given</span>
+                        </ng-template>
                     </ng-container>
 
                     <!-- Rules Tab -->
@@ -50,16 +54,22 @@
 
                         <div *ngIf="(!subredditRulesData && subredditRulesOb | async) || subredditRulesData">
                             <h4>Rules</h4>
-                            <div class="rule-container" *ngFor="let rule of subredditRulesData; let indexOfelement = index">
-                                <div class="d-flex flex-row p-1 p-md-2" (click)="rule.description_html && toggleCollapseElement(indexOfelement) ">
+                            <div class="rule-container"
+                                *ngFor="let rule of subredditRulesData; let indexOfelement = index">
+                                <div class="d-flex flex-row p-1 p-md-2"
+                                    (click)="rule.description_html && toggleCollapseElement(indexOfelement) ">
                                     <span class="rule-short-name">{{rule.short_name}}</span>
-                                    <span *ngIf="rule.description_html" 
-                                    [ngClass]="{'caret-rotate-down': collapseElementStatusArr[indexOfelement]}"
-                                    class="ml-auto icon-before icon-caret rules-caret"></span>
+                                    <span *ngIf="rule.description_html"
+                                        [ngClass]="{'caret-rotate-down': collapseElementStatusArr[indexOfelement]}"
+                                        class="ml-auto icon-before icon-caret rules-caret"></span>
                                 </div>
 
                                 <div [ngClass]="{'show': collapseElementStatusArr[indexOfelement]}"
-                                class="collapse rule-description pl-2 pr-2 pl-md-4 pr-md-4 pb-1" appHTML [selfText]="rule.description_html"></div>
+                                    class="collapse rule-description pl-2 pr-2 pl-md-4 pr-md-4 pb-1" appHTML
+                                    [selfText]="rule.description_html"></div>
+                            </div>
+                            <div *ngIf="subredditRulesData.length === 0">
+                                <span>Empty :O</span>
                             </div>
 
                         </div>
