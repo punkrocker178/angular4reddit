@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-end mt-5 p-4">
     <span class="align-self-center me-2">Sort</span>
-    <select class="form-control w-auto" (change)="change()"  [(ngModel)]="selectedValue">
+    <select class="form-select w-auto" (change)="change()"  [(ngModel)]="selectedValue">
         <option *ngFor="let category of sortCategories">
             {{category}}
         </option>

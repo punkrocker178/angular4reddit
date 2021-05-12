@@ -16,7 +16,7 @@
             </ng-template>
 
             <!-- Subreddit info tabs -->
-            <div class="d-flex flex-column p-lg-3 pl-2 flex-grow-1">
+            <div class="d-flex flex-column p-lg-3 ps-2 flex-grow-1">
 
                 <ul class="nav nav-tabs mb-2">
                     <li class="nav-item">
@@ -65,7 +65,7 @@
                                 </div>
 
                                 <div [ngClass]="{'show': collapseElementStatusArr[indexOfelement]}"
-                                    class="collapse rule-description pl-2 pr-2 pl-md-4 pr-md-4 pb-1" appHTML
+                                    class="collapse rule-description ps-2 pe-2 ps-md-4 pe-md-4 pb-1" appHTML
                                     [selfText]="rule.description_html"></div>
                             </div>
                             <div *ngIf="subredditRulesData.length === 0">
