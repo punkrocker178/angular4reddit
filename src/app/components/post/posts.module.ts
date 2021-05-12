@@ -17,6 +17,7 @@ import { CommentComponent } from './components/comment/components/comment-detail
 import { CommentEditorComponent } from './components/comment/components/comment-editor/comment-editor.component';
 import { SubmissionItemComponent } from './components/submission/submission-item.component';
 import { GalleryComponent } from '../gallery/gallery.component';
+import { ListingsComponent } from '../listings/listings.component';
 
 @NgModule({
     imports:[
@@ -30,6 +31,7 @@ import { GalleryComponent } from '../gallery/gallery.component';
         SharedComponentsModule
     ],
     declarations: [
+        ListingsComponent,
         PostItemComponent,
         SubmissionItemComponent,
         PostDetailComponent,
@@ -42,6 +44,7 @@ import { GalleryComponent } from '../gallery/gallery.component';
         GalleryComponent
     ],
     exports: [
+        ListingsComponent,
         PostItemComponent,
         SubmissionItemComponent,
         PostDetailComponent,

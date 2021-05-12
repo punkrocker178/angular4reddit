@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PipeModule } from 'src/app/pipe/pipe.module';
 import { PostsModule } from '../post/posts.module';
+import { SubredditModule } from '../subreddit/components/subreddit.module';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { SubbredditItemComponent } from './components/search-page/components/subreddit/subbreddit-item.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
@@ -14,7 +15,8 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
         FormsModule,
         PostsModule,
         NgbModule,
-        PipeModule
+        PipeModule,
+        SubredditModule
     ],
     declarations: [
         SearchBarComponent,

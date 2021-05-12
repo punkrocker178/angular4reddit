@@ -10,9 +10,12 @@
   </ng-template>
   <div class="d-flex flex-column subreddit-item-title" (click)="navigateToSubreddit()">
     <span>{{subredditData.data.display_name_prefixed}}</span>
-    <span>{{subredditData.data.subscribers | formatNumber}} {{subredditData.data.subscribers > 0 ? 'Members' : 'Member'}}</span>
+    <span>{{subredditData.data.subscribers | formatNumber}} {{subredditData.data.subscribers > 0 ? 'Members' :
+      'Member'}}</span>
   </div>
-  <span *ngIf="!isMobile()" class="subreddit-item-description">{{subredditData.data.public_description | replacePipe}}</span>
-  <button (click)="subscribe()" class="btn subreddit-item-join-btn" [ngClass]="{'btn-light': !isUserSubscriber(), 'btn-success': isUserSubscriber()}">
-    {{isUserSubscriber() ? 'Joined' : 'Join'}}</button>
+  <span *ngIf="!isMobile()" class="subreddit-item-description">{{subredditData.data.public_description |
+    replacePipe}}</span>
+  <div class="subreddit-item-join-btn">
+    <subsribe-subreddit-btn [subredditData]="subredditData.data"></subsribe-subreddit-btn>
+  </div>
 </div>

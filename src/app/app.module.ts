@@ -18,7 +18,6 @@ import { CommonModule } from '@angular/common';
 import { PipeModule } from './pipe/pipe.module';
 import { ListingsComponent } from './components/listings/listings.component';
 import { VotingService } from './services/vote.service';
-import { SubredditComponent } from './components/subreddit/subreddit.component';
 import { UserProfileComponent } from './components/user/user-profile.component';
 import { SubredditService } from './services/subreddit.service';
 import { DirectivesModule } from './directives/directives.module';
@@ -35,14 +34,13 @@ import { RedditSearchService } from './services/reddit-search.service';
 import { ModalModule } from './components/modals/modal.module';
 import { ToastService } from './services/toast.service';
 import { ToastsContainer } from './components/toast/toast-container/toast-container.component';
+import { SubredditModule } from './components/subreddit/components/subreddit.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    SubredditComponent,
     UserProfileComponent,
-    ListingsComponent,
     NavbarComponent,
     AuthenticateComponent,
     NotFoundComponent,
@@ -64,7 +62,8 @@ import { ToastsContainer } from './components/toast/toast-container/toast-contai
     NgbDropdownModule,
     NgbToastModule,
     SearchModule,
-    ModalModule
+    ModalModule,
+    SubredditModule
   ],
   providers: [
     RedditListingService,

@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { switchMap, tap } from 'rxjs/operators';
+import { Utils } from '../../../../class/Utils';
 import { Observable } from 'rxjs';
-import { Utils } from '../../class/Utils';
 
 
 @Component({
@@ -13,8 +13,8 @@ import { Utils } from '../../class/Utils';
 
 export class SubredditComponent implements OnInit {
 
-    subredditAboutOb;
-    subredditRulesOb;
+    subredditAboutOb: Observable<any[]>;
+    subredditRulesOb: Observable<any[]>;
     isRuleLoading: boolean;
     listingType = 'subreddit';
     subreddit = '';

@@ -15,7 +15,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PostsModule } from './components/post/posts.module';
 import { SearchModule } from './components/search/search.module';
-import { SubredditComponent } from './components/subreddit/subreddit.component';
+import { SubredditComponent } from './components/subreddit/components/subreddit-detail/subreddit.component';
 import { UserProfileComponent } from './components/user/user-profile.component';
 import { DirectivesModule } from './directives/directives.module';
 import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
