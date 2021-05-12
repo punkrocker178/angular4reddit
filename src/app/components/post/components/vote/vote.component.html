@@ -2,7 +2,7 @@
 
     <a (click)="vote(1)" [ngClass]="{'up-voted': isUpVoted, 'me-3': !isCompactView}" class="icon-before icon-up"></a>
 
-    <span [title]="score" class="align-self-center font-weight-bold">{{score | formatNumber}}</span>
+    <span [title]="score" class="align-self-center fw-bold">{{score | formatNumber}}</span>
 
     <a (click)="vote(-1)" [ngClass]="{'down-voted': isDownVoted, 'ms-3': !isCompactView}" class="icon-after icon-down"></a>
 

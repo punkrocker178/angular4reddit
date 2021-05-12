@@ -66,14 +66,14 @@
       </div>
 
       <!-- Video player -->
-      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="scale-media">
+      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="scale-media ratio">
         <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
           class="letter-box-color">
         </video>
       </div>
 
       <!-- Iframe -->
-      <div *ngIf="isEmbededLink() || isMediaEmbed()" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="scale-media">
+      <div *ngIf="isEmbededLink() || isMediaEmbed()" [ngClass]="{'blur-img': isOver18() && !over18_consent}" class="scale-media ratio">
         <iframe [src]="videoSrc | safe: 'resourceUrl'"></iframe>
       </div>
 
@@ -88,7 +88,7 @@
     </div>
 
     <ng-container *ngIf="isTwitchEmbedded() && !noSelfText">
-      <div class="scale-media">
+      <div class="scale-media ratio ratio-16x9">
         <iframe class="embedly-embed" allowfullscreen="true" [src]="embedSrc | safe: 'resourceUrl'"></iframe>
       </div>
     </ng-container>
@@ -107,7 +107,7 @@
     <ng-template #commentBlock>
       <div class="card-side-padding">
         <span>Commented on <a target="_blank" [href]="post.data['link_url']"
-            class="font-weight-bold">{{post.data['link_title']}}</a></span>
+            class="fw-bold">{{post.data['link_title']}}</a></span>
         <div (click)="viewDetail(true)" class="post-comments parsed-html-comments" appHTML
           [selfText]="post?.data['body_html']"></div>
       </div>
@@ -122,12 +122,12 @@
 
     <div (click)="viewDetail()" class="p-2 post-buttons align-self-center flex-fill">
       <button class="btn custom-btn d-md-none">
-        <span class="font-weight-bold me-2">{{post?.data['num_comments']}}</span>
+        <span class="fw-bold me-2">{{post?.data['num_comments']}}</span>
         <i class="fas fa-comment-dots"></i>
       </button>
 
       <button class="btn custom-btn d-none d-md-inline">
-        <span class="font-weight-bold">{{post?.data['num_comments']}}</span>
+        <span class="fw-bold">{{post?.data['num_comments']}}</span>
         Comments
       </button>
     </div>
