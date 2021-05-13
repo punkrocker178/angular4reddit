@@ -7,6 +7,8 @@ export class Domains {
     public static imgurDomain2 = 'imgur.com';
     public static twitchDomain = 'clips.twitch.tv';
     public static youtubeDomain = 'youtube.com';
+    public static redgifsDomain = 'redgifs.com';
+    public static streamableDomain = 'streamable.com';
 
     public static imagesDomains = [
         Domains.iredditDomain,
@@ -19,6 +21,8 @@ export class Domains {
         Domains.gfycatDomain,
         Domains.twitchDomain,
         Domains.youtubeDomain,
-        Domains.imgurDomain2
+        Domains.imgurDomain2,
+        Domains.redgifsDomain,
+        Domains.streamableDomain
     ]
 }
