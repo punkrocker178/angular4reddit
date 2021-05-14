@@ -17,7 +17,6 @@ export class SubredditComponent implements OnInit {
     subredditRulesOb: Observable<any[]>;
     isRuleLoading: boolean;
     listingType = 'subreddit';
-    subreddit = '';
     subredditData: any;
     subredditRulesData: any;
     activeBannerTab = 0;
@@ -38,18 +37,22 @@ export class SubredditComponent implements OnInit {
     ngOnInit() {
         this.isRuleLoading = true;
          this.subredditAboutOb = this.activatedRoute.paramMap.pipe(
-            switchMap((param) => {
-                this.subreddit = param.get('subreddit');
-                return this.subredditService.getSubredditAbout(`r/${this.subreddit}`);
-            }),
-            tap((next:any) => {
-                this.subredditData = next.data;
-                this.clearImages();
-                this.subredditRulesOb = this.subredditService.getSubredditRules(this.subreddit).pipe(tap((next: any) => {
+            tap((param: any) => {
+                const subreddit = param.get('subreddit');
+                this.subredditRulesOb = this.subredditService.getSubredditRules(subreddit).pipe(tap((next: any) => {
                     this.isRuleLoading = false;
                     this.subredditRulesData = next.rules;
                     this.collapseElementStatusArr = new Array(this.subredditRulesData.length);
                 }));
+            }),
+            switchMap((param) => {
+                const subreddit = param.get('subreddit');
+                this.subredditRulesData = null;
+                return this.subredditService.getSubredditAbout(`r/${subreddit}`);
+            }),
+            tap((next:any) => {
+                this.subredditData = next.data;
+                this.clearImages();
             }));
     }
 
