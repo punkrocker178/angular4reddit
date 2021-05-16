@@ -52,6 +52,7 @@ export class PostItemComponent {
   isInitVideo: boolean;
   isInitVideoErr: boolean;
   videoPlayerError: string;
+  isWidescreenVideo: boolean;
 
   // Posts that don't have selft text, images, videos
   noSelfText: boolean;
@@ -109,6 +110,10 @@ export class PostItemComponent {
     this.videoSrc = this.getVideoSource();
     this.videoThumbnailSrc = this.getThumbnailSource();
 
+    if (this.post.data['preview']) {
+      this.isWidescreenVideo = this.isWideScreen(this.post.data['preview']['images']);
+    }
+    
     if (this.hasFlair()) {
       this.flairText = this.getFlair();
     }
@@ -255,6 +260,10 @@ export class PostItemComponent {
 
   isOver18() {
     return this.post.data['over_18'];
+  }
+
+  isWideScreen (images): boolean {
+    return images[0]['source']['width'] > images[0]['source']['height'];
   }
 
   getVideoSource(type?: string) {
