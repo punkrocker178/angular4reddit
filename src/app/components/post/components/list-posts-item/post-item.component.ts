@@ -130,6 +130,10 @@ export class PostItemComponent {
       this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
     }
 
+    if (this.isDetail) {
+      this.playVideo();
+    }
+
   }
 
   playVideo() {
@@ -175,7 +179,7 @@ export class PostItemComponent {
 
   initHlsPlayer() {
     try {
-      let src = this.getVideoSource('dash');
+      let src = this.getVideoSource('hls');
       /**
        * First check for native browser HLS support else use Hls.js
        */
@@ -185,6 +189,13 @@ export class PostItemComponent {
         this.hlsPlayer = new Hls();
         this.hlsPlayer.loadSource(src);
         this.hlsPlayer.attachMedia(this.videoPlayer.nativeElement);
+
+        this.hlsPlayer.on(Hls.Events.ERROR, function (event, data) {
+          const errorType = data.type;
+          const errorDetails = data.details;
+          const errorFatal = data.fatal;
+          console.error(errorDetails);
+        });
       }
     } catch (err) {
       throw err;
