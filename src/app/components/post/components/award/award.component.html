@@ -33,7 +33,7 @@
 
 <!-- Award Template -->
 <ng-template #award_template let-award>
-  <img class="award-icon" [src]="getAwardIcon(award, 0) | replacePipe">
+  <img class="award-icon" [src]="getAwardIcon(award, 1) | replacePipe">
   <span>
     {{ award['count']}}
   </span>
