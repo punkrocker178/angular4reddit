@@ -513,7 +513,7 @@ export class PostItemComponent {
 
     navigator.clipboard.writeText(url)
       .then(() => {
-        this.toastService.show(toastTemplate, { classname: 'bg-success text-light', delay: 2500 });
+        this.toastService.show(toastTemplate, { classname: 'toast bg-success text-light', delay: 2500 });
       });
 
   }
