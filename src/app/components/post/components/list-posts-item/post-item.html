@@ -1,7 +1,7 @@
 <div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
   <div class="card-body crop-content" [ngClass]="{'mb-3': isDetail}">
 
-    <div class="card-side-padding">
+    <div class="card-side-padding pointer">
       <!-- Subreddit - author - post date -->
       <div (click)="viewDetail()" class="d-flex flex-row post-author">
         <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
@@ -40,7 +40,7 @@
     </div>
 
     <ng-container *ngIf="imageSrc">
-      <div [ngClass]="{'crop-height': !isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container">
+      <div [ngClass]="{'crop-height': !isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container pointer">
         <img (click)="viewDetail()" class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe">
       </div>
     </ng-container>
@@ -53,7 +53,8 @@
 
       <!-- Video thumbnail container -->
       <ng-container *ngIf="!isInitVideoErr && (!isMediaEmbed() && !isEmbededLink())">
-        <div (click)="playVideo()" *ngIf="!isInitVideo" 
+        <div (click)="playVideo()" *ngIf="!isInitVideo"
+        [ngClass]="{'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}" 
         class="letter-box-color d-flex video-thumbnail-container">
           <span class="icon-before icon-play play-video-btn"></span>
           <img class="video-thumbnail" *ngIf="videoThumbnailSrc" [src]="videoThumbnailSrc | replacePipe">
@@ -67,7 +68,8 @@
 
       <!-- Video player -->
       <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}"
-        [ngClass]="{'ratio-16x9': isWidescreenVideo, 'ratio-4x3': !isWidescreenVideo}" class="scale-media ratio">
+        [ngClass]="{'ratio-16x9': isWidescreenVideo,'ratio-4x3': !isWidescreenVideo, 'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}"
+        class="ratio">
         <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
           class="letter-box-color">
         </video>
@@ -83,7 +85,7 @@
     </ng-container>
 
     <!-- Link & thumbnail -->
-    <div class="card-side-padding" *ngIf="isEmbededLink() || noSelfText">
+    <div class="card-side-padding pointer" *ngIf="isEmbededLink() || noSelfText">
       <a class="d-flex flex-row flex-wrap" [href]="post.data['url']" target="_blank">
         <span class="w-100 me-auto">{{ post.data['url'] }}</span>
         <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
@@ -102,7 +104,7 @@
 
     <!-- Post text content -->
     <ng-container *ngIf="!isComment(); else commentBlock">
-      <div (click)="viewDetail()" class="parsed-html card-side-padding" appHTML
+      <div (click)="viewDetail()" class="parsed-html card-side-padding pointer" appHTML
         [selfText]="post?.data['selftext_html']">
       </div>
     </ng-container>
@@ -123,7 +125,7 @@
   <div class="card-footer d-flex button-group">
     <app-vote [score]="post?.data['score']" [id]="post?.data['name']" [liked]="post?.data['likes']"></app-vote>
 
-    <div (click)="viewDetail()" class="p-2 post-buttons align-self-center flex-fill">
+    <div (click)="viewDetail()" class="p-2 post-buttons align-self-center flex-fill pointer">
       <button class="btn custom-btn d-md-none">
         <span class="fw-bold me-2">{{post?.data['num_comments']}}</span>
         <i class="fas fa-comment-dots"></i>
@@ -135,7 +137,7 @@
       </button>
     </div>
 
-    <div class="p-2 post-buttons align-self-center flex-fill">
+    <div class="p-2 post-buttons align-self-center flex-fill pointer">
       <button *ngIf="!isSaved; else unsaveBtn" (click)="save()" class="btn custom-btn">
         <i class="far fa-bookmark me-1"></i>
         <span class="d-none d-md-inline">Save</span>
@@ -143,7 +145,7 @@
 
     </div>
 
-    <div class="p-2 post-buttons align-self-center flex-fill">
+    <div class="p-2 post-buttons align-self-center flex-fill pointer">
       <button (click)="share(toastClipboardCopied)" class="btn custom-btn">
         <i class="fas fa-share-alt me-1"></i>
         <span class="d-none d-md-inline">Share</span>
