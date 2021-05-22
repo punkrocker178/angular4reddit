@@ -507,7 +507,7 @@ export class PostItemComponent {
     const url = `https://www.reddit.com${this.post.data['permalink']}`;
 
     if (!navigator.clipboard) {
-      this.fallbackCopyTextToClipboard(url);
+      this.fallbackCopyTextToClipboard(url, toastTemplate);
       return;
     }
 
@@ -522,7 +522,7 @@ export class PostItemComponent {
    * Reference: https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
    */
 
-  fallbackCopyTextToClipboard(text) {
+  fallbackCopyTextToClipboard(text, toastTemplate) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
 
@@ -538,6 +538,7 @@ export class PostItemComponent {
     try {
       const successful = document.execCommand('copy');
       const msg = successful ? 'successful' : 'unsuccessful';
+      this.toastService.show(toastTemplate, { classname: 'toast bg-success text-light', delay: 2500 });
       console.log('Fallback: Copying text command was ' + msg);
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err);
