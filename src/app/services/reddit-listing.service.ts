@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { HeadersUtils } from '../class/HeadersUtils';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Listings } from '../model/listings';
 import { PostDetail } from '../model/post-detail';
 import { Router } from '@angular/router';
@@ -11,10 +11,20 @@ import { Router } from '@angular/router';
 @Injectable()
 export class RedditListingService {
 
+    listingSubject = new BehaviorSubject<Listings>(null);
+
     constructor(
         private http: HttpClient,
         private authenticateService: RedditAuthenticateService,
         private router: Router) { }
+
+    set listingStoredData(data) {
+        this.listingSubject.next(data);
+    }
+
+    get listingStoredData() {
+        return this.listingSubject.getValue();
+    }
 
     getListigs(segment: string, params?: any): Observable<Listings> {
 
@@ -31,6 +41,20 @@ export class RedditListingService {
                 after: data.data.after,
                 children: data.data.children
             }
+        }), 
+        // Store/Cache data
+        tap((next: Listings) => {
+            let listing: Listings;
+            if (this.listingSubject.getValue()) {
+                listing = this.listingSubject.getValue();
+                listing.children = [...listing.children, ...next.children];
+            } else {
+                listing = new Listings();
+                listing.children = next.children;
+            }
+
+            listing.after = next.after;  
+            this.listingSubject.next(listing);
         }));
     }
 

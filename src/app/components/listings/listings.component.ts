@@ -28,6 +28,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   after: string;
   isLoading: boolean = true;
+  storedDataLoaded: boolean;
 
   constructor(
     private redditService: RedditListingService,
@@ -38,7 +39,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const queryParamOb = this.activatedRoute.queryParamMap;
     const paramOb = this.activatedRoute.paramMap;
-  
+
     combineLatest([paramOb, queryParamOb]).pipe(
       switchMap(value => {
         this.after = null;
@@ -47,6 +48,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         if (pathParam.has('subreddit')) {
           this.subreddit = pathParam.get('subreddit');
+          this.redditService.listingStoredData = null;
         }
 
         if (queryParam.has('flair')) {
@@ -54,12 +56,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
         } else {
           this.flairFilter = null;
         }
-        
-        if (this.posts$.getValue().length > 0) {
+
+        if (this.redditService.listingStoredData) {
+          const storedData = this.redditService.listingStoredData;
+          this.after = storedData.after;
+          this.posts$.next(storedData.children);
+          return of([]);
+        } else if (this.posts$.getValue().length > 0) {
           return this.fetchData(null, true)
         } else {
           return of([]);
         }
+
       }
       )
     ).subscribe();
@@ -89,19 +97,19 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     if (this.checkDeviceFeatureService.isMobile()) {
       queryParams.limit = 15;
-    } 
+    }
 
     if (after) {
       queryParams['after'] = this.after
     }
 
     const updateData = (next: any) => {
-        this.after = next.after;
-        const currentPosts = this.posts$.getValue();
-        this.posts$.next([...currentPosts, ...next.children]);
+      this.after = next.after;
+      const currentPosts = this.posts$.getValue();
+      this.posts$.next([...currentPosts, ...next.children]);
     };
 
-    if(this.flairFilter) {
+    if (this.flairFilter) {
       const searchTerm = `flair_name:"${this.flairFilter}"`;
       return this.subredditService.searchInSubreddit(searchTerm, this.subreddit, this.after).pipe(
         tap(updateData));
