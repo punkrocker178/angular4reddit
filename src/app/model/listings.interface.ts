@@ -1,8 +1,8 @@
 import { Post } from './post';
 
-export class Listings {
+export interface Listings {
     kind: string;
-    after: 'string';
+    after: string;
     children: Post[];
 
 }

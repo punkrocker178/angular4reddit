@@ -6,7 +6,6 @@ import { LocalStorageService } from './localStorage.service';
 import { ApiList } from '../constants/api-list';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { Utils } from '../class/Utils';
-import { User } from '../model/user';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 

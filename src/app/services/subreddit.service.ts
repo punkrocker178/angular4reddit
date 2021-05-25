@@ -4,7 +4,7 @@ import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { environment } from 'src/environments/environment';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { Observable } from 'rxjs';
-import { Listings } from '../model/listings';
+import { Listings } from '../model/listings.interface';
 import { map } from 'rxjs/operators';
 
 @Injectable()

@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { catchError, map, tap } from 'rxjs/operators';
-import { Listings } from '../model/listings';
+import { Listings } from '../model/listings.interface';
 import { PostDetail } from '../model/post-detail';
 import { Router } from '@angular/router';
 
@@ -12,11 +12,19 @@ import { Router } from '@angular/router';
 export class RedditListingService {
 
     listingSubject = new BehaviorSubject<Listings>(null);
+    currentSubredditSubject = new BehaviorSubject<string>(null);
 
     constructor(
         private http: HttpClient,
-        private authenticateService: RedditAuthenticateService,
         private router: Router) { }
+
+    set currentSubreddit(subreddit: string) {
+            this.currentSubredditSubject.next(subreddit);
+        }
+    
+    get currentSubreddit() {
+            return this.currentSubredditSubject.getValue();
+        }
 
     set listingStoredData(data) {
         this.listingSubject.next(data);
@@ -44,16 +52,20 @@ export class RedditListingService {
         }), 
         // Store/Cache data
         tap((next: Listings) => {
-            let listing: Listings;
+            let listing: Listings = {
+                after:'' ,
+                children: [],
+                kind: '',
+            };
             if (this.listingSubject.getValue()) {
                 listing = this.listingSubject.getValue();
                 listing.children = [...listing.children, ...next.children];
             } else {
-                listing = new Listings();
                 listing.children = next.children;
             }
 
             listing.after = next.after;  
+            listing.kind = next.kind;
             this.listingSubject.next(listing);
         }));
     }

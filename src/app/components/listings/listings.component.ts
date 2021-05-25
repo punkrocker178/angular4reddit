@@ -46,8 +46,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
         const pathParam = value[0];
         const queryParam = value[1];
 
+        if (pathParam.has('subreddit') && pathParam.get('subreddit') !== this.redditService.currentSubreddit) {
+          this.redditService.listingStoredData = null;
+        }
+
         if (pathParam.has('subreddit')) {
           this.subreddit = pathParam.get('subreddit');
+          this.redditService.currentSubreddit = this.subreddit;
+        } else {
+          this.redditService.currentSubreddit = null;
+        }
+
+        if (!pathParam.has('subreddit') && this.redditService.currentSubreddit) {
           this.redditService.listingStoredData = null;
         }
 
