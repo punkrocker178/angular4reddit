@@ -46,7 +46,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
         const pathParam = value[0];
         const queryParam = value[1];
 
+        // Flush stored data when subreddit changes
         if (pathParam.has('subreddit') && pathParam.get('subreddit') !== this.redditService.currentSubreddit) {
+          this.redditService.listingStoredData = null;
+        }
+
+        // Flush stored data when going back to home from a subreddit page
+        if (!pathParam.has('subreddit') && this.redditService.currentSubreddit) {
           this.redditService.listingStoredData = null;
         }
 
@@ -55,10 +61,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
           this.redditService.currentSubreddit = this.subreddit;
         } else {
           this.redditService.currentSubreddit = null;
-        }
-
-        if (!pathParam.has('subreddit') && this.redditService.currentSubreddit) {
-          this.redditService.listingStoredData = null;
         }
 
         if (queryParam.has('flair')) {

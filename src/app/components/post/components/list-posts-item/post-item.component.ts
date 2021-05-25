@@ -134,11 +134,6 @@ export class PostItemComponent {
       this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.post.data['link_flair_background_color']);
       this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
     }
-
-    if (this.isDetail) {
-      this.playVideo();
-    }
-
   }
 
   playVideo() {

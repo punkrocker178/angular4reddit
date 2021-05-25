@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LocalStorageService } from './localStorage.service';
 import { ApiList } from '../constants/api-list';
@@ -36,7 +35,7 @@ export class RedditAuthenticateService {
     login() {
         let state = Utils.generateRandomString();
         this.localStorage.set('state', state);
-        let scope = ['read', 'identity', 'history', 'vote', 'account', 'submit', 'subscribe', 'save'];
+        let scope = ['read', 'identity', 'history', 'vote', 'account', 'submit', 'subscribe', 'save', 'flair'];
         let httParams = new HttpParams()
             .set('response_type', 'code')
             .set('duration', 'permanent')
