@@ -16,8 +16,8 @@
     </div>
 
     <ng-template #moreReplies>
-      <div *ngIf="showMoreReplies" class="d-flex justify-content-start">
-        <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">{{comment.data['count']}} More Replies</a>
+      <div *ngIf="comment.data['children'].length > 0" class="d-flex justify-content-start">
+        <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">{{comment.data['children'].length}} More Replies</a>
       </div>
     </ng-template>
 
@@ -30,5 +30,3 @@
     <p class="text-center">No Comments \ (•◡•) /</p>
   </div>
 </ng-template>
-
-
