@@ -15,6 +15,7 @@ export class SubredditComponent implements OnInit {
 
     subredditAboutOb: Observable<any[]>;
     subredditRulesOb: Observable<any[]>;
+    subredditLinkFlairsOb: Observable<any[]>;
     isRuleLoading: boolean;
     listingType = 'subreddit';
     subredditData: any;
@@ -23,6 +24,7 @@ export class SubredditComponent implements OnInit {
 
     bannerTabActiveStatus = [
         true,
+        false,
         false,
         false,
     ];
@@ -39,10 +41,15 @@ export class SubredditComponent implements OnInit {
          this.subredditAboutOb = this.activatedRoute.paramMap.pipe(
             tap((param: any) => {
                 const subreddit = param.get('subreddit');
+
                 this.subredditRulesOb = this.subredditService.getSubredditRules(subreddit).pipe(tap((next: any) => {
                     this.isRuleLoading = false;
                     this.subredditRulesData = next.rules;
                     this.collapseElementStatusArr = new Array(this.subredditRulesData.length);
+                }));
+
+                this.subredditLinkFlairsOb = this.subredditService.getSubredditLinkFlairs(subreddit).pipe(tap((next: any) => {
+
                 }));
             }),
             switchMap((param) => {
