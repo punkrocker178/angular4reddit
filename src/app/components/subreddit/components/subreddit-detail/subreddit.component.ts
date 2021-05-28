@@ -20,6 +20,7 @@ export class SubredditComponent implements OnInit {
     listingType = 'subreddit';
     subredditData: any;
     subredditRulesData: any;
+    subredditFlairData: any;
     activeBannerTab = 0;
 
     bannerTabActiveStatus = [
@@ -49,7 +50,7 @@ export class SubredditComponent implements OnInit {
                 }));
 
                 this.subredditLinkFlairsOb = this.subredditService.getSubredditLinkFlairs(subreddit).pipe(tap((next: any) => {
-
+                    this.subredditFlairData = next;
                 }));
             }),
             switchMap((param) => {
