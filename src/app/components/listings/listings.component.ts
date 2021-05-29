@@ -65,6 +65,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         if (queryParam.has('flair')) {
           this.flairFilter = queryParam.get('flair');
+          this.redditService.listingStoredData = null;
+          return this.fetchData(null, true)
         } else {
           this.flairFilter = null;
         }

@@ -113,9 +113,9 @@ export class PostItemComponent {
       this.isWidescreenVideo = this.isWideScreen(this.post.data['preview']['images']);
     }
 
-    this.flair['link_flair_text'] = this.post.data['link_flair_text'];
-    this.flair['link_flair_richtext'] = this.post.data['link_flair_richtext'];
-    this.flair['link_flair_background_color'] = this.post.data['link_flair_background_color'];
+    this.flair['flair_text'] = this.post.data['link_flair_text'];
+    this.flair['flair_richtext'] = this.post.data['link_flair_richtext'];
+    this.flair['flair_background_color'] = this.post.data['link_flair_background_color'];
 
   }
 

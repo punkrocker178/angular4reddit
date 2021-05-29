@@ -25,16 +25,16 @@ export class FlairComponent {
     }
 
     ngAfterViewInit() {
-        if (this.flairInput['link_flair_background_color']) {
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', this.flairInput['link_flair_background_color']);
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.flairInput['link_flair_background_color']);
+        if (this.flairInput['flair_background_color']) {
+            this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', this.flairInput['flair_background_color']);
+            this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.flairInput['flair_background_color']);
             this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
         }
     }
 
     hasFlair() {
-        return this.flairInput['link_flair_text'] ||
-            (this.flairInput['link_flair_richtext'] && this.flairInput['link_flair_richtext'].length > 0);
+        return this.flairInput['flair_text'] ||
+            (this.flairInput['flair_richtext'] && this.flairInput['flair_richtext'].length > 0);
     }
 
     getFlair() {
@@ -50,8 +50,9 @@ export class FlairComponent {
 
         let flairText;
 
-        if (this.flairInput['link_flair_richtext'].length > 1) {
-            const flairRichText = this.flairInput['link_flair_richtext'];
+        
+        if (this.flairInput['flair_richtext'].length > 0) {
+            const flairRichText = this.flairInput['flair_richtext'];
             const flairArr = flairRichText.filter(part => part['e'] === 'text');
             if (flairArr.length > 0) {
                 flairText = flairArr[0]['t'].replace(regex, (match) => replaceObj[match]);
@@ -59,24 +60,23 @@ export class FlairComponent {
             return flairText;
         }
 
-        flairText = this.flairInput['link_flair_text'].replace(regex, (match) => replaceObj[match]);
+        flairText = this.flairInput['flair_text'].replace(regex, (match) => replaceObj[match]);
         return flairText;
     }
 
     getEmojiFlair() {
-        return (this.flairInput['link_flair_richtext'][0] && this.flairInput['link_flair_richtext'][0]['u']);
+        return (this.flairInput['flair_richtext'][0] && this.flairInput['flair_richtext'][0]['u']);
     }
 
     flairHasEmoji() {
-        if (this.flairInput['link_flair_richtext'] && this.flairInput['link_flair_richtext'].length == 0) {
+        if (this.flairInput['flair_richtext'] && this.flairInput['flair_richtext'].length == 0) {
             return false;
         }
 
-        const flair = this.flairInput['link_flair_richtext'];
+        const flair = this.flairInput['flair_richtext'];
         return flair &&
             flair.length > 1 &&
             flair[0]['e'] === 'emoji';
     }
-
 
 }

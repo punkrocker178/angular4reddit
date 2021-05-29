@@ -16,11 +16,12 @@ export class SubredditComponent implements OnInit {
     subredditAboutOb: Observable<any[]>;
     subredditRulesOb: Observable<any[]>;
     subredditLinkFlairsOb: Observable<any[]>;
+    subreddit: string;
     isRuleLoading: boolean;
     listingType = 'subreddit';
     subredditData: any;
     subredditRulesData: any;
-    subredditFlairData: any;
+    subredditFlairData = [];
     activeBannerTab = 0;
 
     bannerTabActiveStatus = [
@@ -42,6 +43,7 @@ export class SubredditComponent implements OnInit {
          this.subredditAboutOb = this.activatedRoute.paramMap.pipe(
             tap((param: any) => {
                 const subreddit = param.get('subreddit');
+                this.subreddit = subreddit;
 
                 this.subredditRulesOb = this.subredditService.getSubredditRules(subreddit).pipe(tap((next: any) => {
                     this.isRuleLoading = false;
@@ -50,7 +52,14 @@ export class SubredditComponent implements OnInit {
                 }));
 
                 this.subredditLinkFlairsOb = this.subredditService.getSubredditLinkFlairs(subreddit).pipe(tap((next: any) => {
-                    this.subredditFlairData = next;
+                    this.subredditFlairData = [];
+                    next.map(flair => {
+                        this.subredditFlairData.push({
+                            flair_text: flair.text,
+                            flair_richtext: flair.richtext,
+                            flair_background_color: flair.background_color
+                        });
+                    })
                 }));
             }),
             switchMap((param) => {

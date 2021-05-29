@@ -53,7 +53,8 @@ import { FlairComponent } from './components/flair/flair.component';
         PostCommentsComponent,
         CommentComponent,
         SortComponent,
-        AwardComponent
+        AwardComponent,
+        FlairComponent
     ]
   })
   export class PostsModule { }
