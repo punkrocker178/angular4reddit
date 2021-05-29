@@ -18,6 +18,7 @@ import { CommentEditorComponent } from './components/comment/components/comment-
 import { SubmissionItemComponent } from './components/submission/submission-item.component';
 import { GalleryComponent } from '../gallery/gallery.component';
 import { ListingsComponent } from '../listings/listings.component';
+import { FlairComponent } from './components/flair/flair.component';
 
 @NgModule({
     imports:[
@@ -41,7 +42,8 @@ import { ListingsComponent } from '../listings/listings.component';
         SortComponent,
         AwardComponent,
         CommentEditorComponent,
-        GalleryComponent
+        GalleryComponent, 
+        FlairComponent
     ],
     exports: [
         ListingsComponent,

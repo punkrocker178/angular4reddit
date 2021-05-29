@@ -88,7 +88,7 @@ export class SubredditComponent implements OnInit {
 
     changeTab(event, tabIndex: number) {
         event.preventDefault();
-        this.bannerTabActiveStatus = [false, false, false];
+        this.bannerTabActiveStatus = new Array(4).fill(false);
         this.bannerTabActiveStatus[tabIndex] = true;
         this.activeBannerTab = tabIndex;
     }

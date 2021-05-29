@@ -42,8 +42,7 @@ export class PostItemComponent {
   hlsPlayer: Hls;
   dashPlayer: dashjs.MediaPlayerClass;
 
-  flairText: string;
-  flairEmoji: string;
+  flair = {};
 
   imageSrc: string;
   videoSrc: string;
@@ -113,26 +112,16 @@ export class PostItemComponent {
     if (this.post.data['preview']) {
       this.isWidescreenVideo = this.isWideScreen(this.post.data['preview']['images']);
     }
-    
-    if (this.hasFlair()) {
-      this.flairText = this.getFlair();
-    }
 
-    if (this.flairHasEmoji()) {
-      this.flairEmoji = this.getEmojiFlair();
-    }
+    this.flair['link_flair_text'] = this.post.data['link_flair_text'];
+    this.flair['link_flair_richtext'] = this.post.data['link_flair_richtext'];
+    this.flair['link_flair_background_color'] = this.post.data['link_flair_background_color'];
 
   }
 
   ngAfterViewInit() {
     if (this.isEmbededLink() && this.isTwitterEmbedded()) {
       this.initTwitter();
-    }
-
-    if (this.hasFlair() && this.post.data['link_flair_background_color']) {
-      this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', this.post.data['link_flair_background_color']);
-      this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.post.data['link_flair_background_color']);
-      this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
     }
   }
 
@@ -241,7 +230,7 @@ export class PostItemComponent {
   isTwitterEmbedded() {
     return this.post.data['domain'] === Domains.twitterDomain;
   }
-  
+
   isMediaEmbed() {
     if (!this.post.data['media']) {
       return false;
@@ -317,7 +306,7 @@ export class PostItemComponent {
 
   getImage(data) {
     let image, resolutions, images;
-    
+
     // GIFs
     if (data['resolutions']) {
       resolutions = data['resolutions'];
@@ -333,11 +322,11 @@ export class PostItemComponent {
     if ((resolutions[resolutions.length - 1] && resolutions[resolutions.length - 1]['height'] < 300) || this.isDetail) {
       image = images['source']['url'];
     } else {
-        try {
-          image = this.getSmallerImage(resolutions, resolutions.length - 1);
-        } catch(err) {
-          image = this.getSmallerImage(resolutions, Math.ceil(resolutions.length / 2));
-        }
+      try {
+        image = this.getSmallerImage(resolutions, resolutions.length - 1);
+      } catch(err) {
+        image = this.getSmallerImage(resolutions, Math.ceil(resolutions.length / 2));
+      }
     }
 
     return image;
@@ -417,52 +406,6 @@ export class PostItemComponent {
 
     });
 
-  }
-
-  hasFlair() {
-    return this.post.data['link_flair_text'] ||
-      (this.post.data['link_flair_richtext'] && this.post.data['link_flair_richtext'].length > 0);
-  }
-
-  getFlair() {
-    // Replace encoded special characters
-    const replaceObj = {
-      '&amp;': '&',
-      '&gt;': '>',
-      '&lt;': '<',
-      '&quot': '"'
-    }
-
-    const regex = new RegExp(Object.keys(replaceObj).join('|'), 'g');
-
-    let flairText;
-
-    if (this.post.data['link_flair_richtext'].length > 1) {
-      const flairRichText = this.post.data['link_flair_richtext'];
-      const flairArr = flairRichText.filter(part => part['e'] === 'text');
-      if (flairArr.length > 0) {
-        flairText = flairArr[0]['t'].replace(regex, (match) => replaceObj[match]);
-      }
-      return flairText;
-    }
-
-    flairText = this.post.data['link_flair_text'].replace(regex, (match) => replaceObj[match]);
-    return flairText;
-  }
-
-  getEmojiFlair() {
-    return (this.post.data['link_flair_richtext'][0] && this.post.data['link_flair_richtext'][0]['u']);
-  }
-
-  flairHasEmoji() {
-    if (this.post.data['link_flair_richtext'] && this.post.data['link_flair_richtext'].length == 0) {
-      return false;
-    }
-
-    const flair = this.post.data['link_flair_richtext'];
-    return flair &&
-      flair.length > 1 &&
-      flair[0]['e'] === 'emoji';
   }
 
   filterByFlair() {

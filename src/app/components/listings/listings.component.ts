@@ -74,12 +74,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
           this.after = storedData.after;
           this.posts$.next(storedData.children);
           return of([]);
-        } else if (this.posts$.getValue().length > 0) {
+        } 
+         if (this.posts$.getValue().length > 0) {
           return this.fetchData(null, true)
-        } else {
-          return of([]);
-        }
-
+        } 
+        
+        return of([]);
       }
       )
     ).subscribe();

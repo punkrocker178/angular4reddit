@@ -21,12 +21,9 @@
         </h5>
 
         <!-- Flair -->
-        <ng-container *ngIf="flairText">
-          <div (click)="filterByFlair()" #flairElement class="flair-text">
-            <img *ngIf="flairEmoji" class="emoji-flair" [src]="flairEmoji">
-            <span>{{flairText}}</span>
-          </div>
-
+        <ng-container *ngIf="post.data['link_flair_text'] ||
+        (post.data['link_flair_richtext'] && post.data['link_flair_richtext'].length > 0)">
+          <app-flair (click)="filterByFlair()" [flairInput]="flair"></app-flair>
         </ng-container>
 
         <div *ngIf="isOver18()">
