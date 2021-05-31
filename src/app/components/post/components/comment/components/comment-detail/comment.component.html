@@ -22,6 +22,6 @@
   <button class="btn btn-outline-secondary" (click)="cancelEditor()">Cancel</button>
 </ng-container>
 <div class="d-flex justify-content-end">
-  <span (click)="showReplyEditor()" class="p-2 post-buttons btn">Reply</span>
+  <span  *ngIf="!isArchive" (click)="showReplyEditor()" class="p-2 post-buttons btn">Reply</span>
   <app-vote [score]="commentData.data.score" [id]="commentData.data.name" [liked]="commentData.data.likes"></app-vote>
 </div>

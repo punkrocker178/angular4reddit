@@ -26,7 +26,7 @@ declare var twttr: any;
 })
 export class PostItemComponent {
   @Input() post: Post;
-  @Input() isDetail: boolean;
+  @Input() options;
   @ViewChild('twitterEmbed') tweet: ElementRef;
   @ViewChild('videoPlayer') videoPlayer: ElementRef;
   @ViewChild('flairElement') flairEl: ElementRef
@@ -75,6 +75,13 @@ export class PostItemComponent {
     private checkDeviceFeatureService: CheckDeviceFeatureService) { }
 
   ngOnInit() {
+
+    if (!this.options) {
+      this.options = {
+        isDetail: false
+      };
+    }
+
     this.over18_consent = this.userService.isNSFWAllowed();
     this.isSaved = this.post.data['saved'];
 
@@ -319,7 +326,7 @@ export class PostItemComponent {
       images = data[0];
     }
 
-    if ((resolutions[resolutions.length - 1] && resolutions[resolutions.length - 1]['height'] < 300) || this.isDetail) {
+    if ((resolutions[resolutions.length - 1] && resolutions[resolutions.length - 1]['height'] < 300) || this.options.isDetail) {
       image = images['source']['url'];
     } else {
       try {
@@ -352,7 +359,7 @@ export class PostItemComponent {
       })
     }
 
-    if (!this.isDetail) {
+    if (!this.options.isDetail) {
       let path = `/r/${this.post.data['subreddit']}/comments/`;
 
       if (isComment && this.post.data['parent_id']) {
@@ -393,7 +400,7 @@ export class PostItemComponent {
 
       item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
 
-      if (!this.isDetail) {
+      if (!this.options.isDetail) {
         mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
         selectedResolution = mediaResolutions.length - 1;
         const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];

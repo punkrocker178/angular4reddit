@@ -15,6 +15,7 @@ import { CommentEditorComponent } from '../comment-editor/comment-editor.compone
 export class CommentComponent {
 
     @Input() commentData;
+    @Input() isArchive: boolean;
     @Output() submittedComment: EventEmitter<Object> = new EventEmitter();
 
     @ViewChild(CommentEditorComponent) commentEditor;

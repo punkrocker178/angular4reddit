@@ -1,5 +1,5 @@
-<div class="card" [ngClass]="{'custom-card': !isDetail, 'mb-5': !isDetail, 'custom-card-no-border': isDetail}">
-  <div class="card-body crop-content" [ngClass]="{'mb-3': isDetail}">
+<div class="card" [ngClass]="{'custom-card': !options.isDetail, 'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
+  <div class="card-body crop-content" [ngClass]="{'mb-3': options.isDetail}">
 
     <div class="card-side-padding pointer">
       <!-- Subreddit - author - post date -->
@@ -13,13 +13,17 @@
 
       <!-- Awards -->
       <ng-container *ngIf="post.data['all_awardings'] && post.data['all_awardings'].length > 0">
-        <app-award [isDetail]="isDetail" [awards]="post.data['all_awardings']"></app-award>
+        <app-award [isDetail]="options.isDetail" [awards]="post.data['all_awardings']"></app-award>
       </ng-container>
 
-      <div class="mb-3">
+      
+
+      <div class="mb-3 d-flex flex-row flex-wrap">
         <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block me-2">{{post?.data['title'] | replacePipe}}
         </h5>
 
+        <span title="Archived" *ngIf="options.isArchive" class="icon-before icon-archive me-2 text-warning"></span>
+    
         <!-- Flair -->
         <ng-container *ngIf="post.data['link_flair_text'] ||
         (post.data['link_flair_richtext'] && post.data['link_flair_richtext'].length > 0)">
@@ -37,7 +41,7 @@
     </div>
 
     <ng-container *ngIf="imageSrc">
-      <div [ngClass]="{'crop-height': !isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container pointer">
+      <div [ngClass]="{'crop-height': !options.isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container pointer">
         <img (click)="viewDetail()" class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe">
       </div>
     </ng-container>

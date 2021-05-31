@@ -11,6 +11,7 @@ export class PostCommentsComponent {
   @Input() comments;
   @Input() isReplies;
   @Input() postId;
+  @Input() isArchive: boolean;
 
   moreRepliesLoading: boolean;
   enableEditor: boolean;

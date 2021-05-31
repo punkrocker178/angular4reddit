@@ -20,6 +20,7 @@ export class PostDetailComponent {
 
   post: Post;
   comments;
+  postOptions;
 
   postId: string;
 
@@ -44,13 +45,15 @@ export class PostDetailComponent {
           this.post = next.detail;
           this.comments = next.comments;
           this.isLoading = false;
+
+          this.postOptions = {
+            isDetail: true,
+            isArchive: this.post.data['archived']
+          }
         })
       )
       .subscribe();
-  }
 
-  isArchived() {
-    return this.post && this.post.data['archived'];
   }
 
   comment() {
