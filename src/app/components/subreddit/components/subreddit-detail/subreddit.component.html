@@ -81,7 +81,7 @@
 
                     <ng-container *ngSwitchCase=3>
                         <div *ngIf="subredditFlairData; else noFlair" class="d-flex flex-row flex-wrap">
-                            <div class="ps-2 pe-2 pb-2" *ngFor="let flairData of subredditFlairData">
+                            <div (click)="filterByFlair(flairData)" class="ps-2 pe-2 pb-2" *ngFor="let flairData of subredditFlairData">
                                 <app-flair  [flairInput]="flairData"></app-flair>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { Utils } from '../../../../class/Utils';
@@ -36,7 +36,8 @@ export class SubredditComponent implements OnInit {
     @ViewChildren('collapseText') collapseTextList!: QueryList<ElementRef>;
 
     constructor(private activatedRoute: ActivatedRoute,
-                private subredditService: SubredditService) { }
+                private subredditService: SubredditService,
+                private router: Router) { }
 
     ngOnInit() {
         this.isRuleLoading = true;
@@ -108,6 +109,11 @@ export class SubredditComponent implements OnInit {
         } else {
             this.collapseElementStatusArr[index] = false;
         }    
+    }
+
+    filterByFlair(flair) {
+        const flairText = flair['flair_text'] || flair['flair_richtext'][0]['t'];
+        this.router.navigate([`/r/${this.subreddit}/`], { queryParams: { flair: flairText } });
     }
 
 }
