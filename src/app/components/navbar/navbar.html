@@ -49,9 +49,9 @@
       <search-bar [showSearchBtn]="false"></search-bar>
     </div>
 
-    <a class="mobile-nav-item mobile-nav-text" *ngIf="!isLoggedIn()" (click)="login()">Login</a>
+    <a class="mobile-nav-item mobile-nav-text mt-3" *ngIf="!isLoggedIn()" (click)="login()">Login</a>
     <ng-container *ngIf="isLoggedIn()">
-      <div (click)="goToProfile()" class="mobile-nav-item">
+      <div (click)="goToProfile()" class="mobile-nav-item mt-3">
         <img class="profile-img-mobile" [src]="user.icon_img | replacePipe">
       </div>
 
