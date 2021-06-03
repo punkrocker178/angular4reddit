@@ -42,7 +42,7 @@
 
     <ng-container *ngIf="imageSrc">
       <div [ngClass]="{'crop-height': !options.isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container pointer">
-        <img (click)="viewDetail()" class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe">
+        <img (click)="viewDetail()" class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe" [alt]="post.data['title']">
       </div>
     </ng-container>
 

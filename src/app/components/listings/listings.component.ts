@@ -46,29 +46,23 @@ export class ListingsComponent implements OnInit, OnDestroy {
         const pathParam = value[0];
         const queryParam = value[1];
 
-        // Flush stored data when subreddit changes
-        if (pathParam.has('subreddit') && pathParam.get('subreddit') !== this.redditService.currentSubreddit) {
-          this.redditService.listingStoredData = null;
-        }
+        this.flushDataOnSubredditChange(pathParam);
 
-        // Flush stored data when going back to home from a subreddit page
-        if (!pathParam.has('subreddit') && this.redditService.currentSubreddit) {
-          this.redditService.listingStoredData = null;
-        }
+        this.flushDataOnUserChange(pathParam);
+
+        this.flushDataOnFlairChange(queryParam);
 
         if (pathParam.has('subreddit')) {
           this.subreddit = pathParam.get('subreddit');
-          this.redditService.currentSubreddit = this.subreddit;
+          this.redditService.visitedSubreddit = this.subreddit;
         } else {
-          this.redditService.currentSubreddit = null;
+          this.redditService.visitedSubreddit = null;
         }
 
-        if (queryParam.has('flair')) {
-          this.flairFilter = queryParam.get('flair');
-          this.redditService.listingStoredData = null;
-          return this.fetchData(null, true)
+        if (pathParam.has('user')) {
+          this.redditService.visitedUser = pathParam.get('user');
         } else {
-          this.flairFilter = null;
+          this.redditService.visitedUser = null;
         }
 
         if (this.redditService.listingStoredData) {
@@ -76,11 +70,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
           this.after = storedData.after;
           this.posts$.next(storedData.children);
           return of([]);
-        } 
-         if (this.posts$.getValue().length > 0) {
+        }
+        if (this.posts$.getValue().length > 0) {
           return this.fetchData(null, true)
-        } 
-        
+        }
+
         return of([]);
       }
       )
@@ -172,6 +166,36 @@ export class ListingsComponent implements OnInit, OnDestroy {
         break;
     }
     return apiSegment;
+  }
+
+  flushDataOnSubredditChange(pathParam) {
+    // Flush stored data when subreddit changes
+    const subredditChange = pathParam.has('subreddit') && pathParam.get('subreddit') !== this.redditService.visitedSubreddit;
+
+    // Flush stored data when going back to home from a subreddit page
+    const goToHome = !pathParam.has('subreddit') && this.redditService.visitedSubreddit;
+
+    if (subredditChange || goToHome) {
+      this.redditService.listingStoredData = null;
+    }
+  }
+
+  flushDataOnUserChange(pathParam) {
+    const userChange = pathParam.has('user') && pathParam.get('user') !== this.redditService.visitedUser;
+    const goToHome = !pathParam.has('user') && this.redditService.visitedUser;
+    
+    if (userChange || goToHome) {
+      this.redditService.listingStoredData = null;
+    }
+  }
+
+  flushDataOnFlairChange(queryParam) {
+    if (queryParam.has('flair')) {
+      this.flairFilter = queryParam.get('flair');
+      this.redditService.listingStoredData = null;
+    } else {
+      this.flairFilter = null;
+    }
   }
 
 }

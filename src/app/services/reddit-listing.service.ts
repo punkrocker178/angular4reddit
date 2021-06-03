@@ -12,18 +12,27 @@ import { Router } from '@angular/router';
 export class RedditListingService {
 
     listingSubject = new BehaviorSubject<Listings>(null);
-    currentSubredditSubject = new BehaviorSubject<string>(null);
+    visitedSubredditSubject = new BehaviorSubject<string>(null);
+    visitedUserSubject = new BehaviorSubject<string>(null);
 
     constructor(
         private http: HttpClient,
         private router: Router) { }
 
-    set currentSubreddit(subreddit: string) {
-            this.currentSubredditSubject.next(subreddit);
+    set visitedUser(user: string) {
+            this.visitedUserSubject.next(user);
         }
     
-    get currentSubreddit() {
-            return this.currentSubredditSubject.getValue();
+    get visitedUser() {
+            return this.visitedUserSubject.getValue();
+        }
+
+    set visitedSubreddit(subreddit: string) {
+            this.visitedSubredditSubject.next(subreddit);
+        }
+    
+    get visitedSubreddit() {
+            return this.visitedSubredditSubject.getValue();
         }
 
     set listingStoredData(data) {
