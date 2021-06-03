@@ -1,19 +1,18 @@
-<div class="gallery d-flex">
+<div class="position-relative">
   <button class="btn btn-light previous-btn" (click)="previous()">
     <div class="icon-before icon-less-than"></div>
   </button>
 
-  <div #item class="gallery-item" [ngClass]="{'active': idx == 0, 'inactive-right': idx > 0}" *ngFor="let item of data.items; let idx = index">
-    <img class="img-fluid"
-    [src]="(source ? item[source] : item) | replacePipe">
+  <div class="d-flex" [ngClass]="configs.class" #gallery>
+    <ng-content></ng-content>
   </div>
+
 
   <button class="btn btn-light next-btn" (click)="next()">
     <div class="icon-before icon-greater-than"></div>
   </button>
 
-  <div class="image-number-background" [ngClass]="positionClass">
-    <span class="image-number">{{elementIndex + 1}} / {{data.items.length}}</span>
+  <div *ngIf="childList.length > 0" class="image-number-background" [ngClass]="positionClass">
+    <span class="image-number">{{elementIndex + 1}} / {{childList.length}}</span>
   </div>
-  
 </div>

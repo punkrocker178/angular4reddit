@@ -57,8 +57,8 @@ export class PostItemComponent {
   noSelfText: boolean;
 
   galleryConfigs = {
-    src: 'source',
     position: 'top-left',
+    class: ''
   }
 
   galleryData = {
@@ -86,7 +86,7 @@ export class PostItemComponent {
     this.isSaved = this.post.data['saved'];
 
     if (this.isGallery()) {
-      this.getGalleryImages();
+      this.initGallery();
     }
 
     if (this.isTwitchEmbedded()) {
@@ -254,7 +254,11 @@ export class PostItemComponent {
   }
 
   isWideScreen (images): boolean {
-    return images[0]['source']['width'] > images[0]['source']['height'];
+    const image = images[0].hasOwnProperty('metadata') ? images[0]['metadata']: images[0];
+    const source = image.hasOwnProperty('source') ? 'source' : 's';
+    const width = image[source]['width'] || image[source]['x'];
+    const height = image[source]['height'] || image[source]['y'];
+    return width > height;
   }
 
   getVideoSource(type?: string) {
@@ -387,7 +391,7 @@ export class PostItemComponent {
     twttr.widgets.load();
   }
 
-  getGalleryImages() {
+  initGallery() {
 
     this.galleryData.items = this.post.data['gallery_data']['items'];
     let mediaResolutions, selectedResolution;
@@ -413,6 +417,7 @@ export class PostItemComponent {
 
     });
 
+    this.galleryConfigs.class = this.isWideScreen(this.galleryData.items) ? 'gallery-wide' : 'gallery';
   }
 
   filterByFlair() {

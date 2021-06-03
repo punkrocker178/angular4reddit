@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { Component, ContentChild, ElementRef, Input, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 declare var $: any;
 
 @Component({
@@ -8,50 +8,50 @@ declare var $: any;
 export class GalleryComponent {
 
     elementIndex = 0;
-    source: string;
     positionClass: string;
-    @ViewChildren('item') galleryItems: QueryList<ElementRef>;
+    @ViewChild('gallery') galleryEl: ElementRef;
+    childList = [];
     @Input() configs;
-    @Input() data;
 
     constructor(private renderer2: Renderer2) {
 
     }
 
     ngOnInit() {
-        this.source = this.configs ? this.configs.src : null;
         this.positionClass = this.getPositionClass();
     }
 
-    next() {
-        if (this.elementIndex < this.data.items.length - 1) {
-            const currEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
-            this.renderer2.removeClass(currEl, 'active');
-            
-            this.elementIndex += 1;
+    ngAfterContentInit() {
+        setTimeout(() => {
+            this.childList = this.galleryEl.nativeElement.children;
+        });
+    }
 
-            const newEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
-            this.renderer2.addClass(newEl, 'active');
+    next() {
+        if (this.elementIndex < this.childList.length - 1) {
+            this.changeIndex(1);
         }
     }
 
     previous() {
         if (this.elementIndex > 0) {
-            
-            const currEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
-            this.renderer2.removeClass(currEl, 'active');
-            
-            this.elementIndex -= 1;
-
-            const newEl = this.galleryItems.toArray()[this.elementIndex].nativeElement;
-            this.renderer2.addClass(newEl, 'active');
-            
+            this.changeIndex(-1);
         }
+    }
+
+    changeIndex(value) {
+        const currEl = this.childList[this.elementIndex];
+        this.renderer2.removeClass(currEl, 'active');
+
+        this.elementIndex += value;
+
+        const newEl = this.childList[this.elementIndex];
+        this.renderer2.addClass(newEl, 'active');
     }
 
     getPositionClass() {
         let position;
-        switch(this.configs.position) {
+        switch (this.configs.position) {
             case 'top-right':
                 position = 'image-number-top-right';
                 break;
@@ -67,4 +67,4 @@ export class GalleryComponent {
         }
         return position;
     }
-    }
+}

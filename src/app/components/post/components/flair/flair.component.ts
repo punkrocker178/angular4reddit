@@ -29,6 +29,7 @@ export class FlairComponent {
             this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', this.flairInput['flair_background_color']);
             this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.flairInput['flair_background_color']);
             this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
+            this.renderer2.setStyle(this.flairEl.nativeElement, 'text-shadow', 'black 0 0');
         }
     }
 

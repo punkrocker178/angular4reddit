@@ -1,5 +1,5 @@
-<div class="card" [ngClass]="{'custom-card': !options.isDetail, 'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
-  <div class="card-body crop-content" [ngClass]="{'mb-3': options.isDetail}">
+<div class="card" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
+  <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': !isGallery()}">
 
     <div class="card-side-padding pointer">
       <!-- Subreddit - author - post date -->
@@ -47,7 +47,12 @@
     </ng-container>
 
     <ng-container *ngIf="galleryData.items.length > 0">
-      <app-gallery [data]="galleryData" [configs]="galleryConfigs"></app-gallery>
+      <app-gallery [configs]="galleryConfigs">
+        <div class="gallery-item" [ngClass]="{'active': idx == 0}" *ngFor="let item of galleryData.items; let idx = index">
+          <img class="img-fluid" [alt]="item.id"
+          [src]="(item['source']) | replacePipe">
+        </div>
+      </app-gallery>
     </ng-container>
 
     <ng-container *ngIf="isVideo()">
