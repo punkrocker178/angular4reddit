@@ -1,0 +1,54 @@
+@import "../_vars.less";
+@import "./_dark-theme.less";
+@import "./_light-theme.less";
+
+.theme-mixin(dark) {
+    .set-theme(dark, @color-dark, @background-color-dark);
+}
+
+.theme-mixin(candy) {
+    .set-theme(candy, @color, @background-color);
+}
+
+.set-theme-foreground(@color, @background-color-variant, @background-color-variant-1, @background-color-variant-2) {
+    nav {
+        background-color: @background-color-variant-1;
+    }
+
+    button {
+        color: @color;
+    }
+
+    button:hover {
+        color: @color;
+    }
+
+    .md {
+        color: @color;
+    }
+
+    .card {
+        background-color: @background-color-variant;
+    }
+
+    .children {
+        background-color: @background-color-variant;
+    }
+
+    .post-buttons {
+        color: @color;
+    }
+
+    .post-buttons:hover {
+        background-color: @background-color-variant-2;
+        border-radius: 4px;
+    }
+}
+
+.dark-theme {
+    .theme-mixin(dark);
+}
+
+.candy-theme {
+    .theme-mixin(candy);
+}

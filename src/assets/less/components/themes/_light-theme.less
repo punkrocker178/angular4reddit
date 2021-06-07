@@ -1,0 +1,12 @@
+@import "../_vars.less";
+
+.set-theme(candy, @color, @background-color) {
+    background-color: @background-color;
+    color: @color;
+
+    main {
+        background-color: @background-color;
+    }
+
+    .set-theme-foreground(@color, @background-color-variant, @background-color-variant-1, @background-color-variant-2);
+}

@@ -1,0 +1,12 @@
+@import "../_vars.less";
+
+.set-theme(dark, @color, @background-color) {
+    background-color: @background-color;
+    color: @color;
+
+    main {
+        background-color: @background-color;
+    }
+
+    .set-theme-foreground(@color, @background-color-dark-elevated, @background-color-dark-elevated-1, @background-color-dark-elevated-variant);
+}
