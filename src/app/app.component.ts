@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RedditAuthenticateService } from './services/reddit-authenticate.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from './services/localStorage.service';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,8 @@ export class AppComponent {
   title = 'areddit';
 
   constructor(private authenService: RedditAuthenticateService,
-              private localStorage: LocalStorageService) { }
+              private localStorage: LocalStorageService, 
+              private themeService: ThemeService) { }
 
   ngOnInit() {
     if (!this.localStorage.get('userToken')) {

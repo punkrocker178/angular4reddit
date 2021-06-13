@@ -1,6 +1,7 @@
 @import "../_vars.less";
 @import "./_dark-theme.less";
 @import "./_light-theme.less";
+@import "./_steam-theme.less";
 
 .theme-mixin(dark) {
     .set-theme(dark, @color-dark, @background-color-dark);
@@ -10,38 +11,31 @@
     .set-theme(candy, @color, @background-color);
 }
 
+.theme-mixin(steam) {
+    .set-theme(steam, @color-steam, @background-color-steam);
+}
+
 .set-theme-foreground(@color, @background-color-variant, @background-color-variant-1, @background-color-variant-2) {
     nav {
         background-color: @background-color-variant-1;
     }
 
-    button {
-        color: @color;
-    }
-
-    button:hover {
-        color: @color;
-    }
-
-    .md {
-        color: @color;
-    }
-
-    .card {
+    .children, .card {
         background-color: @background-color-variant;
     }
 
-    .children {
-        background-color: @background-color-variant;
-    }
-
-    .post-buttons {
+    button, button:hover, .md, .post-buttons, .dropdown-item {
         color: @color;
     }
 
     .post-buttons:hover {
-        background-color: @background-color-variant-2;
+        background: @background-color-variant-2;
         border-radius: 4px;
+    }
+
+    .form-select, .form-control {
+        background-color: @background-color-variant;
+        color: @color;
     }
 }
 
@@ -51,4 +45,8 @@
 
 .candy-theme {
     .theme-mixin(candy);
+}
+
+.steam-theme {
+    .theme-mixin(steam);
 }

@@ -1,0 +1,33 @@
+@import "../_vars.less";
+
+.set-theme(steam, @color, @background-color) {
+
+    --bs-success: @primary-steam;
+
+    background: @background-color-steam;
+    color: @color-steam;
+
+    a {
+        color: @color-link-steam;
+    }
+
+    main {
+        background: @background-color-steam;
+    }
+
+    .set-theme-foreground(@color, @background-color-steam-variant, @background-color-steam-variant-1, @background-color-steam-variant-2);
+
+    .dropdown-menu {
+        background-color: @background-color-dark-elevated-1;
+        color: @color;
+    }
+
+    .dropdown-item:hover {
+        color:  @background-color-dark-elevated-variant;
+    }
+
+    .btn-success {
+        background: var(--bs-success);
+        color: #d2efa9;
+    }
+}

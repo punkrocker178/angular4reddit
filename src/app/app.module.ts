@@ -35,6 +35,7 @@ import { ModalModule } from './components/modals/modal.module';
 import { ToastService } from './services/toast.service';
 import { ToastsContainer } from './components/toast/toast-container/toast-container.component';
 import { SubredditModule } from './components/subreddit/components/subreddit.module';
+import { ThemeService } from './services/theme.service';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { SubredditModule } from './components/subreddit/components/subreddit.mod
     RedditSearchService,
     CheckDeviceFeatureService,
     ToastService,
+    ThemeService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
