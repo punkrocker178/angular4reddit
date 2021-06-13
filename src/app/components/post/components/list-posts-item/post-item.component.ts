@@ -181,6 +181,7 @@ export class PostItemComponent {
        */
       if (this.videoPlayer.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
         this.videoPlayer.nativeElement.src = src;
+        this.videoPlayer.nativeElement.click();
       } else if (Hls.isSupported()) {
         this.hlsPlayer = new Hls();
         this.hlsPlayer.loadSource(src);
