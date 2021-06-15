@@ -17,9 +17,23 @@
 
     .set-theme-foreground(@color, @background-color-steam-variant, @background-color-steam-variant-1, @background-color-steam-variant-2);
 
-    .dropdown-menu {
-        background-color: @background-color-dark-elevated-1;
-        color: @color;
+    .set-post-buttons-hover(@background-color-steam-variant-2);
+
+    .comments-section {
+        background-color: #1b2838;
+    }
+
+    .comments-section .md {
+        color: #acb2b8;
+    }
+
+    .children {
+        background-color: #16202d;
+    }
+
+    .dropdown-menu, .form-select {
+        background-color: #417A9B;
+        color: #e5e4dc;
     }
 
     .dropdown-item:hover {
@@ -29,5 +43,25 @@
     .btn-success {
         background: var(--bs-success);
         color: #d2efa9;
+    }
+
+    .icon-up:hover::before {
+        color: #60b6e7;
+    }
+
+    .icon-down:hover::after {
+        color: #cc5d60;
+    }
+
+    .up-voted::before {
+        color: #60b6e7;
+    }
+    
+    .down-voted::after {
+        color: #cc5d60;
+    }
+
+    .score-points {
+        color: #a4d007;
     }
 }

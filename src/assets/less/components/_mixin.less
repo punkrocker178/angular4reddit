@@ -1,0 +1,33 @@
+.icon-mixin(@width, @background-color) {
+    width: @width;
+    border-radius: 50px;
+    background-color: @background-color;
+    fill: white;
+}
+
+.set-post-button-mixin(@background, @border-radius) {
+    background: @background;
+    border-radius: 4px;
+}
+
+.transform-side-menu(@translate) {
+    transform: @translate
+}
+
+.subreddit-banner(@flex-direction, @padding) {
+    display: flex;
+    flex-direction: @flex-direction;
+    padding: @padding
+}
+
+.justify-center-mixin() {
+    justify-items: center;
+}
+
+.flair-tag-mixin(@font-size, @padding) {
+    padding: @padding;
+    font-size: @font-size;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}

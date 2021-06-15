@@ -1,14 +1,4 @@
-.justify-center-mixin() {
-    justify-items: center;
-}
-
-.flair-tag-mixin(@font-size, @padding) {
-    padding: @padding;
-    font-size: @font-size;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-}
+@import "./_mixin.less";
 
 .card-body {
     padding-left: 0;
@@ -22,7 +12,7 @@
 
 .custom-card-no-border {
     border-width: 0;
-    border-radius: 0;
+    border-radius: 5px;
     .card-body {
         padding: 0;
     }
@@ -154,10 +144,10 @@
 .play-video-btn {
     position: absolute;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-24px, -36px);
     top: 50%;
     color: whitesmoke;
-    font-size: 3em;
+    font-size: 48px;
 }
 
 @media (min-width: 360px) {

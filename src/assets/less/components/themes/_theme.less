@@ -15,6 +15,17 @@
     .set-theme(steam, @color-steam, @background-color-steam);
 }
 
+.set-post-button-mixin(@background, @border-radius) {
+    background: @background;
+    border-radius: 4px;
+}
+
+.set-post-buttons-hover(@background) {
+    .post-buttons:hover {
+        .set-post-button-mixin(@background, 4px);
+    }
+}
+
 .set-theme-foreground(@color, @background-color-variant, @background-color-variant-1, @background-color-variant-2) {
     nav {
         background-color: @background-color-variant-1;
@@ -28,10 +39,7 @@
         color: @color;
     }
 
-    .post-buttons:hover {
-        background: @background-color-variant-2;
-        border-radius: 4px;
-    }
+    .set-post-buttons-hover(@background-color-variant-2);
 
     .form-select, .form-control {
         background-color: @background-color-variant;
