@@ -403,7 +403,12 @@ export class PostItemComponent {
         ...this.post.data['media_metadata'][mediaId]
       };
 
-      item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
+      if (this.post.data['media_metadata'][mediaId]['status'].toLowerCase() === 'failed') {
+        item.source = '';
+      } else {
+        item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
+      }
+      
 
       if (!this.options.isDetail) {
         mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
