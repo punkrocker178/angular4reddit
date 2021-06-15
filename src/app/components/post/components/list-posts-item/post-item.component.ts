@@ -405,6 +405,7 @@ export class PostItemComponent {
 
       if (this.post.data['media_metadata'][mediaId]['status'].toLowerCase() === 'failed') {
         item.source = '';
+        this.post.data['media_metadata'][mediaId]['p'] = [];
       } else {
         item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
       }
@@ -412,6 +413,11 @@ export class PostItemComponent {
 
       if (!this.options.isDetail) {
         mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
+
+        if (mediaResolutions.length === 0) {
+          return;
+        }
+
         selectedResolution = mediaResolutions.length - 1;
         const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
 
