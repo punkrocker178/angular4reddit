@@ -6,6 +6,7 @@ import { filter, take, takeUntil, tap } from 'rxjs/operators';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { NavigationStart, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
     selector: 'navbar',
@@ -18,7 +19,8 @@ export class NavbarComponent implements OnInit {
         private userService: UserService,
         private checkDeviceFeatureService: CheckDeviceFeatureService,
         private router: Router,
-        private renderer2: Renderer2) { }
+        private renderer2: Renderer2,
+        private themeService: ThemeService) { }
 
     menuToggle = false;
     user: UserInterface;
@@ -104,6 +106,14 @@ export class NavbarComponent implements OnInit {
             this.menuToggle = false;
             this.renderer2.removeStyle(document.body, 'overflow');
             this.renderer2.removeStyle(this.mainElement, 'filter');
+        }
+    }
+
+    themeToggle(value) {
+        if (value) {
+            this.themeService.changeTheme('light');
+        } else {
+            this.themeService.changeTheme('dark');
         }
     }
 }

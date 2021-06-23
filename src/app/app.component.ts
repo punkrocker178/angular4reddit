@@ -15,6 +15,8 @@ export class AppComponent {
               private themeService: ThemeService) { }
 
   ngOnInit() {
+    this.themeService.changeTheme('dark');
+    
     if (!this.localStorage.get('userToken')) {
       this.localStorage.set('isLoggedIn', false);
       this.authenService.loginAppOnly().subscribe();

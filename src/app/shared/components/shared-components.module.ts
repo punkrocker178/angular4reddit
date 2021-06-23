@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PipeModule } from 'src/app/pipe/pipe.module';
+import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 import { TrumbowygComponent } from './trumbowyg/trumbowyg.component';
 
 @NgModule({
@@ -9,10 +10,12 @@ import { TrumbowygComponent } from './trumbowyg/trumbowyg.component';
         PipeModule
     ],
     declarations: [
-        TrumbowygComponent
+        TrumbowygComponent,
+        ToggleButtonComponent
     ],
     exports: [
-        TrumbowygComponent
+        TrumbowygComponent,
+        ToggleButtonComponent
     ]
   })
   export class SharedComponentsModule { }

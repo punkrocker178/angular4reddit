@@ -20,6 +20,12 @@
           <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
             <a ngbDropdownItem class="pointer" (click)="goToProfile()">My Profile</a>
 
+            <div class="d-flex pt-1 pb-1 ps-3 pe-3">
+              <span class="icon-before icon-moon me-2"></span>
+              <toggle-button (toggleState)="themeToggle($event)"></toggle-button>
+              <span class="icon-before icon-sun ms-2"></span>
+            </div>
+
             <div ngbDropdownItem class="d-flex" (click)="openHelpPage()">
               <span class="icon-before icon-question me-1"></span>
               <span class="pointer">Help</span>
