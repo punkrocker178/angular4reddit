@@ -23,10 +23,6 @@
     text-align: center;
 }
 
-.crop-content {
-    overflow: hidden;
-}
-
 .custom-btn {
     padding: 0;
 }
@@ -167,12 +163,20 @@
         flex-grow: 3;
         flex-basis: 0;
     }
+
+    .crop-content {
+        .crop-content-mixin(100vh);
+    }
 }
 
 @media (min-width: 768px) {
     .button-group {
         .justify-center-mixin();
         padding: 0 1rem 0 1.5rem;
+    }
+
+    .crop-content {
+        .crop-content-mixin(80vh);
     }
 }
 
