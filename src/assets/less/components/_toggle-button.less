@@ -7,12 +7,6 @@
   position: relative;
 }
 
-.toggle-button-container input[type="checkbox"] {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
 .toggle-button-container .slider {
   position: absolute;
   cursor: pointer;
@@ -38,18 +32,18 @@
   transition: .4s;
 }
 
-.toggle-button-container input[type="checkbox"]:checked+.slider {
+.toggle-button-container .checked.slider {
   background-color: #2196F3;
 }
 
-.toggle-button-container input[type="checkbox"]:focus+.slider {
+.toggle-button-container .checked:focus {
   box-shadow: 0 0 1px #2196F3;
 }
 
-.toggle-button-container input[type="checkbox"]:checked+.slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+.toggle-button-container .checked.slider:before {
+  -webkit-transform: translateX(28px);
+  -ms-transform: translateX(28px);
+  transform: translateX(28px);
 }
 
 /* Rounded sliders */

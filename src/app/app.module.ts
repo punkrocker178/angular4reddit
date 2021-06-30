@@ -36,6 +36,8 @@ import { ToastService } from './services/toast.service';
 import { ToastsContainer } from './components/toast/toast-container/toast-container.component';
 import { SubredditModule } from './components/subreddit/components/subreddit.module';
 import { ThemeService } from './services/theme.service';
+import { PreferencesComponent } from './components/preferences/preferences.component';
+import { PreferencesService } from './services/preferences.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { ThemeService } from './services/theme.service';
     NavbarComponent,
     AuthenticateComponent,
     NotFoundComponent,
-    ToastsContainer
+    ToastsContainer,
+    PreferencesComponent
   ],
   imports: [
     CommonModule,
@@ -79,6 +82,7 @@ import { ThemeService } from './services/theme.service';
     CheckDeviceFeatureService,
     ToastService,
     ThemeService,
+    PreferencesService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

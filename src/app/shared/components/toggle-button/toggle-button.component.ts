@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 
 @Component({
     selector: 'toggle-button',
@@ -7,7 +7,7 @@ import {Component, EventEmitter, Output} from "@angular/core";
 export class ToggleButtonComponent {
     @Output() toggleState: EventEmitter<boolean> = new EventEmitter();
 
-    state = false;
+    @Input() state;
 
     toggle() {
         this.state = !this.state;

@@ -86,10 +86,14 @@ export class NavbarComponent implements OnInit {
     }
 
     goToProfile() {
-
         this.collapseMenu();
 
         this.router.navigateByUrl(`/u/${this.user.name}`);
+    }
+
+    goToPreferences() {
+        this.collapseMenu();
+        this.router.navigateByUrl('prefs');
     }
 
     openHelpPage() {
@@ -110,10 +114,8 @@ export class NavbarComponent implements OnInit {
     }
 
     themeToggle(value) {
-        if (value) {
-            this.themeService.changeTheme('light');
-        } else {
-            this.themeService.changeTheme('dark');
-        }
+        const theme = value ? 'light' : 'dark';
+        
+        this.themeService.changeTheme(theme);
     }
 }

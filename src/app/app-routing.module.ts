@@ -7,6 +7,7 @@ import { SubredditComponent } from './components/subreddit/components/subreddit-
 import { UserProfileComponent } from './components/user/user-profile.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SearchPageComponent } from './components/search/components/search-page/search-page.component';
+import { PreferencesComponent } from './components/preferences/preferences.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,9 @@ const routes: Routes = [
   },
   {
     path: "authenticate", component: AuthenticateComponent
+  },
+  {
+    path: "prefs", component: PreferencesComponent
   },
   {
     path: "r/:subreddit", component: SubredditComponent

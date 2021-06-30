@@ -1,0 +1,27 @@
+<div class="container mt-5 p-3">
+    <h4 class="mb-5">User preferences</h4>
+
+    <div class="mb-4 d-flex flex-row">
+        <div class="me-auto">
+            <h5 class="size-18 mb-0">Safe browsing mode</h5>
+            <p class="d-none d-md-block">Blur thumbnails and media preview for anything labeled NSFW (not safe for work)</p>
+        </div>
+        <toggle-button [state]="preferences.safeBrowsing" (toggleState)="updateTogglePreference('safeBrowsing', $event)"></toggle-button>
+    </div>
+
+
+    <div class="mb-4 d-flex flex-row">
+        <div class="me-auto">
+            <h5 class="size-18 mb-0">Default to markdown</h5>
+            <p class=" d-none d-md-block">Turn on this if you don't want to use the rich text editor</p>
+        </div>
+        <toggle-button [state]="preferences.useMarkdown" (toggleState)="updateTogglePreference('useMarkdown', $event)"></toggle-button>
+
+    </div>
+
+    <div class="mb-4">
+        <h5 class="size-18 mb-0">Change theme</h5>
+        <p>Tired of Light and Dark themes? Try my homemade themes</p>
+    </div>
+
+</div>
