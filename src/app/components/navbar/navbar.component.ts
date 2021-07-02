@@ -5,8 +5,9 @@ import { UserInterface } from 'src/app/model/user.interface';
 import { filter, take, takeUntil, tap } from 'rxjs/operators';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { NavigationStart, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/services/theme.service';
+import { PreferencesService } from 'src/app/services/preferences.service';
 
 @Component({
     selector: 'navbar',
@@ -20,13 +21,16 @@ export class NavbarComponent implements OnInit {
         private checkDeviceFeatureService: CheckDeviceFeatureService,
         private router: Router,
         private renderer2: Renderer2,
-        private themeService: ThemeService) { }
+        private themeService: ThemeService,
+        private preferenceService: PreferencesService) { }
 
     menuToggle = false;
     user: UserInterface;
-    userSubscribtion;
+    userSubscribtion: Observable<UserInterface>;
     destroy$ = new Subject();
     mainElement;
+    
+    themeToggleState: boolean;
 
     ngOnInit() {
         this.mainElement = document.getElementById('main');
@@ -44,6 +48,11 @@ export class NavbarComponent implements OnInit {
                 this.user = next;
             })
         );
+
+        if (this.preferenceService.preferenceValue.theme === 'light') {
+            this.themeToggleState = true;
+        }
+
     }
 
     isLoggedIn() {

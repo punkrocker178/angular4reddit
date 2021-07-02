@@ -11,6 +11,10 @@ export class PreferencesService {
         return this._preferences.asObservable();
     }
 
+    get preferenceValue() {
+        return this._preferences.getValue();
+    }
+
     constructor(private localStorage: LocalStorageService) {}
 
     initPreference() {

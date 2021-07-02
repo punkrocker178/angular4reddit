@@ -24,7 +24,7 @@
 
             <div class="d-flex pt-1 pb-1 ps-3 pe-3">
               <span class="icon-before icon-moon me-2"></span>
-              <toggle-button (toggleState)="themeToggle($event)"></toggle-button>
+              <toggle-button [state]="themeToggleState" (toggleState)="themeToggle($event)"></toggle-button>
               <span class="icon-before icon-sun ms-2"></span>
             </div>
 
