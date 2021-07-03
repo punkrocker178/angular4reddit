@@ -105,18 +105,12 @@
 .subreddit-item-title {
     flex-basis: 0;
     flex-grow: 1;
+    min-width: 0;
 }
 
 .subreddit-item-description {
     flex-basis: 0;
     flex-grow: 15;
-}
-
-.subreddit-item-join-btn {
-    flex-basis: 0;
-    flex-grow: 1;
-    height: 50%;
-    align-self: center;
 }
 
 .nsfw-text {
@@ -162,6 +156,14 @@
     .subreddit-item-title {
         flex-grow: 3;
         flex-basis: 0;
+        min-width: 0;
+    }
+
+    .subreddit-item-join-btn {
+        flex-basis: 0;
+        flex-grow: 1;
+        height: 50%;
+        align-self: center;
     }
 
     .crop-content {
@@ -177,6 +179,22 @@
 
     .crop-content {
         .crop-content-mixin(80vh);
+    }
+
+    .subreddit-item-join-btn {
+        flex-basis: 0;
+        flex-grow: 3;
+        height: 50%;
+        align-self: center;
+    }
+}
+
+@media (min-width: 992px) {
+    .subreddit-item-join-btn {
+        flex-basis: 0;
+        flex-grow: 2;
+        height: 50%;
+        align-self: center;
     }
 }
 
