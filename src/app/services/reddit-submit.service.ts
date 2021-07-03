@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HeadersUtils } from '../class/HeadersUtils';
-import { TrumbowygConstants } from '../constants/trymbowyg-constants';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { TrumbowygService } from './trumbowyg.service';
 
@@ -43,7 +42,10 @@ export class RedditSubmitService {
             body = body.set(field, payload[field]);
         }
 
-        return this.http.post(HeadersUtils.buildUrl('/api/comment'), body.toString(),
+        // HttpParams can't encode '+' sign
+        const data = body.toString().replace(/\+/g, '%2B');
+
+        return this.http.post(HeadersUtils.buildUrl('/api/comment'), data,
             {
                 headers:
                 {

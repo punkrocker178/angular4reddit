@@ -9,6 +9,7 @@ import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { CommentEditorComponent } from '../comment/components/comment-editor/comment-editor.component';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
+import { PreferencesService } from 'src/app/services/preferences.service';
 
 @Component({
   selector: 'post-detail',
@@ -24,6 +25,7 @@ export class PostDetailComponent {
 
   postId: string;
 
+  defaultMarkdown: boolean;
   disableCommentBtn = true;
 
   @ViewChild(CommentEditorComponent) commentEditor;
@@ -34,7 +36,8 @@ export class PostDetailComponent {
     private listingService: RedditListingService,
     private checkDeviceFeatureService: CheckDeviceFeatureService,
     private redditSubmitService: RedditSubmitService,
-    private trumbowygService: TrumbowygService
+    private trumbowygService: TrumbowygService,
+    private preferenceService: PreferencesService
   ) { }
 
   ngOnInit() {
@@ -54,11 +57,13 @@ export class PostDetailComponent {
       )
       .subscribe();
 
+      this.defaultMarkdown = this.preferenceService.preferenceValue.useMarkdown;
+
   }
 
   comment() {
     const thingID = `${this.post.kind}_${this.post.data['id']}`;
-    const content = this.checkDeviceFeatureService.isTouchScreen ?
+    const content = !this.useTrumbowygEditor() ?
       this.commentEditor.commentContent: this.trumbowygService.getTrumbowygAsMarkdown(TrumbowygConstants.TRUMBOWYG_EDITOR);
     const data = {
       thingID: thingID,
@@ -74,7 +79,7 @@ export class PostDetailComponent {
   }
 
   useTrumbowygEditor() {
-    return !this.checkDeviceFeatureService.isTouchScreen;
+    return !this.checkDeviceFeatureService.isTouchScreen && !this.defaultMarkdown;
   }
 
   displayCommentButton(value: boolean) {

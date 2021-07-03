@@ -17,7 +17,7 @@
         </div>
 
         <ng-template #commentEditor>
-          <comment-editor (triggerCommentButton)="displayCommentButton($event)"></comment-editor>
+          <comment-editor [useMarkdown]="defaultMarkdown" (triggerCommentButton)="displayCommentButton($event)"></comment-editor>
         </ng-template>
 
 
@@ -42,7 +42,7 @@
 
       <ng-container *ngIf="comments && !isLoading">
         <div class="comments-section">
-          <post-comments [postId]="post.data['name']" [comments]="comments" [isArchive]="post?.data['archived']"></post-comments>
+          <post-comments [useMarkdown]="defaultMarkdown" [postId]="post.data['name']" [comments]="comments" [isArchive]="post?.data['archived']"></post-comments>
         </div>
       </ng-container>
 

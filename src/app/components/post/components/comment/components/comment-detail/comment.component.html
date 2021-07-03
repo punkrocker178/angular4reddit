@@ -11,6 +11,7 @@
 <ng-container *ngIf="enableEditor">
 
   <comment-editor 
+  [useMarkdown]="useMarkdown"
   [commentData]="commentData"
   [trumbowygConfigs]="trumbowygConfigs"
   (triggerCommentButton)="displayReplyButton($event)"></comment-editor>

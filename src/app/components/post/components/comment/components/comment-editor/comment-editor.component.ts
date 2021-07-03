@@ -23,6 +23,8 @@ export class CommentEditorComponent {
 
     disableCommentBtn: boolean;
 
+    @Input() useMarkdown: boolean;
+
     @Input() trumbowygConfigs;
 
     @Input() commentData;
@@ -40,7 +42,7 @@ export class CommentEditorComponent {
     ngAfterViewInit() {
         let editorInstance;
 
-        if (this.checkDeviceFeatureService.isTouchScreen) {
+        if (!this.useTrumbowygEditor()) {
             editorInstance = this.textArea;
 
             const keyEvent$ = fromEvent(editorInstance.nativeElement, 'keydown');
@@ -49,7 +51,6 @@ export class CommentEditorComponent {
                 const content = this._commentContent ? this._commentContent.replace(/\s+/g, '') : '';
 
                 if (content.length > 0) {
-                    console.log(content);
                     this.disableCommentBtn = false;
                 } else {
                     this.disableCommentBtn = true;
@@ -81,7 +82,7 @@ export class CommentEditorComponent {
     }
 
     useTrumbowygEditor() {
-        return !this.checkDeviceFeatureService.isTouchScreen;
+        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown;
     }
 
     ngOnDestroy() {

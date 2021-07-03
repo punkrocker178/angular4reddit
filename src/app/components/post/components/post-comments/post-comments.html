@@ -4,6 +4,7 @@
 
     <div *ngIf="comment.kind == 't1'; else moreReplies">
       <app-comment 
+      [useMarkdown]="useMarkdown"
       [commentData]="comment"
       [isArchive]="isArchive"
       (submittedComment)="pushComment($event)"
@@ -12,7 +13,7 @@
 
 
     <div *ngIf="hasReplies(comment)" class="children">
-      <post-comments [postId]="postId" [isReplies]="true" [comments]="comment.data['replies']"
+      <post-comments [useMarkdown]="useMarkdown" [postId]="postId" [isReplies]="true" [comments]="comment.data['replies']"
                      [isArchive]="isArchive">
       </post-comments>
     </div>

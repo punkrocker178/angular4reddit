@@ -14,6 +14,7 @@ import { CommentEditorComponent } from '../comment-editor/comment-editor.compone
 })
 export class CommentComponent {
 
+    @Input() useMarkdown: boolean;
     @Input() commentData;
     @Input() isArchive: boolean;
     @Output() submittedComment: EventEmitter<Object> = new EventEmitter();
@@ -56,7 +57,7 @@ export class CommentComponent {
         const thingID = `${kind}_${id}`;
         const trumbowygSelector = `${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData.data.id}`;
 
-        const content = this.checkDeviceFeatureService.isTouchScreen ?
+        const content = !this.useTrumbowygEditor() ?
             this.commentEditor.commentContent : this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
 
         const data = {
@@ -73,7 +74,7 @@ export class CommentComponent {
     }
 
     useTrumbowygEditor() {
-        return !this.checkDeviceFeatureService.isTouchScreen;
+        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown;
     }
 
     displayReplyButton(value: boolean) {

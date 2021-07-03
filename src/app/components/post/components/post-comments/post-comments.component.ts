@@ -19,11 +19,14 @@ export class PostCommentsComponent {
   moreChildrenLimit = 0;
   moreChildrenId;
 
+  @Input() useMarkdown: boolean;
+
   trumbowygConfigs = {
     isComment: true
   }
   
-  constructor(private submitService: RedditSubmitService) {}
+  constructor(
+    private submitService: RedditSubmitService) {}
   
   ngOnInit() {
     if (typeof this.comments === 'object') {
