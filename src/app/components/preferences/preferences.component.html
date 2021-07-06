@@ -1,7 +1,15 @@
-<div class="container mt-5 p-3">
-    <h4 class="mb-5">User preferences</h4>
+<div class="container mt-lg-5 mt-3 p-3">
+    <h4 class="mb-lg-5 mb-4">User preferences</h4>
 
-    <div class="mb-4 d-flex flex-row">
+    <div class="mb-md-4 mb-3 d-flex flex-row">
+        <div class="me-auto">
+            <h5 class="size-18 mb-0">Show NSFW Content</h5>
+            <p class="d-none d-md-block">Show posts, subreddits with NSFW tag (Synced from your Reddit settings)</p>
+        </div>
+        <toggle-button [state]="showNSFW" (toggleState)="updateTogglePreference('nsfw', $event)"></toggle-button>
+    </div>
+
+    <div class="mb-md-4 mb-3 d-flex flex-row">
         <div class="me-auto">
             <h5 class="size-18 mb-0">Safe browsing mode</h5>
             <p class="d-none d-md-block">Blur thumbnails and media preview for anything labeled NSFW (not safe for work)</p>
@@ -10,7 +18,7 @@
     </div>
 
 
-    <div class="mb-4 d-flex flex-row">
+    <div class="mb-md-4 mb-3 d-flex flex-row">
         <div class="me-auto">
             <h5 class="size-18 mb-0">Default to markdown</h5>
             <p class=" d-none d-md-block">Turn on this if you don't want to use the rich text editor</p>

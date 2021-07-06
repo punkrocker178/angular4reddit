@@ -41,7 +41,7 @@
     </div>
 
     <ng-container *ngIf="imageSrc">
-      <div [ngClass]="{'crop-height': !options.isDetail, 'blur-img': isOver18() && !over18_consent}" class="img-container pointer">
+      <div [ngClass]="{'crop-height': !options.isDetail, 'blur-img': isOver18() && !over18Consent}" class="img-container pointer">
         <img (click)="viewDetail()" class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe" [alt]="post.data['title']">
       </div>
     </ng-container>
@@ -73,7 +73,7 @@
       </div>
 
       <!-- Video player -->
-      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18_consent}"
+      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18Consent}"
         [ngClass]="{'ratio-16x9': isWidescreenVideo,'ratio-4x3': !isWidescreenVideo, 'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}"
         class="ratio">
         <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
@@ -83,7 +83,7 @@
 
       <!-- Iframe -->
       <div *ngIf="isEmbededLink() || isMediaEmbed()"
-        [ngClass]="{'blur-img': isOver18() && !over18_consent, 'ratio-16x9': isWidescreenVideo, 'ratio-4x3': !isWidescreenVideo}"
+        [ngClass]="{'blur-img': isOver18() && !over18Consent, 'ratio-16x9': isWidescreenVideo, 'ratio-4x3': !isWidescreenVideo}"
         class="scale-media ratio">
         <iframe [src]="videoSrc | safe: 'resourceUrl'"></iframe>
       </div>

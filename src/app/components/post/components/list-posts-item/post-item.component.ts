@@ -17,6 +17,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
+import { PreferencesService } from 'src/app/services/preferences.service';
 
 declare var twttr: any;
 
@@ -36,7 +37,7 @@ export class PostItemComponent {
   isSaved: boolean;
   isSaving: boolean;
   liked: boolean;
-  over18_consent: boolean;
+  over18Consent: boolean;
   embedSrc: string;
 
   hlsPlayer: Hls;
@@ -72,7 +73,8 @@ export class PostItemComponent {
     private renderer2: Renderer2,
     private toastService: ToastService,
     private authenticateService: RedditAuthenticateService,
-    private checkDeviceFeatureService: CheckDeviceFeatureService) { }
+    private checkDeviceFeatureService: CheckDeviceFeatureService,
+    private preferenceService: PreferencesService) { }
 
   ngOnInit() {
 
@@ -82,7 +84,8 @@ export class PostItemComponent {
       };
     }
 
-    this.over18_consent = this.userService.isNSFWAllowed();
+    this.over18Consent = this.userService.isNSFWAllowed() && !this.preferenceService.preferenceValue.safeBrowsing;
+
     this.isSaved = this.post.data['saved'];
 
     if (this.isGallery()) {
@@ -355,15 +358,21 @@ export class PostItemComponent {
 
   // Needs refactor
   viewDetail(isComment?: boolean) {
-    if (this.isOver18() && !this.over18_consent) {
+    if (this.isOver18() && !this.over18Consent) {
       const modalRef = this.modalService.open(NsfwPopupComponent);
       modalRef.result.then(result => {
-        this.over18_consent = true;
+        this.over18Consent = true;
+        this.navigateToDetail(isComment);
       }, reason => {
         console.log(reason, 'reason');
       })
+    } else {
+      this.navigateToDetail(isComment);
     }
 
+  }
+
+  navigateToDetail(isComment?: boolean) {
     if (!this.options.isDetail) {
       let path = `/r/${this.post.data['subreddit']}/comments/`;
 
@@ -378,7 +387,6 @@ export class PostItemComponent {
 
       this.router.navigateByUrl(path);
     }
-
   }
 
   isCrossPost() {

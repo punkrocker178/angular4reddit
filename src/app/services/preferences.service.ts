@@ -20,6 +20,7 @@ export class PreferencesService {
     initPreference() {
         if (!this.localStorage.get('prefs')) {
             const prefs = {
+                showNSFW: false,
                 safeBrowsing: true,
                 theme: 'dark',
                 useMarkdown: false

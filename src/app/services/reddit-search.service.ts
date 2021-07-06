@@ -58,7 +58,7 @@ export class RedditSearchService {
         ));
     }
 
-    searchSubredditNames(name: string) {
+    searchSubredditNames(name: string, over18?: boolean) {
 
         if (name === '') {
             return of([]);
@@ -66,7 +66,7 @@ export class RedditSearchService {
 
         const payload = {
             exact: false,
-            include_over_18: true,
+            include_over_18: !!over18,
             include_unadvertisable: true,
             query: name,
             typeahead_active: false
