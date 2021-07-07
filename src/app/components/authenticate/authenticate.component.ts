@@ -5,6 +5,8 @@ import { LocalStorageService } from 'src/app/services/localStorage.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserService } from "src/app/services/user.service";
+import { PreferencesService } from "src/app/services/preferences.service";
+import { UserInterface } from "src/app/model/user.interface";
 
 @Component({
     selector: 'authenticate',
@@ -20,6 +22,7 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
         private authenService: RedditAuthenticateService,
         private localStorage: LocalStorageService,
         private userService: UserService,
+        private preferenceService: PreferencesService,
         private router: Router) { }
 
     ngOnInit() {
@@ -31,9 +34,10 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
                     if (res['token_type'] === 'bearer') {
                         this.authenService.getUserInfo()
                         .pipe(takeUntil(this.ngUnsubscribe))
-                        .subscribe(res => {
+                        .subscribe((res: UserInterface) => {
                             this.authenService.storeUserDetail(res);
                             this.userService.setUser(res);
+                            this.preferenceService.setPreference('safeBrowsing', !res.over_18)
                             this.router.navigateByUrl('/home');
                         });
                     }

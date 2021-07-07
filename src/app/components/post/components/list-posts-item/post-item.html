@@ -1,7 +1,7 @@
 <div class="card" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
   <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': !isGallery()}">
 
-    <div class="card-side-padding pointer">
+    <div class="card-side-padding pointer pb-2">
       <!-- Subreddit - author - post date -->
       <div (click)="viewDetail()" class="d-flex flex-row post-author">
         <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"

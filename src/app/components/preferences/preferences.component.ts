@@ -28,9 +28,16 @@ export class PreferencesComponent implements OnInit {
             })
         ).subscribe();
 
-        this.authenService.getUserInfo().pipe(takeUntil(this.destroy$), tap(
-            (next: UserInterface) => this.showNSFW = next.over_18
-        )).subscribe();
+        if (this.authenService.getIsLoggedIn()) {
+            this.authenService.getUserInfo().pipe(takeUntil(this.destroy$), tap(
+                (next: UserInterface) => this.showNSFW = next.over_18
+            )).subscribe();
+        } else {
+            this.userService.user$.pipe(takeUntil(this.destroy$), tap((next: UserInterface) => {
+                this.showNSFW = !!next.over_18;
+            })).subscribe();
+        }
+        
     }
 
     updateTogglePreference(setting: string, value: boolean) {
