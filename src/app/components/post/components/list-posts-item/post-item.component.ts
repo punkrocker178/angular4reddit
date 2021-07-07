@@ -361,7 +361,6 @@ export class PostItemComponent {
     if (this.isOver18() && !this.over18Consent) {
       const modalRef = this.modalService.open(NsfwPopupComponent);
       modalRef.result.then(result => {
-        this.over18Consent = true;
         this.navigateToDetail(isComment);
       }, reason => {
         console.log(reason, 'reason');

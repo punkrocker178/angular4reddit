@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { PreferencesService } from "src/app/services/preferences.service";
 import { UserService } from "src/app/services/user.service";
 
 @Component({
@@ -12,7 +13,8 @@ export class NsfwPopupComponent {
     @Input() input;
 
     constructor(public activeModal: NgbActiveModal,
-        private userService: UserService) {}
+        private userService: UserService,
+        private preferenceService: PreferencesService) {}
 
     dismiss(reason: string) {
         this.activeModal.dismiss(reason);
@@ -20,6 +22,7 @@ export class NsfwPopupComponent {
 
     close(result: string) {
         this.userService.updateNSFW(true);
+        this.preferenceService.setPreference('safeBrowsing', false);
         this.activeModal.close(result);
     }
 }
