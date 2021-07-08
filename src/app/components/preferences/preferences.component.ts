@@ -19,6 +19,7 @@ export class PreferencesComponent implements OnInit {
     destroy$: Subject<boolean> = new Subject();
     preferences: Preferences;
     showNSFW: boolean;
+    updating: boolean;
 
     ngOnInit() {
         this.preferencesService.preference.pipe(
@@ -41,10 +42,18 @@ export class PreferencesComponent implements OnInit {
     }
 
     updateTogglePreference(setting: string, value: boolean) {
+
+        if (this.updating) {
+            return;
+        }
+
+        this.updating = true;
         this.preferencesService.setPreference(setting, value);
 
         if (setting === 'nsfw') {
-            this.userService.updateNSFW(value);
+            this.userService.updateNSFW(value).subscribe(_ => this.updating = false);
+        } else {
+            this.updating = false;
         }
     }
 

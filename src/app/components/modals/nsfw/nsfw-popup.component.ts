@@ -21,7 +21,7 @@ export class NsfwPopupComponent {
     }
 
     close(result: string) {
-        this.userService.updateNSFW(true);
+        this.userService.updateNSFW(true).subscribe();
         this.preferenceService.setPreference('safeBrowsing', false);
         this.activeModal.close(result);
     }

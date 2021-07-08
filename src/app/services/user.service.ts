@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LocalStorageService } from './localStorage.service';
 import { UserInterface } from '../model/user.interface';
@@ -67,33 +67,23 @@ export class UserService {
         return this.http.patch(HeadersUtils.buildUrl(this.preferencesAPI), body);
     }
 
-    updateNSFW(flag: boolean) {
+    updateNSFW(flag: boolean): Observable<any> {
         if (this.authenticateService.getIsLoggedIn()) {
             const userPreferencePayload = this.getUpdateNSFWPayload(flag);
-            this.updateUserPreference(userPreferencePayload).pipe(tap(next => {
-                this.storeNSFW(next['over_18'], true);
-            })).subscribe();
+            return this.updateUserPreference(userPreferencePayload).pipe(tap((next: UserInterface) => {
+                this.storeNSFW(next.over_18);
+            }));
         } else {
             this.storeNSFW(flag);
+            return of(flag);
         }
 
     }
 
-    private storeNSFW(data, isLoggedIn?: boolean) {
-
-        let value;
+    private storeNSFW(value: boolean) {
         let user = this.userSubject.getValue();
-        if (isLoggedIn) {
-            value = data['over_18'];
-            user.over_18 = data['over_18'];
-        } else {
-            value = data;
-            user.over_18 = data;
-        }
-
         this.allowNSFW.next(value);
         this.localStorage.set('userObject', user);
-
     }
 
     getUpdateNSFWPayload(flag: boolean) {
