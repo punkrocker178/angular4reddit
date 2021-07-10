@@ -1,0 +1,27 @@
+.theme-item {
+    padding: 0.5rem;
+    border: 1px solid #d6dee0;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.select-theme-btn {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    opacity: 0;
+    transition: ease 0.5s;
+    transform: translateY(30px);
+}
+
+.theme-item:hover {
+    .select-theme-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.theme-item.selected {
+    border-color: rgb(27 118 196);
+}

@@ -1,0 +1,13 @@
+<div class="row mt-4">
+    <div *ngFor="let theme of themes; let i = index" 
+        class="theme-item me-2 me-md-4 col-12 col-md-6 col-lg-3 mb-3"
+        [ngClass]="{'selected': selectedThemeIndex[i]}"
+        >
+        <p>{{theme.name}}</p>
+        <p class="mb-5">{{theme.description}}</p>
+        <button (click)="selectTheme(i)" 
+                class="btn select-theme-btn"
+                [ngClass]="{'btn-primary': !selectedThemeIndex[i], 'btn-secondary': selectedThemeIndex[i]}">
+                {{ selectedThemeIndex[i] ? 'Unselect' : 'Select' }}</button>
+    </div>
+</div>

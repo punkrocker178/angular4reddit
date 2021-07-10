@@ -2,7 +2,7 @@
 
 .set-theme(steam, @color, @background-color) {
 
-    --bs-success: @primary-steam;
+    --bs-primary: @primary-steam;
 
     background: @background-color-steam;
     color: @color-steam;
@@ -40,9 +40,10 @@
         color:  @background-color-dark-elevated-variant;
     }
 
-    .btn-success {
-        background: var(--bs-success);
+    .btn-primary {
+        background: var(--bs-primary);
         color: #d2efa9;
+        border: 0;
     }
 
     .icon-up:hover::before {

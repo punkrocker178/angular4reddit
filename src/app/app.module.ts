@@ -38,6 +38,7 @@ import { SubredditModule } from './components/subreddit/components/subreddit.mod
 import { ThemeService } from './services/theme.service';
 import { PreferencesComponent } from './components/preferences/preferences.component';
 import { PreferencesService } from './services/preferences.service';
+import { ThemeModule } from './components/theme/theme.module';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { PreferencesService } from './services/preferences.service';
     NgbToastModule,
     SearchModule,
     ModalModule,
-    SubredditModule
+    SubredditModule,
+    ThemeModule
   ],
   providers: [
     RedditListingService,

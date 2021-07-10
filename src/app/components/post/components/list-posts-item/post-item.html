@@ -1,9 +1,9 @@
-<div class="card" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
+<div class="card mt-3" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
   <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': !isGallery()}">
 
-    <div class="card-side-padding pointer pb-2">
+    <div class="card-side-padding pointer">
       <!-- Subreddit - author - post date -->
-      <div (click)="viewDetail()" class="d-flex flex-row post-author">
+      <div (click)="viewDetail()" class="d-flex flex-row post-author pt-2">
         <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
           class="me-auto">{{post?.data['subreddit_name_prefixed']}}</a>
         <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
