@@ -1,6 +1,8 @@
 @import "../_vars.less";
 
 .set-theme(dark, @color, @background-color) {
+    --bs-blue: #3285ff;
+
     background-color: @background-color;
     color: @color;
 
@@ -8,6 +10,10 @@
         background-color: @background-color;
     }
 
+    a {
+        color: var(--bs-blue);
+    }
+    
     .set-theme-foreground(@color, @background-color-dark-elevated, @background-color-dark-elevated-1, @background-color-dark-elevated-variant);
 
     .dropdown-menu {
@@ -16,7 +22,7 @@
     }
 
     .dropdown-item:hover {
-        color:  @background-color-dark-elevated-variant;
+        background-color: var(--bs-blue);
     }
 
     .btn-secondary {

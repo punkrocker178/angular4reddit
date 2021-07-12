@@ -132,37 +132,37 @@
     <app-vote [score]="post?.data['score']" [id]="post?.data['name']" [liked]="post?.data['likes']"></app-vote>
 
     <div (click)="viewDetail()" class="p-2 post-buttons align-self-center flex-fill pointer">
-      <button class="btn custom-btn d-md-none">
+      <span class="d-md-none">
         <span class="fw-bold me-2">{{post?.data['num_comments']}}</span>
         <i class="fas fa-comment-dots"></i>
-      </button>
+      </span>
 
-      <button class="btn custom-btn d-none d-md-inline">
+      <span class="d-none d-md-inline">
         <span class="fw-bold">{{post?.data['num_comments']}}</span>
         Comments
-      </button>
+      </span>
     </div>
 
-    <div class="p-2 post-buttons align-self-center flex-fill pointer">
-      <button *ngIf="!isSaved; else unsaveBtn" (click)="save()" class="btn custom-btn">
+    <div class="p-2 post-buttons align-self-center flex-fill pointer" (click)="!isSaved ? save() : unsave()">
+      <span *ngIf="!isSaved; else unsaveBtn" class="">
         <i class="far fa-bookmark me-1"></i>
         <span class="d-none d-md-inline">Save</span>
-      </button>
+      </span>
 
     </div>
 
-    <div class="p-2 post-buttons align-self-center flex-fill pointer">
-      <button (click)="share(toastClipboardCopied)" class="btn custom-btn">
+    <div class="p-2 post-buttons align-self-center flex-fill pointer" (click)="share(toastClipboardCopied)">
+      <span class="">
         <i class="fas fa-share-alt me-1"></i>
         <span class="d-none d-md-inline">Share</span>
-      </button>
+      </span>
     </div>
 
     <ng-template #unsaveBtn>
-      <button (click)="unsave()" class="btn custom-btn">
+      <span class="">
         <i class="fas fa-bookmark me-1"></i>
         <span class="d-none d-md-inline">Unsave</span>
-      </button>
+      </span>
     </ng-template>
 
   </div>

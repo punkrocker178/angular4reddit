@@ -64,11 +64,13 @@
       </div>
 
       <span class="mobile-nav-item" (click)="goToProfile()" *ngIf="isLoggedIn()">/u/{{user.name}}</span>
-
+      <span class="mobile-nav-text" (click)="goToPreferences()">Preferences</span>
       <span class="mobile-nav-text" (click)="openHelpPage()">Help</span>
       <span class="mobile-about-btn mobile-nav-text">About</span>
+  
       <a class="mobile-nav-text icon-before icon-sign-out" (click)="logout()">Log out</a>
     </ng-container>
+    <span class="icon-before size-32 mobile-change-theme-btn" [ngClass]="{'icon-moon': themeToggleState, 'icon-sun': !themeToggleState}" (click)="themeToggle(!themeToggleState)"></span>
 
   </div>
 

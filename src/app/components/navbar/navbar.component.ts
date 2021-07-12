@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit {
     destroy$ = new Subject();
     mainElement;
     
-    themeToggleState: boolean;
+    themeToggleState: boolean = false;
 
     ngOnInit() {
         this.mainElement = document.getElementById('main');
@@ -124,7 +124,7 @@ export class NavbarComponent implements OnInit {
 
     themeToggle(value) {
         const theme = value ? 'light' : 'dark';
-        
+        this.themeToggleState = value;
         this.themeService.changeTheme(theme);
     }
 }

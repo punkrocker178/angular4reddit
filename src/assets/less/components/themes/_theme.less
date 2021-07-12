@@ -27,8 +27,12 @@
 }
 
 .set-theme-foreground(@color, @background-color-variant, @background-color-variant-1, @background-color-variant-2) {
-    nav {
+    nav, .side-menu, .side-menu-show {
         background-color: @background-color-variant-1;
+    }
+
+    .hamburger-btn div {
+        background-color: if(luma(@background-color-variant-1) > 50%, @color, #f5f5f5);
     }
 
     .children, .card, .modal-content {
