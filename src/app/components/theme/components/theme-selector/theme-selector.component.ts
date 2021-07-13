@@ -11,13 +11,19 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class ThemeSelectorComponent {
     themes: Theme[];
     selectedThemeIndex: boolean[];
-    @Output() themeSelected: EventEmitter = new EventEmitter();
+    @Input() selectedTheme: string;
+    @Output() themeEmitter: EventEmitter = new EventEmitter();
 
     constructor(private themeService: ThemeService) {}
 
     ngOnInit() {
         this.themes = this.themeService.themes.filter((theme: Theme) => (theme.name !== 'Light' && theme.name !== 'Dark'));
+        const themeIndex = this.themes.findIndex((theme: Theme) => theme.name.toLowerCase() === this.selectedTheme.toLowerCase());
         this.selectedThemeIndex = new Array(this.themes.length).fill(false);
+
+        if (themeIndex > -1) {
+            this.selectedThemeIndex[themeIndex] = true;
+        }
     }
 
     selectTheme(index: number) {

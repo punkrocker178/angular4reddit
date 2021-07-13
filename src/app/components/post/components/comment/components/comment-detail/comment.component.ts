@@ -24,6 +24,8 @@ export class CommentComponent {
     enableEditor: boolean;
     disableReplyBtn = true;
 
+    isAuthorModerator: boolean;
+
     trumbowygConfigs = {
         isComment: true
     }
@@ -37,6 +39,7 @@ export class CommentComponent {
     }
 
     ngOnInit() {
+        this.checkAuthor();
     }
 
     showReplyEditor() {
@@ -79,5 +82,11 @@ export class CommentComponent {
 
     displayReplyButton(value: boolean) {
         this.disableReplyBtn = value;
+    }
+
+    checkAuthor() {
+        if (this.commentData.data.distinguished && this.commentData.data.distinguished.toLowerCase() === 'moderator') {
+            this.isAuthorModerator = true;
+        }
     }
 }

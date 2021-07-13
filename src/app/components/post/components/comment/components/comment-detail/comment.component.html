@@ -1,4 +1,5 @@
-<span class="me-2">{{commentData.data.author}}</span>
+<span class="me-1">{{commentData.data.author}}</span>
+<span *ngIf="isAuthorModerator" class="icon-before icon-shield me-2 d-inline-block"></span>
 <span
   [title]="commentData.data.created_utc | dateTimePipe: 'format'">{{commentData.data.created_utc | dateTimePipe: 'diff'}}</span>
 

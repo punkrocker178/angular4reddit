@@ -22,13 +22,14 @@ export class ThemeService {
         {
             name: 'Steam',
             themeClass: 'steam-theme',
-            description: 'Your favourite wator vapor game store'
+            description: 'Your favourite water vapor game store'
         },
-        {
-            name: 'Candy',
-            themeClass: 'candy-theme',
-            description: 'Mmmmm Candy'
-        }
+        // This theme needs more work
+        // {
+        //     name: 'Candy',
+        //     themeClass: 'candy-theme',
+        //     description: 'Mmmmm Candy'
+        // }
     ];
 
     get themes(): Theme[] {

@@ -83,7 +83,7 @@ export class PostItemComponent {
         isDetail: false
       };
     }
-
+    
     this.over18Consent = this.userService.isNSFWAllowed() && !this.preferenceService.preferenceValue.safeBrowsing;
 
     this.isSaved = this.post.data['saved'];

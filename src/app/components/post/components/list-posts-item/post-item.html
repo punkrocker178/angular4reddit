@@ -1,5 +1,5 @@
 <div class="card mt-3" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
-  <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': !isGallery()}">
+  <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': (!isGallery() && !options.isDetail)}">
 
     <div class="card-side-padding pointer">
       <!-- Subreddit - author - post date -->
@@ -41,7 +41,7 @@
     </div>
 
     <ng-container *ngIf="imageSrc">
-      <div [ngClass]="{'crop-height': !options.isDetail, 'blur-img': isOver18() && !over18Consent}" class="img-container pointer">
+      <div [ngClass]="{'blur-img': isOver18() && !over18Consent}" class="img-container pointer">
         <img (click)="viewDetail()" class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe" [alt]="post.data['title']">
       </div>
     </ng-container>
