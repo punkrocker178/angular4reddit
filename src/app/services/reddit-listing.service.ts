@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 @Injectable()
 export class RedditListingService {
 
+    static MAX_POST_LIMIT = 80;
+
     listingSubject = new BehaviorSubject<Listings>(null);
     visitedSubredditSubject = new BehaviorSubject<string>(null);
     visitedUserSubject = new BehaviorSubject<string>(null);
@@ -68,7 +70,14 @@ export class RedditListingService {
             };
             if (this.listingSubject.getValue()) {
                 listing = this.listingSubject.getValue();
-                listing.children = [...listing.children, ...next.children];
+
+                let children = listing.children;
+
+                if (listing.children.length >= RedditListingService.MAX_POST_LIMIT) {
+                    children = listing.children.slice(20);
+                }
+
+                listing.children = [...children, ...next.children];
             } else {
                 listing.children = next.children;
             }

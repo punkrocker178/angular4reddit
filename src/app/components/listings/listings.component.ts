@@ -28,7 +28,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   after: string;
   isLoading: boolean = true;
-  storedDataLoaded: boolean;
 
   constructor(
     private redditService: RedditListingService,
@@ -100,7 +99,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     let queryParams = {
-      limit: 25
+      limit: 20
     }
 
     if (this.checkDeviceFeatureService.isMobile()) {
@@ -114,7 +113,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const updateData = (next: any) => {
       this.after = next.after;
       const currentPosts = this.posts$.getValue();
-      this.posts$.next([...currentPosts, ...next.children]);
+
+      if (currentPosts.length >= RedditListingService.MAX_POST_LIMIT) {
+        this.posts$.next(currentPosts.slice(20))
+      } else {
+        this.posts$.next([...currentPosts, ...next.children]);
+      }
+      
     };
 
     if (this.flairFilter) {
