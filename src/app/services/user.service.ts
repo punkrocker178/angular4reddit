@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { LocalStorageService } from './localStorage.service';
 import { UserInterface } from '../model/user.interface';
 import { HeadersUtils } from '../class/HeadersUtils';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable()
 export class UserService {
@@ -71,6 +72,7 @@ export class UserService {
         if (this.authenticateService.getIsLoggedIn()) {
             const userPreferencePayload = this.getUpdateNSFWPayload(flag);
             return this.updateUserPreference(userPreferencePayload).pipe(tap((next: UserInterface) => {
+                console.log(next.over_18);
                 this.storeNSFW(next.over_18);
             }));
         } else {
@@ -82,6 +84,7 @@ export class UserService {
 
     private storeNSFW(value: boolean) {
         let user = this.userSubject.getValue();
+        user.over_18 = value;
         this.allowNSFW.next(value);
         this.localStorage.set('userObject', user);
     }

@@ -2,6 +2,9 @@
     <div class="row">
         <div class="col-12 contents">
             <app-sort (changeSort)="changeSort($event)"></app-sort>
+            <div>
+                <span>Load previous</span>
+            </div>
             <div *ngFor="let post of posts$ | async">
                 <post-item [post]="post"></post-item>
             </div>
@@ -10,9 +13,8 @@
                 <i class="fa-3x fas fa-sync-alt fa-spin"></i>
             </div>
 
-            <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500"
-                (scrolled)="scroll$.next($event)"></div>
-
+            <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="1500"
+                 (scrolled)="loadMore($event)"></div>
         </div>
     </div>
 </div>

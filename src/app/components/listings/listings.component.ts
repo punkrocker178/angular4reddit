@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { Observable, BehaviorSubject, Subscription, of, combineLatest } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
-import { tap, debounceTime, switchMap } from 'rxjs/operators';
+import { tap, switchMap, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
@@ -69,7 +69,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
           this.after = storedData.after;
           this.posts$.next(storedData.children);
           return of([]);
+        } else {
+          this.scroll$.next(true);
         }
+
         if (this.posts$.getValue().length > 0) {
           return this.fetchData(null, true)
         }
@@ -80,7 +83,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     ).subscribe();
 
     this.scrollSubscription = this.scroll$.pipe(
-      debounceTime(1000),
+      filter(event => event !== null),
       switchMap(_ => this.fetchData(this.after))
     ).subscribe(_ => {
       this.isLoading = false;
@@ -112,14 +115,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     const updateData = (next: any) => {
       this.after = next.after;
-      const currentPosts = this.posts$.getValue();
+      let currentPosts = this.posts$.getValue();
 
       if (currentPosts.length >= RedditListingService.MAX_POST_LIMIT) {
-        this.posts$.next(currentPosts.slice(20))
-      } else {
-        this.posts$.next([...currentPosts, ...next.children]);
-      }
+        currentPosts = currentPosts.slice(20);
+      } 
       
+      this.posts$.next([...currentPosts, ...next.children]);
     };
 
     if (this.flairFilter) {
@@ -201,6 +203,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
     } else {
       this.flairFilter = null;
     }
+  }
+
+  loadMore(event) {
+    this.scroll$.next(event);
   }
 
 }

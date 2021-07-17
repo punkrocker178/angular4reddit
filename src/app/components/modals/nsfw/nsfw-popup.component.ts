@@ -21,8 +21,11 @@ export class NsfwPopupComponent {
     }
 
     close(result: string) {
-        this.userService.updateNSFW(true).subscribe();
-        this.preferenceService.setPreference('safeBrowsing', false);
+        this.userService.updateNSFW(true).subscribe(_ => {
+            this.preferenceService.setPreference('showNSFW', true);
+            this.preferenceService.setPreference('safeBrowsing', false);
+        });
+        
         this.activeModal.close(result);
     }
 }
