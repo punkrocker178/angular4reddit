@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Listings } from '../model/listings.interface';
 import { PostDetail } from '../model/post-detail';
 import { Router } from '@angular/router';
+import { Post } from '../model/post';
 
 @Injectable()
 export class RedditListingService {
 
-    static MAX_POST_LIMIT = 80;
+    static MAX_POST_LIMIT = 100;
+    static QUERY_LIMIT = 25;
 
+    previousListingSubject = new BehaviorSubject<Post[]>([]);
     listingSubject = new BehaviorSubject<Listings>(null);
     visitedSubredditSubject = new BehaviorSubject<string>(null);
     visitedUserSubject = new BehaviorSubject<string>(null);
@@ -45,6 +47,14 @@ export class RedditListingService {
         return this.listingSubject.getValue();
     }
 
+    get listingPreviousData() {
+        return this.previousListingSubject.getValue();;
+    }
+
+    set listingPreviousData(data) {
+        this.previousListingSubject.next(data);
+    }
+
     getListigs(segment: string, params?: any): Observable<Listings> {
 
         const options = {
@@ -63,6 +73,8 @@ export class RedditListingService {
         }), 
         // Store/Cache data
         tap((next: Listings) => {
+            let hasReachedPostLimit: boolean;
+
             let listing: Listings = {
                 after:'' ,
                 children: [],
@@ -74,7 +86,8 @@ export class RedditListingService {
                 let children = listing.children;
 
                 if (listing.children.length >= RedditListingService.MAX_POST_LIMIT) {
-                    children = listing.children.slice(20);
+                    children = listing.children.slice(RedditListingService.QUERY_LIMIT);
+                    hasReachedPostLimit = true;
                 }
 
                 listing.children = [...children, ...next.children];

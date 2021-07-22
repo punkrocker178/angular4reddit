@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { Observable, BehaviorSubject, Subscription, of, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription, of, combineLatest, Subject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
-import { tap, switchMap, filter } from 'rxjs/operators';
+import { tap, switchMap, filter, throttleTime, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
+import { Post } from 'src/app/model/post';
 
 @Component({
   selector: 'listings-component',
@@ -19,15 +20,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
   flairFilter: string;
 
   sort = ApiList.LISTINGS_HOT;
-  posts$ = new BehaviorSubject([]);
+  posts$: BehaviorSubject<Post[]> = new BehaviorSubject([]);
   scroll$ = new BehaviorSubject(null);
+  scrollNextData$ = new BehaviorSubject(null);
 
-  scrollSubscription: Subscription;
-  paramSubscription: Subscription;
-  queryParamSubscription: Subscription;
+  destroy$ = new Subject();
 
   after: string;
   isLoading: boolean = true;
+
+  previousData = [];
+  nextData = [];
 
   constructor(
     private redditService: RedditListingService,
@@ -40,6 +43,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const paramOb = this.activatedRoute.paramMap;
 
     combineLatest([paramOb, queryParamOb]).pipe(
+      takeUntil(this.destroy$),
       switchMap(value => {
         this.after = null;
         const pathParam = value[0];
@@ -82,12 +86,40 @@ export class ListingsComponent implements OnInit, OnDestroy {
       )
     ).subscribe();
 
-    this.scrollSubscription = this.scroll$.pipe(
+    this.scroll$.pipe(
+      takeUntil(this.destroy$),
       filter(event => event !== null),
       switchMap(_ => this.fetchData(this.after))
     ).subscribe(_ => {
       this.isLoading = false;
     });
+
+    // Show hidden post when scroll up
+    this.scrollNextData$.pipe(
+      takeUntil(this.destroy$),
+      filter(next => next !== null),
+      throttleTime(2000),
+      tap(_ => {
+        let currentPosts = this.posts$.getValue();
+
+        currentPosts.forEach((post, index) => {
+          if (index < RedditListingService.QUERY_LIMIT) {
+            this.previousData.push(post);
+          }
+        });
+
+        currentPosts = currentPosts.slice(RedditListingService.QUERY_LIMIT);
+
+        let nextPosts = [];
+
+        for (let i = 0; i < this.nextData.length; i ++) {
+          nextPosts.push(this.nextData.pop());
+        }
+
+        currentPosts.push(...nextPosts);
+        this.posts$.next(currentPosts);
+      })
+    ).subscribe();
   }
 
   fetchData(after?: string, refreshData?: boolean) {
@@ -102,11 +134,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     let queryParams = {
-      limit: 20
-    }
-
-    if (this.checkDeviceFeatureService.isMobile()) {
-      queryParams.limit = 15;
+      limit: RedditListingService.QUERY_LIMIT
     }
 
     if (after) {
@@ -118,10 +146,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
       let currentPosts = this.posts$.getValue();
 
       if (currentPosts.length >= RedditListingService.MAX_POST_LIMIT) {
-        currentPosts = currentPosts.slice(20);
-      } 
-      
+        currentPosts = currentPosts.slice(RedditListingService.QUERY_LIMIT);
+        this.previousData.push(...this.posts$.getValue().splice(0, RedditListingService.QUERY_LIMIT));
+      }
+
       this.posts$.next([...currentPosts, ...next.children]);
+
     };
 
     if (this.flairFilter) {
@@ -156,7 +186,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.scrollSubscription.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   defaultListingsTypeApi() {
@@ -190,7 +221,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   flushDataOnUserChange(pathParam) {
     const userChange = pathParam.has('user') && pathParam.get('user') !== this.redditService.visitedUser;
     const goToHome = !pathParam.has('user') && this.redditService.visitedUser;
-    
+
     if (userChange || goToHome) {
       this.redditService.listingStoredData = null;
     }
@@ -206,7 +237,34 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   loadMore(event) {
-    this.scroll$.next(event);
+    if (this.nextData.length === 0) {
+      this.scroll$.next(event);
+    } else {
+      this.scrollNextData$.next(event);
+    }
+
+  }
+
+  loadPrevious() {
+    if (this.previousData.length === 0) {
+      return;
+    }
+
+    const lastItemsIndex = -RedditListingService.QUERY_LIMIT;
+
+    const currentPosts = this.posts$.getValue();
+    currentPosts.unshift(...this.previousData.slice(lastItemsIndex));
+
+    if (currentPosts.length >= RedditListingService.MAX_POST_LIMIT) {
+      this.nextData.push(...currentPosts.slice(lastItemsIndex));
+    }
+
+    currentPosts.splice(lastItemsIndex);
+    this.posts$.next(currentPosts);
+
+    for (let i = 0; i < RedditListingService.QUERY_LIMIT; i ++) {
+      this.previousData.pop();
+    }
   }
 
 }

@@ -6,7 +6,6 @@ import { tap } from 'rxjs/operators';
 import { LocalStorageService } from './localStorage.service';
 import { UserInterface } from '../model/user.interface';
 import { HeadersUtils } from '../class/HeadersUtils';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable()
 export class UserService {

@@ -104,7 +104,7 @@ export class PostItemComponent {
           twitchSrc = srcArr[0];
         }
 
-        this.embedSrc = decodeURIComponent(twitchSrc) + '&parent=localhost';
+        this.embedSrc = decodeURIComponent(twitchSrc) + '&parent=localhost&parent=dbqo2nayu6ql6.cloudfront.net';
       } else {
         this.noSelfText = true;
       }

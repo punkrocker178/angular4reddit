@@ -18,8 +18,8 @@
 
       
 
-      <div class="mb-3 d-flex flex-row flex-wrap">
-        <h5 (click)="viewDetail()" class="card-title mb-2 d-inline-block me-2">{{post?.data['title'] | replacePipe}}
+      <div class="d-flex flex-row flex-wrap pb-2">
+        <h5 (click)="viewDetail()" class="card-title mb-0 d-inline-block me-2">{{post?.data['title'] | replacePipe}}
         </h5>
 
         <span title="Archived" *ngIf="options.isArchive" class="icon-before icon-archive me-2 text-warning"></span>

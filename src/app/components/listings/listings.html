@@ -3,7 +3,7 @@
         <div class="col-12 contents">
             <app-sort (changeSort)="changeSort($event)"></app-sort>
             <div>
-                <span>Load previous</span>
+                <button class="btn btn-link" *ngIf="previousData.length > 0" (click)="loadPrevious()">Load previous</button>
             </div>
             <div *ngFor="let post of posts$ | async">
                 <post-item [post]="post"></post-item>
