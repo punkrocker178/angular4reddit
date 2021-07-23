@@ -37,18 +37,51 @@
             <i class="fa-3x fas fa-sync-alt fa-spin"></i>
         </div>
 
-        <button *ngIf="!allResults && !submissionLoading" class="mt-3 ms-2 btn btn-link"
+        <button *ngIf="(!allResults && !submissionLoading) || advancedSearchChanged" class="mt-3 ms-2 btn btn-link"
             (click)="loadMoreSubmissions()">More results</button>
         <span *ngIf="allResults" class="p-2">No more posts</span>
     </div>
 
+    <!-- Tooltip -->
+    <div #tooltip role="tooltip" class="popover-tooltip help-tooltip">
+        <h5>Usage</h5>
+        <p>With advanced search, you can narrow/widen your search results. These settings will be applied on your next
+            search</p>
+        <ul>
+            <li>
+                <span class="font-weight-bold me-1">Time between:</span>
+                <span>Summarize highest votes post in the selected length of time. Data pagination also based on this
+                    value</span>
+            </li>
+            <li>
+                <span class="font-weight-bold me-1">
+                    Limit result:
+                </span>
+                <span>
+                    Show max amount of results return based on your limit
+                </span>
+            </li>
+            <li>
+                <span class="font-weight-bold me-1">
+                    Subreddit:
+                </span>
+                <span>
+                    Show results only from that subreddit
+                </span>
+            </li>
+        </ul>
+    </div>
+
     <div ngbDropdown placement="top-right" class="advanced-search">
-        <button class="btn btn-success icon-before icon-search-plus advanced-search-btn" ngbDropdownToggle></button>
+        <button class="btn btn-primary icon-before icon-search-plus advanced-search-btn" ngbDropdownToggle></button>
         <div ngbDropdownMenu aria-labelledby="advancedSearchDropdown" class="p-3 advanced-search-dropdown">
-            <h4>Advanced Search</h4>
+            <h4 class="d-inline-block me-2">Advanced Search</h4>
+            <div appPopover [tooltip]="tooltip" [config]="popoverConfig" aria-describedby="tooltip" class="d-inline-block">
+                <span class="icon-before icon-question"></span>
+            </div>
             <div>
-                <label for="timeOffset">Time range</label>
-                <select id="timeOffset" class="form-select" [(ngModel)]="timeOffset">
+                <label for="timeOffset">Time between</label>
+                <select id="timeOffset" class="form-select" (onChange)="changeAdvanceSearch()" [(ngModel)]="timeOffset">
                     <option>1 Day</option>
                     <option>1 Month</option>
                     <option>1 Year</option>
@@ -56,7 +89,7 @@
             </div>
             <div>
                 <label for="timeOffset">Limit results</label>
-                <select id="timeOffset" class="form-select" [(ngModel)]="resultsLimit">
+                <select id="timeOffset" class="form-select" (onChange)="changeAdvanceSearch()" [(ngModel)]="resultsLimit">
                     <option>25</option>
                     <option>50</option>
                     <option>100</option>

@@ -29,6 +29,19 @@ export class SearchPageComponent {
     subredditFilter: string;
     timeOffset: string;
     resultsLimit;
+    advancedSearchChanged: boolean;   
+
+    popoverConfig = {
+        placement: 'bottom',
+        modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 0],
+              },
+            },
+          ],
+    }
 
     constructor(private redditSearchService: RedditSearchService,
         private activatedRoute: ActivatedRoute) {}
@@ -113,6 +126,7 @@ export class SearchPageComponent {
                     this.allResults = true;
                 }
 
+                this.advancedSearchChanged = false;
                 this.submissionLoading = false;
                 const currentSubmissions = this.submission$.getValue();
                 this.submission$.next([...currentSubmissions, ...next]);
@@ -174,6 +188,10 @@ export class SearchPageComponent {
         
         const searchPayload = this.getSearchSubmissionPayload(this.searchTerm, null, null, date, 50);
         this.searchSubmissions(searchPayload).subscribe();
+    }
+
+    changeAdvanceSearch() {
+        this.advancedSearchChanged = true;
     }
 
 }

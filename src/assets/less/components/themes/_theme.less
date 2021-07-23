@@ -35,6 +35,10 @@
         background-color: if(luma(@background-color-variant-1) > 50%, @color, #f5f5f5);
     }
 
+    .thumbnail {
+        background: if(luma(@background-color-variant-1) > 50%, @color, @background-color-variant-1);
+    }
+
     .children, .card, .modal-content {
         background-color: @background-color-variant;
     }

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PipeModule } from 'src/app/pipe/pipe.module';
+import { SharedDirectivesModule } from 'src/app/shared/directives/directives.module';
 import { PostsModule } from '../post/posts.module';
 import { SubredditModule } from '../subreddit/components/subreddit.module';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
@@ -16,7 +17,8 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
         PostsModule,
         NgbModule,
         PipeModule,
-        SubredditModule
+        SubredditModule,
+        SharedDirectivesModule
     ],
     declarations: [
         SearchBarComponent,
