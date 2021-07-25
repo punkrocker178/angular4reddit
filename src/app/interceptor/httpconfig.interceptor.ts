@@ -103,6 +103,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         if (!this.isRefreshing) {
             this.isRefreshing = true;
             this.refreshTokenSubject.next(null);
+            
             let authOb = switchMap((res: any) => {
                 this.isRefreshing = false; 
                 this.refreshTokenSubject.next(res.access_token);
@@ -113,6 +114,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                 this.localStorage.set('userToken', res.access_token);
                 return next.handle(req);
             });
+
             if (this.authenService.getIsLoggedIn()) {
                 return this.authenService.refreshToken().pipe(authOb);
             } else {

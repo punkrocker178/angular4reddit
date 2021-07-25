@@ -18,6 +18,10 @@
     }
 }
 
+.crop-content {
+    .crop-content-mixin(100vh);
+}
+
 .post-buttons {
     font-family: open-sans;
     text-align: center;
@@ -172,20 +176,12 @@
         height: 50%;
         align-self: center;
     }
-
-    .crop-content {
-        .crop-content-mixin(100vh);
-    }
 }
 
 @media (min-width: 768px) {
     .button-group {
         .justify-center-mixin();
         padding: 0 1rem 0 1.5rem;
-    }
-
-    .crop-content {
-        .crop-content-mixin(85vh);
     }
 
     .subreddit-item-join-btn {
@@ -204,6 +200,3 @@
         align-self: center;
     }
 }
-
-
-

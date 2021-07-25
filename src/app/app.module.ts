@@ -18,7 +18,6 @@ import { CommonModule } from '@angular/common';
 import { PipeModule } from './pipe/pipe.module';
 import { ListingsComponent } from './components/listings/listings.component';
 import { VotingService } from './services/vote.service';
-import { UserProfileComponent } from './components/user/user-profile.component';
 import { SubredditService } from './services/subreddit.service';
 import { DirectivesModule } from './directives/directives.module';
 import { UserService } from './services/user.service';
@@ -39,12 +38,12 @@ import { ThemeService } from './services/theme.service';
 import { PreferencesComponent } from './components/preferences/preferences.component';
 import { PreferencesService } from './services/preferences.service';
 import { ThemeModule } from './components/theme/theme.module';
+import { UserModule } from './components/user/user.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    UserProfileComponent,
     NavbarComponent,
     AuthenticateComponent,
     NotFoundComponent,
@@ -69,7 +68,8 @@ import { ThemeModule } from './components/theme/theme.module';
     SearchModule,
     ModalModule,
     SubredditModule,
-    ThemeModule
+    ThemeModule,
+    UserModule
   ],
   providers: [
     RedditListingService,

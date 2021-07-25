@@ -29,6 +29,10 @@ export class NavbarComponent implements OnInit {
     userSubscribtion: Observable<UserInterface>;
     destroy$ = new Subject();
     mainElement;
+
+    profilePath: string;
+    aboutPath = '/about';
+    preferencePath = '/prefs';
     
     themeToggleState: boolean = false;
 
@@ -46,13 +50,13 @@ export class NavbarComponent implements OnInit {
             take(2),
             tap(next => {
                 this.user = next;
+                this.profilePath = `/u/${this.user.name}`;
             })
         );
 
         if (this.preferenceService.preferenceValue.theme === 'light') {
             this.themeToggleState = true;
-        }
-
+        }  
     }
 
     isLoggedIn() {
@@ -92,6 +96,11 @@ export class NavbarComponent implements OnInit {
             this.renderer2.removeStyle(document.body, 'overflow');
             this.renderer2.removeStyle(this.mainElement, 'filter');
         }
+    }
+
+    goToComponent(componentPath: string) {
+        this.collapseMenu();
+        this.router.navigateByUrl(componentPath);
     }
 
     goToProfile() {
