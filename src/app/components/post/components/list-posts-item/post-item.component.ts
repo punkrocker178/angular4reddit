@@ -104,7 +104,7 @@ export class PostItemComponent {
           twitchSrc = srcArr[0];
         }
 
-        this.embedSrc = decodeURIComponent(twitchSrc) + '&parent=localhost&parent=dbqo2nayu6ql6.cloudfront.net';
+        this.embedSrc = decodeURIComponent(twitchSrc) + '&parent=localhost&parent=angular4reddit.me';
       } else {
         this.noSelfText = true;
       }
