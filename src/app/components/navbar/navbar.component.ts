@@ -2,7 +2,7 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { UserService } from 'src/app/services/user.service';
 import { UserInterface } from 'src/app/model/user.interface';
-import { filter, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { NavigationStart, Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -68,16 +68,7 @@ export class NavbarComponent implements OnInit {
     }
 
     logout() {
-        this.authenService.revokeToken().subscribe(
-            res => {
-                if (res.ok && res.status === 200) {
-                    this.userService.setUser({
-                        name: 'anonymous'
-                    });
-                    this.authenService.logout();
-                }
-            }
-        );
+        this.authenService.logout().pipe(take(1), switchMap(_ => this.authenService.revokeToken())).subscribe();
     }
 
     isMobile() {

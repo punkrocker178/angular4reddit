@@ -42,11 +42,10 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         }
 
         if (this.isExpiredToken()) {
-            console.log(this.localStorage.get('initTime'));
             return this.handle401Error(req, next);
         }
 
-        const token = this.localStorage.get('userToken');
+        const token = this.localStorage.get('userToken') || this.refreshTokenSubject.getValue();
         
         if (token) {
             req = this.setToken(req, token);

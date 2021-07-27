@@ -6,7 +6,8 @@ import { ApiList } from '../constants/api-list';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { Utils } from '../class/Utils';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable()
 export class RedditAuthenticateService {
@@ -66,9 +67,7 @@ export class RedditAuthenticateService {
         this.localStorage.remove('userObject');
         this.localStorage.remove('state');
         this.localStorage.set('isLoggedIn', false);
-
-        // Will improve this later 
-        window.location.reload();
+        return of(true);
     }
 
     getBearerAPI(code: string) {
@@ -122,7 +121,7 @@ export class RedditAuthenticateService {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 observe: 'response'
-            });
+            }).pipe(switchMap(_ => this.loginAppOnly()));
     }
 
     getUserInfo() {
