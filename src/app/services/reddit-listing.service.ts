@@ -73,7 +73,6 @@ export class RedditListingService {
         }), 
         // Store/Cache data
         tap((next: Listings) => {
-            let hasReachedPostLimit: boolean;
 
             let listing: Listings = {
                 after:'' ,
@@ -87,7 +86,6 @@ export class RedditListingService {
 
                 if (listing.children.length >= RedditListingService.MAX_POST_LIMIT) {
                     children = listing.children.slice(RedditListingService.QUERY_LIMIT);
-                    hasReachedPostLimit = true;
                 }
 
                 listing.children = [...children, ...next.children];

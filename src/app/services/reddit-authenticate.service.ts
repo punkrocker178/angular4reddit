@@ -36,7 +36,7 @@ export class RedditAuthenticateService {
     login() {
         let state = Utils.generateRandomString();
         this.localStorage.set('state', state);
-        let scope = ['read', 'identity', 'history', 'vote', 'account', 'submit', 'subscribe', 'save', 'flair', 'mysubreddits'];
+        let scope = ['read', 'identity', 'history', 'vote', 'account', 'submit', 'subscribe', 'save', 'flair'];
         let httParams = new HttpParams()
             .set('response_type', 'code')
             .set('duration', 'permanent')

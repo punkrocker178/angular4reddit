@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { Observable, BehaviorSubject, Subscription, of, combineLatest, Subject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
-import { tap, switchMap, filter, throttleTime, takeUntil } from 'rxjs/operators';
+import { tap, switchMap, filter, throttleTime, takeUntil, catchError } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
@@ -28,6 +28,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   after: string;
   isLoading: boolean = true;
+  isError: boolean;
+  errorMsg = '';
 
   previousData = [];
   nextData = [];
@@ -112,7 +114,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         let nextPosts = [];
 
-        for (let i = 0; i < this.nextData.length; i ++) {
+        for (let i = 0; i < this.nextData.length; i++) {
           nextPosts.push(this.nextData.pop());
         }
 
@@ -161,7 +163,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
 
     return this.redditService.getListigs(this.defaultListingsTypeApi(), queryParams).pipe(
-      tap(updateData));
+      tap(updateData), catchError(err => {
+        this.isLoading = false;
+        this.isError = true;
+        this.errorMsg = `Code: ${err.status} -  Message: ${err.error.message}`;
+        console.log(err);
+        return err;
+      }
+      ));
 
   }
 
@@ -262,7 +271,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     currentPosts.splice(lastItemsIndex);
     this.posts$.next(currentPosts);
 
-    for (let i = 0; i < RedditListingService.QUERY_LIMIT; i ++) {
+    for (let i = 0; i < RedditListingService.QUERY_LIMIT; i++) {
       this.previousData.pop();
     }
   }

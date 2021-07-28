@@ -5,6 +5,15 @@
             <div>
                 <button class="btn btn-link" *ngIf="previousData.length > 0" (click)="loadPrevious()">Load previous</button>
             </div>
+
+            <div *ngIf="isError && !isLoading" class="p-2 p-md-3 d-flex justify-content-center">
+                <div class="me-2 me-md-4">
+                    <span class="align-self-center">Oops there is an error :( </span>
+                    <pre>{{errorMsg}}</pre>
+                </div>
+                <button (click)="loadMore($event); isError = false;" class="btn btn-outline-secondary rounded-btn">Try again</button>
+            </div>
+
             <div *ngFor="let post of posts$ | async">
                 <post-item [post]="post"></post-item>
             </div>

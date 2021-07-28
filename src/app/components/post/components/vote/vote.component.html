@@ -1,9 +1,9 @@
 <div [ngClass]="{'vote-compact': isCompactView}" class="p-2 h-100 post-buttons d-flex pointer">
 
-    <span (click)="vote(1)" [ngClass]="{'up-voted': isUpVoted, 'me-3': !isCompactView}" class="icon-before icon-up cursor-pointer"></span>
+    <span (click)="vote(1)" [ngClass]="{'up-voted': isUpVoted, 'me-3': !isCompactView}" class="icon-before icon-up cursor-pointer size-22"></span>
 
     <span [title]="score" class="align-self-center fw-bold score-points">{{score | formatNumber}}</span>
 
-    <span (click)="vote(-1)" [ngClass]="{'down-voted': isDownVoted, 'ms-3': !isCompactView}" class="icon-after icon-down cursor-pointer"></span>
+    <span (click)="vote(-1)" [ngClass]="{'down-voted': isDownVoted, 'ms-3': !isCompactView}" class="icon-after icon-down cursor-pointer size-22"></span>
 
 </div>
