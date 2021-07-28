@@ -1,7 +1,7 @@
 <div class="container pt-4 pb-4">
     <div class="p-2 p-lg-0 mb-3">
         <h5 class="mb-0">The app</h5>
-        <p class="p-2">Angular4Reddit is yet another Reddit client web app for you to sink your time. Hope you enjoy your stay.</p>
+        <p class="p-2">angular4reddit is yet another Reddit client web app for you to sink your time. Hope you enjoy your stay.</p>
     </div>
 
     <div class="p-2 p-lg-0 mb-3">
@@ -20,6 +20,24 @@
                 <li>Infinite scrolling</li>
                 <li>Responsive mobile UI</li>
                 <li>Change themes</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="p-2 p-lg-0 mb-3">
+        <h5 class="mb-0">Known issues</h5>
+        <div class="p-2">
+            <p>There are some technical issues and bugs here and there that may affect your experience.
+            <p>
+            <ul>
+                <li>On mobile: After login on reddit page, you will be redirected to offical reddit mobile app.
+                     You will have to go back to out app and click sign in again.
+                     However, it doesn't happen on desktop</li>
+                <li>On mobile (maybe android only ?): After you have scrolled long enough, you will experience slightly flickering posts when you scroll up again
+                    (maybe it's because to many DOMs ?)
+                </li>
+                <li>Reddit api <pre class="mb-0 d-inline">morechildren</pre> is returning comments without a tree structure. So when you load more comments, the app is unable to show correct indentation of those comments</li>
+                <li>Sometimes, you will encounter duplicated posts</li>
             </ul>
         </div>
     </div>

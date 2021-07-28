@@ -71,6 +71,11 @@ export class PostDetailComponent {
     };
 
     this.redditSubmitService.comment(data).subscribe(data => {
+
+      if (this.commentEditor) {
+        this.commentEditor.commentContent = '';
+      }
+
       this.comments.push({
         data: data,
         kind: 't1'

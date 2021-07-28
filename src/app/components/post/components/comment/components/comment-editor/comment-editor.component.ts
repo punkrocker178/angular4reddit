@@ -19,6 +19,10 @@ export class CommentEditorComponent {
         return this._commentContent;
     }
 
+    public set commentContent(data: string) {
+        this._commentContent = data;
+    }
+
     keyEventSubscribtion: Subscription;
 
     disableCommentBtn: boolean;

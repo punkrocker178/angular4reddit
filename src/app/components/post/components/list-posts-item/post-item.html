@@ -76,7 +76,7 @@
       <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18Consent}"
         [ngClass]="{'ratio-16x9': isWidescreenVideo,'ratio-4x3': !isWidescreenVideo, 'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}"
         class="ratio">
-        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay
+        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay muted
           class="letter-box-color">
         </video>
       </div>
