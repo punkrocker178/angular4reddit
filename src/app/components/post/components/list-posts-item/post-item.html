@@ -131,7 +131,7 @@
   <div class="card-footer d-flex button-group">
     <app-vote [score]="post?.data['score']" [id]="post?.data['name']" [liked]="post?.data['likes']"></app-vote>
 
-    <div (click)="viewDetail()" class="p-2 post-buttons align-self-center flex-fill pointer">
+    <div (click)="viewDetail(true)" class="p-2 post-buttons align-self-center flex-fill pointer">
       <span class="d-md-none">
         <span class="fw-bold me-2">{{post?.data['num_comments']}}</span>
         <i class="fas fa-comment-dots"></i>

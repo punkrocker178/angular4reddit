@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { Observable, BehaviorSubject, Subscription, of, combineLatest, Subject } from 'rxjs';
+import { Observable, BehaviorSubject, of, combineLatest, Subject, fromEvent } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
-import { tap, switchMap, filter, throttleTime, takeUntil, catchError } from 'rxjs/operators';
+import { tap, switchMap, filter, throttleTime, takeUntil, catchError, debounceTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
@@ -31,8 +31,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
   isError: boolean;
   errorMsg = '';
 
+  showScrollTopBtn: boolean;
+
   previousData = [];
   nextData = [];
+
+  scrollYPosition = 0;
 
   constructor(
     private redditService: RedditListingService,
@@ -122,6 +126,21 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.posts$.next(currentPosts);
       })
     ).subscribe();
+
+    /* Auto hide scroll to top button */
+    // fromEvent(document, 'scroll').pipe(
+    //   takeUntil(this.destroy$),
+    //   throttleTime(3000),
+    //   debounceTime(1500),
+    //   tap(event => {
+    //     if (window.pageYOffset > this.scrollYPosition) {
+    //       this.showScrollTopBtn = false;
+    //     } else {
+    //       this.showScrollTopBtn = true;
+    //     }
+    //     this.scrollYPosition = window.pageYOffset;
+    //   })
+    // ).subscribe();
   }
 
   fetchData(after?: string, refreshData?: boolean) {

@@ -22,8 +22,11 @@
                 <i class="fa-3x fas fa-sync-alt fa-spin"></i>
             </div>
 
+            <scroll-top-button [targetElementId]="'navbar-top'"></scroll-top-button>
+
             <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="1500"
-                 (scrolled)="loadMore($event)"></div>
+                 (scrolled)="loadMore($event)"
+                 ></div>
         </div>
     </div>
 </div>

@@ -374,12 +374,22 @@ export class PostItemComponent {
   navigateToDetail(isComment?: boolean) {
     if (!this.options.isDetail) {
       let path = `/r/${this.post.data['subreddit']}/comments/`;
+      const parentPost = this.post.data['permalink'].split('/')[4];
 
       if (isComment && this.post.data['parent_id']) {
-        const parent_id = this.post.data['parent_id'].split('_');
+        const parentId = this.post.data['parent_id'].split('_');
+        let comment = this.post.data['id'];
+        let parent = parentId[1];
+
+        if (parentId[1] !== parentPost) {
+          parent = parentPost;
+          comment = parentId[1];
+        }
+
         const params = new HttpParams()
-          .set('comment', this.post.data['id']);
-        path += `${parent_id[1]}?${params.toString()}`;
+          .set('comment', comment);
+
+        path += `${parent}?${params.toString()}`;
       } else {
         path += `${this.post.data['id']}`;
       }

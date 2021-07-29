@@ -12,22 +12,27 @@ export class ReplacePipe implements PipeTransform {
    * @param regex: string
    * @param replace: string
    */
-  transform(value: string, regex?: string| RegExp, replace?: string): string {
-      let stringReplace = replace;
-      let stringRegex = regex;
+  transform(value: string, regex?: string| RegExp, replace?: any): string {
       let result = '';
 
+      const replaceObj = {
+        '&amp;': '&',
+        '&gt;': '>',
+        '&lt;': '<',
+        '&quot': '"'
+    }
+
       if (!regex) {
-          stringRegex = /amp;/g;
+          regex = new RegExp(Object.keys(replaceObj).join('|'), 'g');
       }
 
       if (!replace) {
-          stringReplace = '';
+          replace = (match) => replaceObj[match];
 
       }
 
       if (value) {
-        result = value.replace(stringRegex, stringReplace);
+        result = value.replace(regex, replace);
       }
 
       return result;
