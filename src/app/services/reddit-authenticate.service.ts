@@ -14,10 +14,8 @@ export class RedditAuthenticateService {
 
     redirectURI: string;
 
-    private getAccessTokenAPI = environment.functionUrl + '/api/v1/access_token';
-    private getRevokeTokenAPI = environment.functionUrl + '/api/v1/revoke_token';
-
-    private basicAuth: string = 'Basic ' + window.btoa(environment.clientId + ':' + environment.secret);
+    private getAccessTokenAPI = environment.functionUrl + '/oauth/api/v1/access_token';
+    private getRevokeTokenAPI = environment.functionUrl + '/oauth/api/v1/revoke_token';
 
     constructor(
         private http: HttpClient,
@@ -52,7 +50,6 @@ export class RedditAuthenticateService {
             {
                 headers:
                 {
-                    'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).pipe(tap(next => {
@@ -80,7 +77,7 @@ export class RedditAuthenticateService {
             {
                 headers:
                 {
-                    'Authorization': this.basicAuth,
+                    // 'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).pipe(tap(next => {
@@ -102,7 +99,6 @@ export class RedditAuthenticateService {
             {
                 headers:
                 {
-                    'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
@@ -117,7 +113,6 @@ export class RedditAuthenticateService {
             {
                 headers:
                 {
-                    'Authorization': this.basicAuth,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 observe: 'response'
