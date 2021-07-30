@@ -23,6 +23,8 @@ import { RedditAuthenticateService } from '../services/reddit-authenticate.servi
 export class HttpConfigInterceptor implements HttpInterceptor {
 
     oauthRegex = /\/oauth/;
+    acessTokenAPIs = ['api/v1/access_token', 'api/v1/revoke_token'];
+
     private isRefreshing = false;
     private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
@@ -36,7 +38,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         if (!req.headers.get('Content-Type')) {
             req = req.clone({ headers: req.headers.set('Content-Type', 'application/json') });
         }
-        
+
         if (!this.isValidRequestToIntercept(req.url, req.headers.get('skip'))) {
             return next.handle(req);
         }
@@ -46,7 +48,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         }
 
         const token = this.localStorage.get('userToken') || this.refreshTokenSubject.getValue();
-        
+
         if (token) {
             req = this.setToken(req, token);
         }
@@ -70,6 +72,12 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     }
 
     isValidRequestToIntercept(url: string, skip) {
+        this.acessTokenAPIs.forEach(api => {
+            if(url.toLowerCase().includes(api)) {
+                skip = true;
+            }
+        });
+
         if (!this.oauthRegex.test(url) || skip) {
             return false;
         }
@@ -87,7 +95,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     }
 
     handle404Error(error) {
-        let err=  error.error;
+        let err = error.error;
         if (err == null) {
             err = {
                 status: 404,
@@ -102,9 +110,9 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         if (!this.isRefreshing) {
             this.isRefreshing = true;
             this.refreshTokenSubject.next(null);
-            
+
             let authOb = switchMap((res: any) => {
-                this.isRefreshing = false; 
+                this.isRefreshing = false;
                 this.refreshTokenSubject.next(res.access_token);
                 req = req.clone({
                     headers: req.headers.set('Authorization', 'Bearer ' + res.access_token)
@@ -119,7 +127,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             } else {
                 return this.authenService.loginAppOnly().pipe(authOb);
             }
-            
+
         } else {
             return this.refreshTokenSubject.pipe(
                 filter(token => token != null),
