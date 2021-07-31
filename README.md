@@ -1,8 +1,34 @@
-# Areddit
+# angular4reddit
 
 This app is a simple reddit's client using Angular.  
 The app will call to AWS Lambda & AWS API Gateway to bypass CORS policy to get actual Reddit's API responses.  
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.8.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.13.
+
+## Features
+
+- Log in to your Reddit account using Reddit Oauth2
+- No promotional post / ads
+- You can vote, comment, save posts
+- Filter new/rising/hot posts, also filter by flair in subreddit
+- Search posts, subreddits
+- Infinite scrolling
+- Responsive mobile UI
+- Change themes
+
+## Known issues
+
+- On mobile: After login on reddit page, you will be redirected to offical reddit mobile app. You will have to go back to out app and click sign in again. However, it doesn't happen on desktop
+- On mobile (maybe android only ?): After you have scrolled long enough, you will experience slightly flickering screen when you scroll up again
+- Reddit `morechildren` api is returning comments without a tree structure. So when you load more comments, the app is unable to show correct indentation of those comments
+- Sometimes, you will encounter duplicated posts
+
+## Upcoming plans
+
+- Implement classic view with virtual scrolling
+- Enhance my profile page (Comments tab, Saved posts tab, Manage subreddits subscribtion)
+- Enhance UI
+- More themes (Color themes look like social media sites)
+- Bug fixing
 
 ## Install
 
@@ -15,6 +41,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 Run in docker container  
 ```docker run --rm -it -p 4200:4200 -v /your-app-directory/:/app -w /app node:latest npm start```
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
