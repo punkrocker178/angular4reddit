@@ -18,7 +18,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Known issues
 
-- On mobile: After login on reddit page, you will be redirected to offical reddit mobile app. You will have to go back to out app and click sign in again. However, it doesn't happen on desktop
+- On mobile: After login on reddit page, you will be redirected to offical reddit mobile app. You will have to go back to the app and click sign in again. However, it doesn't happen on desktop
 - On mobile (maybe android only ?): After you have scrolled long enough, you will experience slightly flickering screen when you scroll up again
 - Reddit `morechildren` api is returning comments without a tree structure. So when you load more comments, the app is unable to show correct indentation of those comments
 - Sometimes, you will encounter duplicated posts
