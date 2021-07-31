@@ -1,5 +1,6 @@
 # angular4reddit
-
+Check it out: [angular4reddit.me](https://angular4reddit.me)  
+  
 This app is a simple reddit's client using Angular.  
 The app will call to AWS Lambda & AWS API Gateway to bypass CORS policy to get actual Reddit's API responses.  
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.13.
