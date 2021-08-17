@@ -1,3 +1,22 @@
-<div class="d-flex justify-content-center loading-spinner">
-    <i class="fa-3x fas fa-sync-alt fa-spin"></i>
+<div class="container d-flex justify-content-center p-5">
+    <div *ngIf="!errorMsg" class="loading-spinner">
+        <i class="fa-3x fas fa-sync-alt fa-spin"></i>
+    </div>
+
+    <div *ngIf="errorMsg">
+        <h4>Error: {{errorMsg}}</h4>
+        <p class="mb-3">Looks like we are experiencing an error while logging you in ಠ╭╮ಠ</p>
+
+        <p class="fst-italic fw-light mb-3">You declined because app requires to many permissions? No worries, we will try to
+            let you choose
+            which permission you allow us to use in the future
+        </p>
+
+        <div class="text-center">
+            <button routerLink="/" class="btn btn-primary">Go Back</button>
+        </div>
+        
+
+
+    </div>
 </div>
