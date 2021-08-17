@@ -26,7 +26,7 @@
     "dashjs": "^3.2.2",
     "hls.js": "^1.0.0",
     "jquery": "^3.5.1",
-    "luxon": "^1.25.0",
+    "luxon": "^2.0.2",
     "marked": "^1.2.7",
     "ngx-infinite-scroll": "^9.0.0",
     "rxjs": "~6.5.4",
