@@ -47,7 +47,7 @@ export class NavbarComponent implements OnInit {
         ).subscribe();
 
         this.userSubscribtion = this.userService.user$.pipe(
-            take(2),
+            takeUntil(this.destroy$),
             tap(next => {
                 this.user = next;
                 this.profilePath = `/u/${this.user.name}`;
@@ -68,7 +68,14 @@ export class NavbarComponent implements OnInit {
     }
 
     logout() {
-        this.authenService.logout().pipe(take(1), switchMap(_ => this.authenService.revokeToken())).subscribe();
+        this.authenService.logout().pipe(take(1), 
+        switchMap(_ => this.authenService.revokeToken()),
+        tap(_ => {
+            this.userService.setUser({
+                name: 'redditor',
+                icon_img: '/assets/images/snoo-profile.png'
+            })
+        })).subscribe();
     }
 
     isMobile() {
