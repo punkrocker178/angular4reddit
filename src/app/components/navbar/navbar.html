@@ -13,12 +13,14 @@
     <ng-container *ngIf="userSubscribtion | async">
 
       <ng-container *ngIf="!isMobile()">
-        <div *ngIf="isLoggedIn()" ngbDropdown class="ms-auto d-flex align-items-center pointer me-4">
+        <div ngbDropdown class="ms-auto d-flex align-items-center pointer me-4">
           <img class="profile-img me-1" [src]="user.icon_img | replacePipe">
           <span ngbDropdownToggle>{{user.name}}</span>
 
           <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
-            <a ngbDropdownItem class="pointer" (click)="goToComponent(profilePath)">My Profile</a>
+            <a *ngIf="isLoggedIn()" ngbDropdownItem class="pointer" (click)="goToComponent(profilePath)">My Profile</a>
+
+            <a *ngIf="!isLoggedIn()" ngbDropdownItem class="pointer" (click)="login()">Sign In</a>
 
             <a ngbDropdownItem class="pointer" (click)="goToComponent(preferencePath)">Preferences</a>
 
@@ -46,7 +48,6 @@
           </div>
         </div>
 
-        <button *ngIf="!isLoggedIn()" (click)="login()" class="btn btn-primary rounded-btn ms-auto">Sign In</button>
       </ng-container>
 
     </ng-container>

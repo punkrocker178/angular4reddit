@@ -16,7 +16,8 @@ export class UserService {
     allowNSFW$ = this.allowNSFW.asObservable();
 
     private userSubject: BehaviorSubject<UserInterface> = new BehaviorSubject({
-        name: 'anonymous'
+        name: 'redditor',
+        icon_img: '/assets/images/snoo-profile.png'
     });
 
     public user$ = this.userSubject.asObservable();
