@@ -18,9 +18,9 @@
           <span ngbDropdownToggle>{{user.name}}</span>
 
           <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
-            <a *ngIf="isLoggedIn()" ngbDropdownItem class="pointer" (click)="goToComponent(profilePath)">My Profile</a>
+            <a *ngIf="user.is_login" ngbDropdownItem class="pointer" (click)="goToComponent(profilePath)">My Profile</a>
 
-            <a *ngIf="!isLoggedIn()" ngbDropdownItem class="pointer" (click)="login()">Sign In</a>
+            <a *ngIf="!user.is_login" ngbDropdownItem class="pointer" (click)="login()">Sign In</a>
 
             <a ngbDropdownItem class="pointer" (click)="goToComponent(preferencePath)">Preferences</a>
 
@@ -40,7 +40,7 @@
               <span class="pointer">About</span>
             </div>
 
-            <div ngbDropdownItem class="d-flex" (click)="logout()">
+            <div *ngIf="user.is_login" ngbDropdownItem class="d-flex" (click)="logout()">
               <span class="icon-before icon-sign-out me-1"></span>
               <span class="pointer">Logout</span>
             </div>
@@ -54,22 +54,22 @@
   </div>
 
   <div [ngClass]="{'side-menu-show': menuToggle, 'side-menu': !menuToggle}">
-    <div class="mt-5" [ngClass]="{'mobile-nav-item-2': isLoggedIn()}">
+    <div class="mt-5" [ngClass]="{'mobile-nav-item-2': user.is_login}">
       <search-bar [showSearchBtn]="false"></search-bar>
     </div>
 
-    <ng-container *ngIf="!isLoggedIn()">
+    <ng-container *ngIf="!user.is_login">
       <a class="mobile-nav-text mt-3" (click)="login()">Login</a>
       <span class="mobile-nav-text" (click)="openHelpPage()">Help</span>
       <span class="mobile-nav-text" (click)="goToComponent(aboutPath)">About</span>
     </ng-container>
     
-    <ng-container *ngIf="isLoggedIn()">
+    <ng-container *ngIf="user.is_login">
       <div (click)="goToComponent(profilePath)" class="mobile-nav-item mt-3">
         <img class="profile-img-mobile" [src]="user.icon_img | replacePipe">
       </div>
 
-      <span class="mobile-nav-item" (click)="goToComponent(profilePath)" *ngIf="isLoggedIn()">/u/{{user.name}}</span>
+      <span class="mobile-nav-item" (click)="goToComponent(profilePath)">/u/{{user.name}}</span>
       <span class="mobile-nav-text" (click)="goToComponent(preferencePath)">Preferences</span>
       <span class="mobile-nav-text" (click)="openHelpPage()">Help</span>
       <span class="mobile-about-btn mobile-nav-text" (click)="goToComponent(aboutPath)">About</span>

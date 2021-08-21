@@ -56,4 +56,5 @@ export interface UserInterface {
     in_beta?;
     comment_karma?;
     has_subscribed?;
+    is_login?;
 }

@@ -17,7 +17,8 @@ export class UserService {
 
     private userSubject: BehaviorSubject<UserInterface> = new BehaviorSubject({
         name: 'redditor',
-        icon_img: '/assets/images/snoo-profile.png'
+        icon_img: '/assets/images/snoo-profile.png',
+        is_login: false
     });
 
     public user$ = this.userSubject.asObservable();

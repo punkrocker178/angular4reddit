@@ -60,7 +60,7 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
         ).subscribe(
             (data: UserInterface) => {
                 this.authenService.storeUserDetail(data);
-                this.userService.setUser(data);
+                this.userService.setUser({ ...data, is_login: true });
                 this.preferenceService.setPreference('safeBrowsing', !data.over_18)
                 this.router.navigateByUrl('/home');
             }, err => {

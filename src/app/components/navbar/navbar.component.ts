@@ -59,10 +59,6 @@ export class NavbarComponent implements OnInit {
         }  
     }
 
-    isLoggedIn() {
-        return this.authenService.getIsLoggedIn();
-    }
-
     login() {
         this.authenService.login();
     }
@@ -73,7 +69,8 @@ export class NavbarComponent implements OnInit {
         tap(_ => {
             this.userService.setUser({
                 name: 'redditor',
-                icon_img: '/assets/images/snoo-profile.png'
+                icon_img: '/assets/images/snoo-profile.png',
+                is_login: false
             })
         })).subscribe();
     }
