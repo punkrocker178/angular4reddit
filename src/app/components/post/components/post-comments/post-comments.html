@@ -19,10 +19,10 @@
     </div>
 
     <ng-template #moreReplies>
-      <div *ngIf="comment.data['children'].length > 0 || moreRepliesLoading" class="d-flex justify-content-start">
-        <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">
-         {{moreRepliesLoading ? 'Loading' : comment.data['children'].length + ' More Replies'}}
-        </a>
+      <div *ngIf="comment.data['children'].length > 0" class="d-flex justify-content-start">
+          <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">
+            {{moreRepliesLoading ? 'Loading' : comment.data['children'].length + ' More Replies'}}
+          </a>
       </div>
     </ng-template>
 

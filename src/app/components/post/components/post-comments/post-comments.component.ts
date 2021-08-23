@@ -34,12 +34,8 @@ export class PostCommentsComponent {
         this.comments = this.comments.data['children'];
       }
     }
-
-    // this.moreChildrenId = this.comments.filter(comment => !this.isComment(comment));
-
   }
 
-  /* Issue: ExpressionChangedAfterItHasBeenCheckedError */
   hasReplies(comment) {
     return comment.data['replies'] && 
     comment.data['replies']['data']['children'] && 
@@ -73,11 +69,11 @@ export class PostCommentsComponent {
     }
 
     moreChildrenArray = comment.data['children'].slice(0, end);
-    this.moreChildrenId.splice(0, end);
 
     const payload = this.submitService.moreCommentsPayload(this.postId, moreChildrenArray);
     this.submitService.loadMoreComments(payload).pipe(
       tap(next => {
+        this.moreChildrenId.splice(0, end);
         this.comments = [...this.comments, ...next];
         this.moreRepliesLoading = false;
       })
