@@ -1,29 +1,29 @@
-<span class="me-1">{{commentData.data.author}}</span>
-<span *ngIf="isAuthorModerator" class="icon-before icon-shield me-2 d-inline-block"></span>
-<span
-  [title]="commentData.data.created_utc | dateTimePipe: 'format'">{{commentData.data.created_utc | dateTimePipe: 'diff'}}</span>
+<div class="pe-2">
 
-<!-- Awards -->
-<ng-container *ngIf="commentData.data['all_awardings'] && commentData.data['all_awardings'].length > 0">
-  <app-award [isDetail]="false" [awards]="commentData.data['all_awardings']"></app-award>
-</ng-container>
+  <span class="me-1">{{commentData.data.author}}</span>
+  <span *ngIf="isAuthorModerator" class="icon-before icon-shield me-2 d-inline-block"></span>
+  <span [title]="commentData.data.created_utc | dateTimePipe: 'format'">{{commentData.data.created_utc | dateTimePipe:
+    'diff'}}</span>
 
-<div class="post-comments parsed-html-comments" appHTML [selfText]="commentData.data.body_html"></div>
-<ng-container *ngIf="enableEditor">
+  <!-- Awards -->
+  <ng-container *ngIf="commentData.data['all_awardings'] && commentData.data['all_awardings'].length > 0">
+    <app-award [isDetail]="false" [awards]="commentData.data['all_awardings']"></app-award>
+  </ng-container>
 
-  <comment-editor 
-  [useMarkdown]="useMarkdown"
-  [commentData]="commentData"
-  [trumbowygConfigs]="trumbowygConfigs"
-  (triggerCommentButton)="displayReplyButton($event)"></comment-editor>
+  <div class="post-comments parsed-html-comments" appHTML [selfText]="commentData.data.body_html"></div>
+  <ng-container *ngIf="enableEditor">
 
-  <button class="btn btn-dark me-2" 
-    [disabled]="disableReplyBtn"
-    (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>
-    
-  <button class="btn btn-outline-secondary" (click)="cancelEditor()">Cancel</button>
-</ng-container>
-<div class="d-flex justify-content-end">
-  <span  *ngIf="!isArchive" (click)="showReplyEditor()" class="p-2 post-buttons btn">Reply</span>
-  <app-vote [score]="commentData.data.score" [id]="commentData.data.name" [liked]="commentData.data.likes"></app-vote>
+    <comment-editor [useMarkdown]="useMarkdown" [commentData]="commentData" [trumbowygConfigs]="trumbowygConfigs"
+      (triggerCommentButton)="displayReplyButton($event)"></comment-editor>
+
+    <button class="btn btn-dark me-2" [disabled]="disableReplyBtn"
+      (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>
+
+    <button class="btn btn-outline-secondary" (click)="cancelEditor()">Cancel</button>
+  </ng-container>
+  <div class="d-flex justify-content-end">
+    <button *ngIf="!isArchive" (click)="showReplyEditor()" class="p-2 post-buttons btn align-self-center">Reply</button>
+    <app-vote [score]="commentData.data.score" [id]="commentData.data.name" [liked]="commentData.data.likes"></app-vote>
+  </div>
+
 </div>

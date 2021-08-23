@@ -2,14 +2,14 @@
 
   <div class="mb-2" *ngFor="let comment of comments">
 
-    <div *ngIf="comment.kind == 't1'; else moreReplies">
+    <ng-container *ngIf="comment.kind == 't1'; else moreReplies">
       <app-comment 
       [useMarkdown]="useMarkdown"
       [commentData]="comment"
       [isArchive]="isArchive"
       (submittedComment)="pushComment($event)"
       ></app-comment>
-    </div>
+    </ng-container>
 
 
     <div *ngIf="hasReplies(comment)" class="children">
@@ -19,8 +19,10 @@
     </div>
 
     <ng-template #moreReplies>
-      <div *ngIf="comment.data['children'].length > 0" class="d-flex justify-content-start">
-        <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">{{comment.data['children'].length}} More Replies</a>
+      <div *ngIf="comment.data['children'].length > 0 || moreRepliesLoading" class="d-flex justify-content-start">
+        <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">
+         {{moreRepliesLoading ? 'Loading' : comment.data['children'].length + ' More Replies'}}
+        </a>
       </div>
     </ng-template>
 
