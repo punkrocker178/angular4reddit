@@ -83,7 +83,7 @@ export class PostItemComponent {
         isDetail: false
       };
     }
-    
+
     this.over18Consent = this.userService.isNSFWAllowed() && !this.preferenceService.preferenceValue.safeBrowsing;
 
     this.isSaved = this.post.data['saved'];
@@ -165,10 +165,7 @@ export class PostItemComponent {
 
       src = ReplacePipe.prototype.transform(src);
       this.dashPlayer = dashjs.MediaPlayer().create();
-      this.dashPlayer.initialize();
-      this.dashPlayer.setAutoPlay(false);
-      this.dashPlayer.attachSource(src);
-      this.dashPlayer.attachView(this.videoPlayer.nativeElement);
+      this.dashPlayer.initialize(this.videoPlayer.nativeElement, src, false);
       this.dashPlayer.setVolume(0.5);
     } catch (err) {
       throw err;
@@ -426,7 +423,7 @@ export class PostItemComponent {
       } else {
         item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
       }
-      
+
 
       if (!this.options.isDetail) {
         mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
