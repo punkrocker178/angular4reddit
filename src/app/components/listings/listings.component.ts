@@ -207,6 +207,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
       case ApiList.LISTINGS_NEW_LABEL:
         this.sort = ApiList.LISTINGS_NEW;
         break;
+      case ApiList.LISTINGS_ALL:
+        this.sort = ApiList.LISTINGS_ALL;
+        break;
     }
     this.posts$.next([]);
     this.after = null;

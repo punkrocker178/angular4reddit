@@ -7,6 +7,7 @@ export class ApiList {
     public static readonly LISTINGS_RISING_LABEL: string = 'Rising';
 
     /* Listtings APIs */
+    public static readonly LISTINGS_ALL: string = '/r/all';
     public static readonly LISTINGS_HOT: string = '/hot';
     public static readonly LISTINGS_BEST: string = '/best';
     public static readonly LISTINGS_NEW: string = '/new';
