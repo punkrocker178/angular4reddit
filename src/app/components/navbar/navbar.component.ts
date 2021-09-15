@@ -33,7 +33,6 @@ export class NavbarComponent implements OnInit {
     profilePath: string;
     aboutPath = '/about';
     preferencePath = '/prefs';
-    
     themeToggleState: boolean = false;
 
     ngOnInit() {
@@ -56,7 +55,7 @@ export class NavbarComponent implements OnInit {
 
         if (this.preferenceService.preferenceValue.theme === 'light') {
             this.themeToggleState = true;
-        }  
+        }
     }
 
     login() {
@@ -64,14 +63,14 @@ export class NavbarComponent implements OnInit {
     }
 
     logout() {
-        this.authenService.logout().pipe(take(1), 
+        this.authenService.logout().pipe(take(1),
         switchMap(_ => this.authenService.revokeToken()),
         tap(_ => {
             this.userService.setUser({
                 name: 'redditor',
                 icon_img: '/assets/images/snoo-profile.png',
                 is_login: false
-            })
+            });
         })).subscribe();
     }
 

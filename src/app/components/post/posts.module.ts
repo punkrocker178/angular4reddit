@@ -19,6 +19,7 @@ import { SubmissionItemComponent } from './components/submission/submission-item
 import { GalleryComponent } from '../gallery/gallery.component';
 import { ListingsComponent } from '../listings/listings.component';
 import { FlairComponent } from './components/flair/flair.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports:[
@@ -29,7 +30,8 @@ import { FlairComponent } from './components/flair/flair.component';
         CommonModule,
         DirectivesModule,
         SharedDirectivesModule,
-        SharedComponentsModule
+        SharedComponentsModule,
+        NgbDropdownModule
     ],
     declarations: [
         ListingsComponent,
@@ -42,7 +44,7 @@ import { FlairComponent } from './components/flair/flair.component';
         SortComponent,
         AwardComponent,
         CommentEditorComponent,
-        GalleryComponent, 
+        GalleryComponent,
         FlairComponent
     ],
     exports: [

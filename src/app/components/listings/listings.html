@@ -1,7 +1,7 @@
 <div class="container px-0 custom-height-container">
     <div class="row">
         <div class="col-12 col-lg-8 col-md-10 px-0 px-md-4 px-lg-5 contents">
-            <app-sort (changeSort)="changeSort($event)" (changeFeedEmitter)="changeSort($event)"></app-sort>
+            <app-sort [showFeed]="isLoggedIn" (changeSort)="changeSort($event)" (changeFeedEmitter)="changeSort($event)"></app-sort>
             <div>
                 <button class="btn btn-link" *ngIf="previousData.length > 0" (click)="loadPrevious()">Load previous</button>
             </div>

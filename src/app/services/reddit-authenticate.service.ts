@@ -27,8 +27,12 @@ export class RedditAuthenticateService {
         return this.localStorage.get('isLoggedIn');
     }
 
-    storeUserDetail(user: any) {
+    storeUserToStorage(user: any) {
         this.localStorage.set('userObject', user);
+    }
+
+    getUserFromStorage() {
+      return this.localStorage.get('userObject');
     }
 
     login() {

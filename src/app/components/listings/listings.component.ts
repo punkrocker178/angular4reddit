@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { Observable, BehaviorSubject, of, combineLatest, Subject, fromEvent } from 'rxjs';
+import { BehaviorSubject, of, combineLatest, Subject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
 import { tap, switchMap, filter, throttleTime, takeUntil, catchError, debounceTime } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { Post } from 'src/app/model/post';
+import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 
 @Component({
   selector: 'listings-component',
@@ -36,9 +37,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
   previousData = [];
   nextData = [];
 
+  isLoggedIn: boolean;
   scrollYPosition = 0;
 
   constructor(
+    private authenticateService: RedditAuthenticateService,
     private redditService: RedditListingService,
     private subredditService: SubredditService,
     private activatedRoute: ActivatedRoute,
@@ -126,6 +129,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.posts$.next(currentPosts);
       })
     ).subscribe();
+
+    this.isLoggedIn = this.authenticateService.getIsLoggedIn();
 
     /* Auto hide scroll to top button */
     // fromEvent(document, 'scroll').pipe(

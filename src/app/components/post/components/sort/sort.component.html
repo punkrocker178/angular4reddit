@@ -1,18 +1,18 @@
 <div class="row justify-content-end mt-5 p-3">
-  <div class="me-auto feed-group col-12 col-md-4 mb-3">
+  <div *ngIf="showFeed" class="me-auto feed-group col-12 col-md-4 mb-3">
     <span (click)="changeFeed('my feed')" class="me-3 d-md-inline-block" [ngClass]="{'selected': currentFeed === 'my feed'}">My Newsfeed</span>
     <span (click)="changeFeed('/r/all')" class="d-md-inline-block" [ngClass]="{'selected': currentFeed === '/r/all'}">/r/All</span>
   </div>
 
   <div class="col-6 d-md-none"></div>
 
-  <div class="dropdown col-6 col-md-4" [ngClass]="{'show': clickState}">
-    <button (click)="toggleDropdown()" class="btn btn-secondary dropdown-toggle w-100" type="button" id="categoryDropdown">
+  <div ngbDropdown placement="bottom-right" class="col-6 col-md-4">
+    <button ngbDropdownToggle class="btn btn-secondary dropdown-toggle w-100" type="button" id="categoryDropdown">
       {{selectedValue}}
     </button>
-    <ul class="dropdown-menu" [ngClass]="{'show': clickState}" aria-labelledby="categoryDropdown">
+    <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="categoryDropdown">
       <ng-container *ngFor="let type of sortTypes; let idx = index">
-        <li (click)="toggleDropdown(type)" class="dropdown-item pointer">
+        <a ngbDropdownItem (click)="toggleDropdown(type)" class="pointer">
 
           <!-- SVG icons -->
           <ng-container [ngSwitch]="type">
@@ -35,9 +35,9 @@
 
           <span class="ms-2">{{type}}</span>
 
-        </li>
+        </a>
       </ng-container>
-    </ul>
+    </div>
   </div>
 </div>
 
