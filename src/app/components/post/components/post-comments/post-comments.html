@@ -1,37 +1,43 @@
 <ng-container *ngIf="comments['length'];else noComments">
 
-  <div class="mb-2" *ngFor="let comment of comments">
+	<div class="mb-2" *ngFor="let comment of comments">
 
-    <ng-container *ngIf="comment.kind == 't1'; else moreReplies">
-      <app-comment 
-      [useMarkdown]="useMarkdown"
-      [commentData]="comment"
-      [isArchive]="isArchive"
-      (submittedComment)="pushComment($event)"
-      ></app-comment>
-    </ng-container>
+		<ng-container *ngIf="comment.kind == 't1'; else moreReplies">
+			<app-comment
+      [originalPoster]="orginalPoster"
+			[useMarkdown]="useMarkdown"
+			[commentData]="comment"
+			[isArchive]="isArchive"
+			(submittedComment)="pushComment($event)"
+			></app-comment>
+		</ng-container>
 
 
-    <div *ngIf="hasReplies(comment)" class="children">
-      <post-comments [useMarkdown]="useMarkdown" [postId]="postId" [isReplies]="true" [comments]="comment.data['replies']"
-                     [isArchive]="isArchive">
-      </post-comments>
-    </div>
+		<div *ngIf="hasReplies(comment)" class="children">
+			<post-comments
+										[orginalPoster]="orginalPoster"
+										[useMarkdown]="useMarkdown"
+										[postId]="postId"
+										[isReplies]="true"
+										[comments]="comment.data['replies']"
+										[isArchive]="isArchive">
+			</post-comments>
+		</div>
 
-    <ng-template #moreReplies>
-      <div *ngIf="comment.data['children'].length > 0" class="d-flex justify-content-start">
-          <a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">
-            {{moreRepliesLoading ? 'Loading' : comment.data['children'].length + ' More Replies'}}
-          </a>
-      </div>
-    </ng-template>
+		<ng-template #moreReplies>
+			<div *ngIf="comment.data['children'].length > 0" class="d-flex justify-content-start">
+					<a (click)="loadMoreReplies($event, comment)" href="" class="link-primary">
+						{{moreRepliesLoading ? 'Loading' : comment.data['children'].length + ' More Replies'}}
+					</a>
+			</div>
+		</ng-template>
 
-  </div>
+	</div>
 
 </ng-container>
 
 <ng-template #noComments>
-  <div class="p-5">
-    <p class="text-center">No Comments \ (•◡•) /</p>
-  </div>
+	<div class="p-5">
+		<p class="text-center">No Comments \ (•◡•) /</p>
+	</div>
 </ng-template>

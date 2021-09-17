@@ -22,6 +22,7 @@ export class PostDetailComponent {
   post: Post;
   comments;
   postOptions;
+  originalPoster: string;
 
   postId: string;
 
@@ -47,6 +48,7 @@ export class PostDetailComponent {
         tap((next) => {
           this.post = next.detail;
           this.comments = next.comments;
+          this.originalPoster = next.detail.data['author'];
           this.isLoading = false;
 
           this.postOptions = {

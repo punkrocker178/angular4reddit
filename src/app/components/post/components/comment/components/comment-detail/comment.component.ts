@@ -17,6 +17,7 @@ export class CommentComponent {
     @Input() useMarkdown: boolean;
     @Input() commentData;
     @Input() isArchive: boolean;
+    @Input() originalPoster: string;
     @Output() submittedComment: EventEmitter<Object> = new EventEmitter();
 
     @ViewChild(CommentEditorComponent) commentEditor;
@@ -48,7 +49,7 @@ export class CommentComponent {
         } else {
             this.enableEditor = true;
         }
-        
+
     }
 
     cancelEditor() {

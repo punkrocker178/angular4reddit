@@ -1,51 +1,55 @@
 <div class="container mt-4 mt-md-5 px-0 px-lg-5 custom-height-container">
-  <div class="row">
-    <div class="col-12 col-md-10 g-0">
-      <div *ngIf="isLoading" class="loading-spinner d-flex justify-content-center mt-2">
-        <i class="fa-3x fas fa-sync-alt fa-spin"></i>
-      </div>
+	<div class="row">
+		<div class="col-12 col-md-10 g-0">
+			<div *ngIf="isLoading" class="loading-spinner d-flex justify-content-center mt-2">
+				<i class="fa-3x fas fa-sync-alt fa-spin"></i>
+			</div>
 
-      <ng-container *ngIf="post && !isLoading">
-        <post-item [post]="post" [options]="postOptions"></post-item>
-      </ng-container>
+			<ng-container *ngIf="post && !isLoading">
+				<post-item [post]="post" [options]="postOptions"></post-item>
+			</ng-container>
 
-      <ng-container *ngIf="!post?.data['archived'] && !isLoading">
+			<ng-container *ngIf="!post?.data['archived'] && !isLoading">
 
-        <div *ngIf="!showCommentEditor(); else commentEditor" class="d-flex comment-login">
-          <span class="me-3 align-self-center">Log in or sign up to leave a comment (~˘▾˘)~</span>
-          <button class="btn btn-outline-primary">Log In</button>
-        </div>
+				<div *ngIf="!showCommentEditor(); else commentEditor" class="d-flex comment-login">
+					<span class="me-3 align-self-center">Log in or sign up to leave a comment (~˘▾˘)~</span>
+					<button class="btn btn-outline-primary">Log In</button>
+				</div>
 
-        <ng-template #commentEditor>
-          <comment-editor [useMarkdown]="defaultMarkdown" (triggerCommentButton)="displayCommentButton($event)"></comment-editor>
-        </ng-template>
+				<ng-template #commentEditor>
+					<comment-editor [useMarkdown]="defaultMarkdown" (triggerCommentButton)="displayCommentButton($event)"></comment-editor>
+				</ng-template>
 
 
-        <div *ngIf="showCommentEditor()" class="d-flex flex-row-reverse ps-2 pe-2">
-          <button [disabled]="disableCommentBtn" class="btn btn-primary" (click)="comment()">Comment</button>
-        </div>
+				<div *ngIf="showCommentEditor()" class="d-flex flex-row-reverse ps-2 pe-2">
+					<button [disabled]="disableCommentBtn" class="btn btn-primary" (click)="comment()">Comment</button>
+				</div>
 
-      </ng-container>
+			</ng-container>
 
-      <ng-container *ngIf="post?.data['archived']">
-        <div class="p-3 p-md-4 mt-3 d-flex flex-row">
-          <div class="me-2 me-md-3">
-            <span class="icon-before icon-archive h-100"></span>
-          </div>
-          <div class="d-flex flex-column">
-            <span class="font-weigth-bold">This thread is archived</span>
-            <span>New comments cannot be posted and votes cannot be cast</span>
-          </div>
+			<ng-container *ngIf="post?.data['archived']">
+				<div class="p-3 p-md-4 mt-3 d-flex flex-row">
+					<div class="me-2 me-md-3">
+						<span class="icon-before icon-archive h-100"></span>
+					</div>
+					<div class="d-flex flex-column">
+						<span class="font-weigth-bold">This thread is archived</span>
+						<span>New comments cannot be posted and votes cannot be cast</span>
+					</div>
 
-        </div>
-      </ng-container>
+				</div>
+			</ng-container>
 
-      <ng-container *ngIf="comments && !isLoading">
-        <div class="comments-section">
-          <post-comments [useMarkdown]="defaultMarkdown" [postId]="post.data['name']" [comments]="comments" [isArchive]="post?.data['archived']"></post-comments>
-        </div>
-      </ng-container>
+			<ng-container *ngIf="comments && !isLoading">
+				<div class="comments-section">
+					<post-comments [useMarkdown]="defaultMarkdown"
+												 [postId]="post.data['name']"
+												 [comments]="comments"
+												 [orginalPoster]="originalPoster"
+												 [isArchive]="post?.data['archived']"></post-comments>
+				</div>
+			</ng-container>
 
-    </div>
-  </div>
+		</div>
+	</div>
 </div>

@@ -10,7 +10,8 @@ export class PostCommentsComponent {
 
   @Input() comments;
   @Input() isReplies;
-  @Input() postId;
+  @Input() postId: string;
+  @Input() orginalPoster: string;
   @Input() isArchive: boolean;
 
   moreRepliesLoading: boolean;
@@ -24,10 +25,10 @@ export class PostCommentsComponent {
   trumbowygConfigs = {
     isComment: true
   }
-  
+
   constructor(
     private submitService: RedditSubmitService) {}
-  
+
   ngOnInit() {
     if (typeof this.comments === 'object') {
       if (this.comments.data && this.comments.data['children']) {
@@ -37,8 +38,8 @@ export class PostCommentsComponent {
   }
 
   hasReplies(comment) {
-    return comment.data['replies'] && 
-    comment.data['replies']['data']['children'] && 
+    return comment.data['replies'] &&
+    comment.data['replies']['data']['children'] &&
     comment.data['replies']['data']['children'].length > 0;
   }
 
@@ -52,7 +53,7 @@ export class PostCommentsComponent {
 
   loadMoreReplies(event, comment) {
     event.preventDefault();
-    
+
     if (this.moreRepliesLoading) {
       return;
     }
@@ -61,7 +62,7 @@ export class PostCommentsComponent {
     this.moreChildrenId = comment.data['children'];
 
     let moreChildrenArray, end;
-    
+
     if (this.moreChildrenId.length >= 100) {
       end = 100;
     } else {

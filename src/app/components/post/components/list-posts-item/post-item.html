@@ -2,8 +2,14 @@
   <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': (!isGallery() && !options.isDetail)}">
 
     <div class="card-side-padding pointer">
+      <div *ngIf="post?.data['stickied']" class="mt-2">
+        <span class="icon-before icon-thumbstack">
+          <span class="ms-2">Pinned</span>
+        </span>
+      </div>
+
       <!-- Subreddit - author - post date -->
-      <div (click)="viewDetail()" class="d-flex flex-row post-author pt-2">
+      <div (click)="viewDetail()" class="d-flex flex-row post-author mt-1">
         <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
           class="me-auto">{{post?.data['subreddit_name_prefixed']}}</a>
         <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
@@ -16,14 +22,14 @@
         <app-award [isDetail]="options.isDetail" [awards]="post.data['all_awardings']"></app-award>
       </ng-container>
 
-      
+
 
       <div class="d-flex flex-row flex-wrap pb-2">
         <h5 (click)="viewDetail()" class="card-title mb-0 d-inline-block me-2">{{post?.data['title'] | replacePipe}}
         </h5>
 
         <span title="Archived" *ngIf="options.isArchive" class="icon-before icon-archive me-2 text-warning"></span>
-    
+
         <!-- Flair -->
         <ng-container *ngIf="post.data['link_flair_text'] ||
         (post.data['link_flair_richtext'] && post.data['link_flair_richtext'].length > 0)">
@@ -60,7 +66,7 @@
       <!-- Video thumbnail container -->
       <ng-container *ngIf="!isInitVideoErr && (!isMediaEmbed() && !isEmbededLink())">
         <div (click)="playVideo()" *ngIf="!isInitVideo"
-        [ngClass]="{'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}" 
+        [ngClass]="{'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}"
         class="letter-box-color d-flex video-thumbnail-container">
           <span class="icon-before icon-play play-video-btn"></span>
           <img class="video-thumbnail" *ngIf="videoThumbnailSrc" [src]="videoThumbnailSrc | replacePipe">
