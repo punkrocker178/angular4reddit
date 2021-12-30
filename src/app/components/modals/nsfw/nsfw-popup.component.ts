@@ -4,7 +4,7 @@ import { PreferencesService } from "src/app/services/preferences.service";
 import { UserService } from "src/app/services/user.service";
 
 @Component({
-    selector: 'nsfw-popup',
+    selector: 'app-nsfw-popup',
     templateUrl: './nsfw-popup.component.html'
 })
 
@@ -25,7 +25,7 @@ export class NsfwPopupComponent {
             this.preferenceService.setPreference('showNSFW', true);
             this.preferenceService.setPreference('safeBrowsing', false);
         });
-        
+
         this.activeModal.close(result);
     }
 }

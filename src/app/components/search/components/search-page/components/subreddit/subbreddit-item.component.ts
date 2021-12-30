@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
- 
+
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'subreddit-item',
     templateUrl: './subreddit-item.component.html'
 })
 
-export class SubbredditItemComponent {
+export class SubbredditItemComponent implements OnInit, OnDestroy {
 
     icon: string;
     @Input() subredditData;
@@ -34,5 +35,5 @@ export class SubbredditItemComponent {
         this.subscribe$.complete();
         this.subscribe$.unsubscribe();
     }
-  
+
 }

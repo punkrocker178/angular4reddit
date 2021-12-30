@@ -1,12 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'post-comments',
-    templateUrl: './post-comments.html',
-    // changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './post-comments.html'
   })
-export class PostCommentsComponent {
+export class PostCommentsComponent implements OnInit{
 
   @Input() comments;
   @Input() isReplies;

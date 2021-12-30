@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
@@ -6,10 +6,10 @@ import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { TrumbowygComponent } from 'src/app/shared/components/trumbowyg/trumbowyg.component';
 
 @Component({
-    selector: 'comment-editor',
+    selector: 'app-comment-editor',
     templateUrl: './comment-editor.component.html'
 })
-export class CommentEditorComponent {
+export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
     postId: string;
 

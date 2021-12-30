@@ -5,11 +5,9 @@ import { take, takeUntil, tap } from "rxjs/operators";
 import { RedditAuthenticateService } from "src/app/services/reddit-authenticate.service";
 
 @Component({
-    selector: 'login-prompt',
-    templateUrl: './login-promt.component.html',
-
+    selector: 'app-login-prompt',
+    templateUrl: './login-promt.component.html'
 })
-
 
 export class LoginPromptComponent {
     @Input() input;

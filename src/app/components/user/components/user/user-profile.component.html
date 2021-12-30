@@ -33,6 +33,6 @@
   </div>
 
   <div *ngIf="(this.overview$ | async)">
-    <listings-component [type]="listingsType" [username]="username"></listings-component>
+    <app-listings-component [type]="listingsType" [username]="username"></app-listings-component>
   </div>
 </div>

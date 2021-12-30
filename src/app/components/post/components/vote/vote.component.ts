@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { VotingService } from 'src/app/services/vote.service';
 
 @Component({
     selector: 'app-vote',
     templateUrl: './vote.component.html'
 })
-export class VoteComponent {
+export class VoteComponent implements OnInit {
 
     @Input() score;
     @Input() id: string;

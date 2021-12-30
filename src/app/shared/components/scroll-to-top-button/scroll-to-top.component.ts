@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {Component, Input} from "@angular/core";
 
 @Component({
-    selector: 'scroll-top-button',
+    selector: 'app-scroll-top-button',
     templateUrl: './scroll-to-top.component.html'
 })
 export class ScrollToTopComponent {

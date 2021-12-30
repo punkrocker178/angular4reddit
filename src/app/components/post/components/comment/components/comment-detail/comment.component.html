@@ -25,8 +25,8 @@
   <div class="post-comments parsed-html-comments" appHTML [selfText]="commentData.data.body_html"></div>
   <ng-container *ngIf="enableEditor">
 
-    <comment-editor [useMarkdown]="useMarkdown" [commentData]="commentData" [trumbowygConfigs]="trumbowygConfigs"
-      (triggerCommentButton)="displayReplyButton($event)"></comment-editor>
+    <app-comment-editor [useMarkdown]="useMarkdown" [commentData]="commentData" [trumbowygConfigs]="trumbowygConfigs"
+      (triggerCommentButton)="displayReplyButton($event)"></app-comment-editor>
 
     <button class="btn btn-dark me-2" [disabled]="disableReplyBtn"
       (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>

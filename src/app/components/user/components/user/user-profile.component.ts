@@ -6,6 +6,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Utils } from 'src/app/class/Utils';
 
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'user-profile',
     templateUrl: './user-profile.component.html'
 })

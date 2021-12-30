@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 
 
 @Component({
-    selector: 'subreddit',
+    selector: 'app-subreddit',
     templateUrl: './subreddit.component.html'
 })
 
@@ -108,7 +108,7 @@ export class SubredditComponent implements OnInit {
             this.collapseElementStatusArr[index] = true;
         } else {
             this.collapseElementStatusArr[index] = false;
-        }    
+        }
     }
 
     filterByFlair(flair) {

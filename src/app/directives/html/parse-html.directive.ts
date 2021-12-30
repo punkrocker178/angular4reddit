@@ -1,10 +1,10 @@
-import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Renderer2 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Directive({
   selector: '[appHTML]'
 })
-export class ParseHtmlDirective {
+export class ParseHtmlDirective implements AfterViewInit, OnDestroy {
 
   private text$: BehaviorSubject<string> = new BehaviorSubject('');
   textSubscription: Subscription;

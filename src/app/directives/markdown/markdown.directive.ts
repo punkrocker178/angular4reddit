@@ -1,17 +1,17 @@
-import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Renderer2 } from '@angular/core';
 import marked from 'marked';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 
 /**
  * Since marked.js does not support Reddit's markdown flavour (Some post display weirdly)
- * This directive will be left unused 
+ * This directive will be left unused
  */
 
 @Directive({
   selector: '[appMarkdown]'
 })
-export class MarkdownDirective {
+export class MarkdownDirective implements AfterViewInit, OnDestroy {
 
   private text$: BehaviorSubject<string> = new BehaviorSubject('');
   textSubscription: Subscription;

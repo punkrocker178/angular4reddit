@@ -1,11 +1,11 @@
-import { Component, ContentChild, ElementRef, Input, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 declare var $: any;
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html'
 })
-export class GalleryComponent {
+export class GalleryComponent implements OnInit, AfterContentInit {
 
     elementIndex = 0;
     positionClass: string;

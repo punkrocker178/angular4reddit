@@ -54,7 +54,7 @@
 
     <ng-container *ngIf="galleryData.items.length > 0">
       <app-gallery [configs]="galleryConfigs">
-        <div class="gallery-item" [ngClass]="{'active': idx == 0}" *ngFor="let item of galleryData.items; let idx = index">
+        <div class="gallery-item" [ngClass]="{'active': idx === 0}" *ngFor="let item of galleryData.items; let idx = index">
           <img class="img-fluid" [alt]="item.id"
           [src]="(item['source']) | replacePipe">
         </div>

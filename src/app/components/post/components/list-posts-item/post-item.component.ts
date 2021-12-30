@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, Renderer2, ViewChild, TemplateRef } from '@angular/core';
+import { Component, Input, ElementRef, Renderer2, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { Router } from '@angular/router';
 import { Utils } from 'src/app/class/Utils';
@@ -22,10 +22,11 @@ import { PreferencesService } from 'src/app/services/preferences.service';
 declare var twttr: any;
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'post-item',
   templateUrl: './post-item.html'
 })
-export class PostItemComponent {
+export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() post: Post;
   @Input() options;
   @ViewChild('twitterEmbed') tweet: ElementRef;

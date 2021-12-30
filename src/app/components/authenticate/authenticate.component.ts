@@ -9,7 +9,7 @@ import { PreferencesService } from "src/app/services/preferences.service";
 import { UserInterface } from "src/app/model/user.interface";
 
 @Component({
-    selector: 'authenticate',
+    selector: 'app-authenticate',
     templateUrl: './authenticate.component.html'
 })
 

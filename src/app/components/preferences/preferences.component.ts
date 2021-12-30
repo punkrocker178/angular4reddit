@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { Preferences } from 'src/app/model/preferences.interface';
@@ -11,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
     templateUrl: './preferences.component.html'
 })
 
-export class PreferencesComponent implements OnInit {
+export class PreferencesComponent implements OnInit, OnDestroy {
 
     constructor(private preferencesService: PreferencesService,
         private authenService: RedditAuthenticateService,
@@ -38,7 +38,7 @@ export class PreferencesComponent implements OnInit {
                 this.showNSFW = !!next.over_18;
             })).subscribe();
         }
-        
+
     }
 
     updateTogglePreference(setting: string, value: boolean) {

@@ -6,7 +6,7 @@
             <h5 class="size-18 mb-0">Show NSFW Content</h5>
             <p class="d-none d-md-block">Show posts, subreddits with NSFW tag (Synced from your Reddit settings)</p>
         </div>
-        <toggle-button [state]="showNSFW" (toggleState)="updateTogglePreference('nsfw', $event)"></toggle-button>
+        <app-toggle-button [state]="showNSFW" (toggleState)="updateTogglePreference('nsfw', $event)"></app-toggle-button>
     </div>
 
     <div class="mb-md-4 mb-3 d-flex flex-row">
@@ -14,7 +14,7 @@
             <h5 class="size-18 mb-0">Safe browsing mode</h5>
             <p class="d-none d-md-block">Blur thumbnails and media preview for anything labeled NSFW (not safe for work)</p>
         </div>
-        <toggle-button [state]="preferences.safeBrowsing" (toggleState)="updateTogglePreference('safeBrowsing', $event)"></toggle-button>
+        <app-toggle-button [state]="preferences.safeBrowsing" (toggleState)="updateTogglePreference('safeBrowsing', $event)"></app-toggle-button>
     </div>
 
 
@@ -23,7 +23,7 @@
             <h5 class="size-18 mb-0">Default to markdown</h5>
             <p class=" d-none d-md-block">Turn on this if you don't want to use the rich text editor</p>
         </div>
-        <toggle-button [state]="preferences.useMarkdown" (toggleState)="updateTogglePreference('useMarkdown', $event)"></toggle-button>
+        <app-toggle-button [state]="preferences.useMarkdown" (toggleState)="updateTogglePreference('useMarkdown', $event)"></app-toggle-button>
 
     </div>
 

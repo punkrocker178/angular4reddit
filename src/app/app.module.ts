@@ -32,7 +32,7 @@ import { SearchModule } from './components/search/search.module';
 import { RedditSearchService } from './services/reddit-search.service';
 import { ModalModule } from './components/modals/modal.module';
 import { ToastService } from './services/toast.service';
-import { ToastsContainer } from './components/toast/toast-container/toast-container.component';
+import { ToastsContainerComponent } from './components/toast/toast-container/toast-container.component';
 import { SubredditModule } from './components/subreddit/components/subreddit.module';
 import { ThemeService } from './services/theme.service';
 import { PreferencesComponent } from './components/preferences/preferences.component';
@@ -47,7 +47,7 @@ import { UserModule } from './components/user/user.module';
     NavbarComponent,
     AuthenticateComponent,
     NotFoundComponent,
-    ToastsContainer,
+    ToastsContainerComponent,
     PreferencesComponent
   ],
   imports: [

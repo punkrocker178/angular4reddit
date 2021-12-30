@@ -1,7 +1,7 @@
-<trumbowyg-editor
+<app-trumbowyg-editor
   *ngIf="useTrumbowygEditor(); else textAreaEditor"
   [configs]="trumbowygConfigs ? trumbowygConfigs : null"
-  [editorId]="commentData ? commentData.data.id : null"></trumbowyg-editor>
+  [editorId]="commentData ? commentData.data.id : null"></app-trumbowyg-editor>
 
 <ng-template #textAreaEditor>
   <textarea #textAreaElement [(ngModel)]="_commentContent" placeholder="What are your thoughts ?"

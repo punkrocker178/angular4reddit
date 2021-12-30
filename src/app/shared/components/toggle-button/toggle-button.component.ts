@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 
 @Component({
-    selector: 'toggle-button',
+    selector: 'app-toggle-button',
     templateUrl: './toggle-button.component.html'
 })
 export class ToggleButtonComponent {

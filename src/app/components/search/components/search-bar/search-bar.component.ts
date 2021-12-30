@@ -1,15 +1,15 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { fromEvent, Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
 
 @Component({
-    selector: 'search-bar',
+    selector: 'app-search-bar',
     templateUrl: './search-bar.component.html'
 })
 
-export class SearchBarComponent {
+export class SearchBarComponent implements AfterViewInit, OnDestroy {
 
     constructor(private redditSearchService: RedditSearchService,
         private router: Router) { }

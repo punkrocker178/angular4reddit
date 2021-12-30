@@ -6,7 +6,7 @@
     <span routerLink="/" class="d-flex align-items-center me-auto pointer">Angular Reddit</span>
 
     <div *ngIf="!isMobile()" class="pt-2">
-      <search-bar [showSearchBtn]="true"></search-bar>
+      <app-search-bar [showSearchBtn]="true"></app-search-bar>
     </div>
 
 
@@ -26,7 +26,7 @@
 
             <div class="d-flex pt-1 pb-1 ps-3 pe-3">
               <span class="icon-before icon-moon me-2"></span>
-              <toggle-button [state]="themeToggleState" (toggleState)="themeToggle($event)"></toggle-button>
+              <app-toggle-button [state]="themeToggleState" (toggleState)="themeToggle($event)"></app-toggle-button>
               <span class="icon-before icon-sun ms-2"></span>
             </div>
 
@@ -55,7 +55,7 @@
 
   <div [ngClass]="{'side-menu-show': menuToggle, 'side-menu': !menuToggle}">
     <div class="mt-5" [ngClass]="{'mobile-nav-item-2': user.is_login}">
-      <search-bar [showSearchBtn]="false"></search-bar>
+      <app-search-bar [showSearchBtn]="false"></app-search-bar>
     </div>
 
     <ng-container *ngIf="!user.is_login">
@@ -63,7 +63,7 @@
       <span class="mobile-nav-text" (click)="openHelpPage()">Help</span>
       <span class="mobile-nav-text" (click)="goToComponent(aboutPath)">About</span>
     </ng-container>
-    
+
     <ng-container *ngIf="user.is_login">
       <div (click)="goToComponent(profilePath)" class="mobile-nav-item mt-3">
         <img class="profile-img-mobile" [src]="user.icon_img | replacePipe">
@@ -73,7 +73,7 @@
       <span class="mobile-nav-text" (click)="goToComponent(preferencePath)">Preferences</span>
       <span class="mobile-nav-text" (click)="openHelpPage()">Help</span>
       <span class="mobile-about-btn mobile-nav-text" (click)="goToComponent(aboutPath)">About</span>
-  
+
       <a class="mobile-nav-text icon-before icon-sign-out" (click)="logout()">Log out</a>
     </ng-container>
     <span class="icon-before size-32 mobile-change-theme-btn" [ngClass]="{'icon-moon': themeToggleState, 'icon-sun': !themeToggleState}" (click)="themeToggle(!themeToggleState)"></span>

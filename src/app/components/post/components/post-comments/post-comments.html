@@ -2,7 +2,7 @@
 
 	<div class="mb-2" *ngFor="let comment of comments">
 
-		<ng-container *ngIf="comment.kind == 't1'; else moreReplies">
+		<ng-container *ngIf="comment.kind === 't1'; else moreReplies">
 			<app-comment
       [originalPoster]="orginalPoster"
 			[useMarkdown]="useMarkdown"

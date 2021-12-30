@@ -1,4 +1,4 @@
-import {Component, TemplateRef} from '@angular/core';
+import {Component, HostBinding, TemplateRef} from '@angular/core';
 
 import {ToastService} from '../../../services/toast.service';
 
@@ -19,14 +19,15 @@ import {ToastService} from '../../../services/toast.service';
 
       <ng-template #text>{{ toast.textOrTpl }}</ng-template>
     </ngb-toast>
-  `,
-  host: {'[class.toast-container]': 'true',
-         '[class.toast-position]': 'true'}
+  `
 })
-export class ToastsContainer {
+export class ToastsContainerComponent {
+  @HostBinding('[class.toast-container]') toastContainer = true;
+  @HostBinding('[class.toast-position]') toastPosition = true;
+
   constructor(public toastService: ToastService) {}
 
-  isTemplate(toast) { 
+  isTemplate(toast) {
       return toast.textOrTpl instanceof TemplateRef;
      }
 }

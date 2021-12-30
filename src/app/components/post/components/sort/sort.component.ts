@@ -23,9 +23,6 @@ export class SortComponent {
 
   }
 
-  ngOnInit() {
-  }
-
   toggleDropdown(type?: string) {
     this.clickState = !this.clickState;
     if (type) {

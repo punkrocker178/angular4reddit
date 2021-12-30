@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { UserService } from 'src/app/services/user.service';
 import { UserInterface } from 'src/app/model/user.interface';
@@ -10,11 +10,11 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { PreferencesService } from 'src/app/services/preferences.service';
 
 @Component({
-    selector: 'navbar',
+    selector: 'app-navbar',
     templateUrl: './navbar.html'
 })
 
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 
     constructor(private authenService: RedditAuthenticateService,
         private userService: UserService,

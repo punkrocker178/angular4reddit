@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
- 
+
 @Component({
     selector: 'app-search',
     templateUrl: './search-page.component.html'
 })
 
-export class SearchPageComponent {
+export class SearchPageComponent implements OnInit, OnDestroy {
 
     searchTerm: string;
 
@@ -29,7 +29,7 @@ export class SearchPageComponent {
     subredditFilter: string;
     timeOffset: string;
     resultsLimit;
-    advancedSearchChanged: boolean;   
+    advancedSearchChanged: boolean;
 
     popoverConfig = {
         placement: 'bottom',
@@ -52,7 +52,7 @@ export class SearchPageComponent {
             this.searchSubreddits(this.searchTerm).subscribe();
             this.searchSubmissions(this.getSearchSubmissionPayload(this.searchTerm, null, null, null, this.getResultsLimit())).subscribe();
         });
-        
+
     }
 
     getResultsLimit() {
@@ -89,7 +89,7 @@ export class SearchPageComponent {
                 } else {
                     this.allSubredditResults = true;
                 }
-                
+
                 this.subredditLoading = false;
             })
         );
@@ -106,7 +106,7 @@ export class SearchPageComponent {
         if (searchPayload.subredditFilter) {
             payload['subreddit'] = searchPayload.subredditFilter;
         }
-        
+
         if (searchPayload.after) {
             payload['after'] = searchPayload.after;
         }
@@ -114,7 +114,7 @@ export class SearchPageComponent {
         if (searchPayload.before) {
             payload['before'] = searchPayload.before;
         }
-        
+
         if (!searchPayload.before && !searchPayload.after) {
             payload['after'] = '14d';
         }
@@ -151,7 +151,7 @@ export class SearchPageComponent {
                 after = this.oldestSubmission - 31536000;
                 break;
             case '1 Day' :
-            default:    
+            default:
                 after = this.oldestSubmission - 86400;
                 break;
         }
@@ -159,7 +159,7 @@ export class SearchPageComponent {
         if (after < 0) {
             after = 0;
         }
-        
+
         const searchPayload = this.getSearchSubmissionPayload(this.searchTerm, this.subredditFilter, this.oldestSubmission, after, this.getResultsLimit());
 
         this.searchSubmissions(searchPayload).subscribe();
@@ -175,7 +175,7 @@ export class SearchPageComponent {
         return oldestDate;
     }
 
-    
+
 
     ngOnDestroy() {
         this.paramSubscription.unsubscribe();
@@ -185,7 +185,7 @@ export class SearchPageComponent {
         this.submissionLoading = true;
         this.submission$.next([]);
         this.allResults = false;
-        
+
         const searchPayload = this.getSearchSubmissionPayload(this.searchTerm, null, null, date, 50);
         this.searchSubmissions(searchPayload).subscribe();
     }

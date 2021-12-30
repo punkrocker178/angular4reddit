@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
@@ -12,7 +12,7 @@ import { CommentEditorComponent } from '../comment-editor/comment-editor.compone
     selector: 'app-comment',
     templateUrl: './comment.component.html'
 })
-export class CommentComponent {
+export class CommentComponent implements OnInit {
 
     @Input() useMarkdown: boolean;
     @Input() commentData;

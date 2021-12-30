@@ -10,7 +10,7 @@ import { Post } from 'src/app/model/post';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 
 @Component({
-  selector: 'listings-component',
+  selector: 'app-listings-component',
   templateUrl: './listings.html'
 })
 export class ListingsComponent implements OnInit, OnDestroy {

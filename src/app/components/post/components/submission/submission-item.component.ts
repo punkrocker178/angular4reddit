@@ -1,13 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'submission-item',
     templateUrl: './submission-item.component.html'
 })
 
-export class SubmissionItemComponent {
+export class SubmissionItemComponent implements OnInit {
 
     subredddit: string;
 
@@ -33,7 +34,7 @@ export class SubmissionItemComponent {
     }
 
     viewDetail() {
-        
+
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { fromEvent, Subscription } from 'rxjs';
@@ -6,10 +6,10 @@ import { debounceTime, tap } from 'rxjs/operators';
 declare var $: any;
 
 @Component({
-    selector: 'trumbowyg-editor',
+    selector: 'app-trumbowyg-editor',
     templateUrl: './trumbowyg.component.html'
 })
-export class TrumbowygComponent {
+export class TrumbowygComponent implements AfterViewInit {
     @Input() configs;
 
     @Input() editorId;
@@ -25,16 +25,16 @@ export class TrumbowygComponent {
 
     @ViewChild('editor') editorInstance: ElementRef;
     @ViewChild('commentEditorInstance') commentEditorInstance: ElementRef;
-    
+
     constructor(private trumbowygService: TrumbowygService) {
 
     }
 
     ngAfterViewInit() {
-        this._trumbowygSelector = this.configs && this.configs.isComment ? 
+        this._trumbowygSelector = this.configs && this.configs.isComment ?
         TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR + '-' + this.editorId: TrumbowygConstants.TRUMBOWYG_EDITOR;
-        
-        this.trumbowygService.initEditor(this._trumbowygSelector, 
+
+        this.trumbowygService.initEditor(this._trumbowygSelector,
             {
                 btns: [
                     ['formatting'],

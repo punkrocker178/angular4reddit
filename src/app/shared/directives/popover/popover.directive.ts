@@ -6,13 +6,13 @@
  *
  */
 
-import { Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, Input, OnDestroy, Renderer2 } from '@angular/core';
 import { createPopper, VirtualElement } from '@popperjs/core';
 
 @Directive({
   selector: '[appPopover]'
 })
-export class PopoverDirective {
+export class PopoverDirective implements AfterViewInit, OnDestroy {
 
   tooltipElement;
 

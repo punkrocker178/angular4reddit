@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { SubredditService } from 'src/app/services/subreddit.service';
- 
+
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'subsribe-subreddit-btn',
     templateUrl: './subscribe-subreddit-btn.component.html'
 })
 
-export class SubscribeSubredditBtnComponent {
+export class SubscribeSubredditBtnComponent implements OnInit, OnDestroy {
 
     @Input() subredditData;
     isSubscribed: boolean;
@@ -36,5 +37,5 @@ export class SubscribeSubredditBtnComponent {
         this.subscribe$.complete();
         this.subscribe$.unsubscribe();
     }
-  
+
 }

@@ -1,11 +1,10 @@
-import { Component, ElementRef, Input, Output, Renderer2, ViewChild } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'app-flair',
     templateUrl: './flair.component.html'
 })
-export class FlairComponent {
+export class FlairComponent implements OnInit, AfterViewInit {
 
     @Input() flairInput;
     @ViewChild('flairElement') flairEl: ElementRef;
@@ -51,7 +50,7 @@ export class FlairComponent {
 
         let flairText;
 
-        
+
         if (this.flairInput['flair_richtext'].length > 0) {
             const flairRichText = this.flairInput['flair_richtext'];
             const flairArr = flairRichText.filter(part => part['e'] === 'text');

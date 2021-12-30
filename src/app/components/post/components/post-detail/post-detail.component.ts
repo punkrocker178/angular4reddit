@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
@@ -12,10 +12,11 @@ import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.
 import { PreferencesService } from 'src/app/services/preferences.service';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'post-detail',
   templateUrl: './post-detail.html'
 })
-export class PostDetailComponent {
+export class PostDetailComponent implements OnInit {
 
   isLoading: boolean = true;
 
