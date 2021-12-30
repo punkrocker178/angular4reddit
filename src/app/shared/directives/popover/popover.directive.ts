@@ -1,13 +1,13 @@
 /**
- * 
+ *
  *  This directive use popperjs library to create a popover. I'm using popper's Virtual element instead of HTMLElement
  *  because the position of the popover is got offset very far from the target element
  *  I can't figured out why.
- * 
+ *
  */
 
 import { Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
-import { createPopper } from '@popperjs/core';
+import { createPopper, VirtualElement } from '@popperjs/core';
 
 @Directive({
   selector: '[appPopover]'
@@ -22,7 +22,7 @@ export class PopoverDirective {
 
   popoverInstance;
 
-  virtualElement = {
+  virtualElement: VirtualElement = {
     getBoundingClientRect: this.generateGetBoundingClientRect()
   }
 
@@ -55,7 +55,7 @@ export class PopoverDirective {
 
   }
 
-  generateGetBoundingClientRect(x = 0, y = 0) {
+  generateGetBoundingClientRect(x = 0, y = 0): () => DOMRect {
     return () => ({
       width: 0,
       height: 0,
@@ -63,6 +63,9 @@ export class PopoverDirective {
       right: x,
       bottom: y,
       left: x,
+      x: y,
+      y: y,
+      toJSON: () => {}
     });
   }
 
