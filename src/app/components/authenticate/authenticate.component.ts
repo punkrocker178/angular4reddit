@@ -14,7 +14,7 @@ import { UserInterface } from "src/app/model/user.interface";
 })
 
 export class AuthenticateComponent implements OnInit, OnDestroy {
-    private ngUnsubscribe = new Subject();
+    private ngUnsubscribe = new Subject<void>();
 
     isError: boolean;
     errorMsg: string;

@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
     menuToggle = false;
     user: UserInterface;
     userSubscribtion: Observable<UserInterface>;
-    destroy$ = new Subject();
+    destroy$ = new Subject<void>();
     mainElement;
 
     profilePath: string;

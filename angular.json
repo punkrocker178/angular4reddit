@@ -122,12 +122,22 @@
               "devServerTarget": "areddit:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "defaultProject": "areddit",
   "cli": {
-    "analytics": "4b1cfddc-30ea-4cf4-914d-7703d9c7beef"
+    "analytics": "4b1cfddc-30ea-4cf4-914d-7703d9c7beef",
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

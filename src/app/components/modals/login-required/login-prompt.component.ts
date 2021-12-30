@@ -7,7 +7,7 @@ import { RedditAuthenticateService } from "src/app/services/reddit-authenticate.
 @Component({
     selector: 'login-prompt',
     templateUrl: './login-promt.component.html',
-    
+
 })
 
 
@@ -15,7 +15,7 @@ export class LoginPromptComponent {
     @Input() input;
 
     timer;
-    dismiss$ = new Subject();
+    dismiss$ = new Subject<void>();
 
     constructor(public activeModal: NgbActiveModal,
                 private authenService: RedditAuthenticateService) {}
@@ -29,11 +29,11 @@ export class LoginPromptComponent {
     close(result: string) {
         const counter = interval(1000);
         const seconds = 5;
-        
+
         counter.pipe(take(seconds), takeUntil(this.dismiss$), tap(next => {
             this.timer = seconds - next - 1;
             console.log(this.timer);
-            if (this.timer === 0) {            
+            if (this.timer === 0) {
                 this.activeModal.close(result);
                 this.authenService.login();
             }
