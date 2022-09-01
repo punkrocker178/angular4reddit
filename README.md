@@ -1,5 +1,5 @@
 # angular4reddit
-Check it out: [angular4reddit.me](https://angular4reddit.me)  
+Check it out: [App](https://dbqo2nayu6ql6.cloudfront.net)  
   
 This app is a simple reddit's client using Angular.  
 The app will call to AWS Lambda & AWS API Gateway to bypass CORS policy to get actual Reddit's API responses.  
@@ -34,14 +34,14 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Install
 
 Run `npm i` or  
- ```docker run -it -v /your-app-directory/:/app -w /app node:latest npm i```
+ ```docker run -it -v $PWD/:/app -w /app node:latest npm i```
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.  
 
 Run in docker container  
-```docker run --rm -it -p 4200:4200 -v /your-app-directory/:/app -w /app node:latest npm start```
+```docker run --rm -it -p 4200:4200 -v $PWD/:/app -w /app node:latest npm start```
 
 ## Code scaffolding
 
