@@ -34,7 +34,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Install
 
 Run `npm i` or  
- ```docker run -it -v $PWD/:/app -w /app node:latest npm i```
+ ```docker run -rm -it -v $PWD/:/app -w /app node:latest npm i```
 
 ## Development server
 
