@@ -1,5 +1,3 @@
-import  marked  from 'marked';
-
 export class Utils {
     static stringCharacters = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 

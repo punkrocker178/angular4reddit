@@ -1,5 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Renderer2 } from '@angular/core';
-import marked from 'marked';
+import { marked } from 'marked'
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 
@@ -37,7 +37,7 @@ export class MarkdownDirective implements AfterViewInit, OnDestroy {
   }
 
   parseMarkdown(text: string) {
-    this.parsed = marked(text, {
+    this.parsed = marked.parse(text, {
       gfm: false,
       smartypants: true,
       smartLists: true
