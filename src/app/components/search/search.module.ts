@@ -6,7 +6,6 @@ import { SharedModule } from 'src/app/shared/components/shared-components.module
 import { PostsModule } from '../post/posts.module';
 import { SubredditModule } from '../subreddit/components/subreddit.module';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
-import { SubbredditItemComponent } from './components/search-page/components/subreddit/subbreddit-item.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
 
 @NgModule({
@@ -21,7 +20,6 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
   declarations: [
     SearchBarComponent,
     SearchPageComponent,
-    SubbredditItemComponent
   ],
   exports: [
     SearchBarComponent,
