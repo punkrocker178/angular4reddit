@@ -12,4 +12,4 @@ import { NgModule } from '@angular/core';
         FooterComponent
     ]
   })
-  export class HeaderFooter { }
+  export class HeaderFooterModule { }

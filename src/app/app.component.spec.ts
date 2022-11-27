@@ -8,7 +8,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthenticateComponent } from './components/authenticate/authenticate.component';
-import { HeaderFooter } from './components/header-footer/header-footer.module';
+import { HeaderFooterModule } from './components/header-footer/header-footer.module';
 import { HomeComponent } from './components/home/home.component';
 import { ListingsComponent } from './components/listings/listings.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -30,7 +30,7 @@ import { SubredditService } from './services/subreddit.service';
 import { TrumbowygService } from './services/trumbowyg.service';
 import { UserService } from './services/user.service';
 import { VotingService } from './services/vote.service';
-import { SharedComponentsModule } from './shared/components/shared-components.module';
+import { SharedModule } from './shared/components/shared-components.module';
 import { SharedDirectivesModule } from './shared/directives/directives.module';
 
 describe('AppComponent', () => {
@@ -42,13 +42,13 @@ describe('AppComponent', () => {
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
-        HeaderFooter,
+        HeaderFooterModule,
         PipeModule,
         PostsModule,
         InfiniteScrollModule,
         DirectivesModule,
         SharedDirectivesModule,
-        SharedComponentsModule,
+        SharedModule,
         NgbModule,
         SearchModule
       ],
@@ -75,7 +75,7 @@ describe('AppComponent', () => {
         RedditSearchService,
         CheckDeviceFeatureService,
         {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
-        
+
       ]
     }).compileComponents();
   }));
