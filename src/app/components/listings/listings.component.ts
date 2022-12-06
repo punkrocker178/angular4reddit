@@ -5,7 +5,6 @@ import { ApiList } from 'src/app/constants/api-list';
 import { tap, switchMap, filter, throttleTime, takeUntil, catchError, debounceTime } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
-import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { Post } from 'src/app/model/post';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 
@@ -32,26 +31,19 @@ export class ListingsComponent implements OnInit, OnDestroy {
   isError: boolean;
   errorMsg = '';
 
-  showScrollTopBtn: boolean;
-
-  previousData = [];
-  nextData = [];
-
   isLoggedIn: boolean;
-  scrollYPosition = 0;
 
   constructor(
     private authenticateService: RedditAuthenticateService,
     private redditService: RedditListingService,
     private subredditService: SubredditService,
-    private activatedRoute: ActivatedRoute,
-    private checkDeviceFeatureService: CheckDeviceFeatureService) { }
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    const queryParamOb = this.activatedRoute.queryParamMap;
-    const paramOb = this.activatedRoute.paramMap;
+    const queryParamMap = this.activatedRoute.queryParamMap;
+    const paramMap = this.activatedRoute.paramMap;
 
-    combineLatest([paramOb, queryParamOb]).pipe(
+    combineLatest([paramMap, queryParamMap]).pipe(
       takeUntil(this.destroy$),
       switchMap(value => {
         this.after = null;
@@ -77,14 +69,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
           this.redditService.visitedUser = null;
         }
 
-        if (this.redditService.listingStoredData) {
-          const storedData = this.redditService.listingStoredData;
-          this.after = storedData.after;
-          this.posts$.next(storedData.children);
-          return of([]);
-        } else {
-          this.scroll$.next(true);
-        }
+        this.scroll$.next(true);
 
         if (this.posts$.getValue().length > 0) {
           return this.fetchData(null, true)
@@ -103,52 +88,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     });
 
-    // Show hidden post when scroll up
-    this.scrollNextData$.pipe(
-      takeUntil(this.destroy$),
-      filter(next => next !== null),
-      throttleTime(2000),
-      tap(_ => {
-        let currentPosts = this.posts$.getValue();
-
-        currentPosts.forEach((post, index) => {
-          if (index < RedditListingService.QUERY_LIMIT) {
-            this.previousData.push(post);
-          }
-        });
-
-        currentPosts = currentPosts.slice(RedditListingService.QUERY_LIMIT);
-
-        let nextPosts = [];
-
-        for (let i = 0; i < this.nextData.length; i++) {
-          nextPosts.push(this.nextData.pop());
-        }
-
-        currentPosts.push(...nextPosts);
-        this.posts$.next(currentPosts);
-      })
-    ).subscribe();
-
     this.isLoggedIn = this.authenticateService.getIsLoggedIn();
-
-    /* Auto hide scroll to top button */
-    // fromEvent(document, 'scroll').pipe(
-    //   takeUntil(this.destroy$),
-    //   throttleTime(3000),
-    //   debounceTime(1500),
-    //   tap(event => {
-    //     if (window.pageYOffset > this.scrollYPosition) {
-    //       this.showScrollTopBtn = false;
-    //     } else {
-    //       this.showScrollTopBtn = true;
-    //     }
-    //     this.scrollYPosition = window.pageYOffset;
-    //   })
-    // ).subscribe();
   }
 
-  fetchData(after?: string, refreshData?: boolean) {
+  private fetchData(after?: string, refreshData?: boolean) {
 
     if (this.after == null && this.posts$.getValue().length > 0 && !refreshData) {
       return of([]);
@@ -167,27 +110,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
       queryParams['after'] = this.after
     }
 
-    const updateData = (next: any) => {
-      this.after = next.after;
-      let currentPosts = this.posts$.getValue();
-
-      if (currentPosts.length >= RedditListingService.MAX_POST_LIMIT) {
-        currentPosts = currentPosts.slice(RedditListingService.QUERY_LIMIT);
-        this.previousData.push(...this.posts$.getValue().splice(0, RedditListingService.QUERY_LIMIT));
-      }
-
-      this.posts$.next([...currentPosts, ...next.children]);
-
-    };
-
     if (this.flairFilter) {
       const searchTerm = `flair_name:"${this.flairFilter}"`;
       return this.subredditService.searchInSubreddit(searchTerm, this.subreddit, this.after).pipe(
-        tap(updateData));
+        tap(next => this.updateListingData(next)));
     }
 
     return this.redditService.getListigs(this.defaultListingsTypeApi(), queryParams).pipe(
-      tap(updateData), catchError(err => {
+      tap(next => this.updateListingData(next)), catchError(err => {
         this.isLoading = false;
         this.isError = true;
         this.errorMsg = `Code: ${err.status} -  Message: ${err.error.message}`;
@@ -195,10 +125,21 @@ export class ListingsComponent implements OnInit, OnDestroy {
         return err;
       }
       ));
-
   }
 
-  changeSort(value) {
+  // Update listing, will remove old post if reaches limit
+  private updateListingData(next) {
+    this.after = next.after;
+    let currentPosts = this.posts$.getValue();
+
+    if (currentPosts.length >= RedditListingService.MAX_POST_LIMIT) {
+      currentPosts = currentPosts.slice(RedditListingService.QUERY_LIMIT);
+    }
+
+    this.posts$.next([...currentPosts, ...next.children]);
+  }
+
+  public changeSort(value) {
     switch (value) {
       case ApiList.LISTINGS_HOT_LABEL:
         this.sort = ApiList.LISTINGS_HOT;
@@ -226,7 +167,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  defaultListingsTypeApi() {
+  private defaultListingsTypeApi() {
     let apiSegment = '';
     switch (this.type) {
       case 'user-profile':
@@ -242,7 +183,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     return apiSegment;
   }
 
-  flushDataOnSubredditChange(pathParam) {
+  private flushDataOnSubredditChange(pathParam) {
     // Flush stored data when subreddit changes
     const subredditChange = pathParam.has('subreddit') && pathParam.get('subreddit') !== this.redditService.visitedSubreddit;
 
@@ -254,7 +195,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  flushDataOnUserChange(pathParam) {
+  private flushDataOnUserChange(pathParam) {
     const userChange = pathParam.has('user') && pathParam.get('user') !== this.redditService.visitedUser;
     const goToHome = !pathParam.has('user') && this.redditService.visitedUser;
 
@@ -263,7 +204,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  flushDataOnFlairChange(queryParam) {
+  private flushDataOnFlairChange(queryParam) {
     if (queryParam.has('flair')) {
       this.flairFilter = queryParam.get('flair');
       this.redditService.listingStoredData = null;
@@ -272,35 +213,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadMore(event) {
-    if (this.nextData.length === 0) {
-      this.scroll$.next(event);
-    } else {
-      this.scrollNextData$.next(event);
-    }
-
-  }
-
-  loadPrevious() {
-    if (this.previousData.length === 0) {
-      return;
-    }
-
-    const lastItemsIndex = -RedditListingService.QUERY_LIMIT;
-
-    const currentPosts = this.posts$.getValue();
-    currentPosts.unshift(...this.previousData.slice(lastItemsIndex));
-
-    if (currentPosts.length >= RedditListingService.MAX_POST_LIMIT) {
-      this.nextData.push(...currentPosts.slice(lastItemsIndex));
-    }
-
-    currentPosts.splice(lastItemsIndex);
-    this.posts$.next(currentPosts);
-
-    for (let i = 0; i < RedditListingService.QUERY_LIMIT; i++) {
-      this.previousData.pop();
-    }
+  public loadMore(event) {
+    this.scroll$.next(event);
   }
 
 }

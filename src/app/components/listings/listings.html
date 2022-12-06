@@ -2,9 +2,6 @@
     <div class="row">
         <div class="col-12 col-lg-8 col-md-10 px-0 px-md-4 px-lg-5 contents">
             <app-sort [showFeed]="isLoggedIn && !subreddit" (changeSort)="changeSort($event)" (changeFeedEmitter)="changeSort($event)"></app-sort>
-            <div>
-                <button class="btn btn-link" *ngIf="previousData.length > 0" (click)="loadPrevious()">Load previous</button>
-            </div>
 
             <div *ngIf="isError && !isLoading" class="p-2 p-md-3 d-flex justify-content-center">
                 <div class="me-2 me-md-4">
@@ -24,7 +21,7 @@
 
             <app-scroll-top-button [targetElementId]="'navbar-top'"></app-scroll-top-button>
 
-            <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="1500"
+            <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="1000"
                  (scrolled)="loadMore($event)"
                  ></div>
         </div>
