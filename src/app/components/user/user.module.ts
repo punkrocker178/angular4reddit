@@ -6,6 +6,7 @@ import { HeaderFooterModule } from '../header-footer/header-footer.module';
 import { PostsModule } from '../post/posts.module';
 import { AboutComponent } from './components/about/about.component';
 import { UserProfileComponent } from './components/user/user-profile.component';
+import { UserRoutingModule } from './user-routing.module';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { UserProfileComponent } from './components/user/user-profile.component';
     DirectivesModule,
     PipeModule,
     PostsModule,
-    HeaderFooterModule
+    HeaderFooterModule,
+    UserRoutingModule
   ],
   declarations: [
     UserProfileComponent,

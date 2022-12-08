@@ -30,16 +30,21 @@ const routes: Routes = [
     path: "about", component: AboutComponent
   },
   {
-    path: "r/:subreddit", component: SubredditComponent
+    path: "r/:subreddit/comments/:id",
+    pathMatch: 'full',
+    component: PostDetailComponent
   },
   {
-    path: "r/:subreddit/comments/:id", component: PostDetailComponent
+    path: 'r',
+    loadChildren: () => import('./components/subreddit/subreddit.module').then(m => m.SubredditModule)
   },
   {
-    path: "u/:user", component: UserProfileComponent
+    path: 'u',
+    loadChildren: () => import('./components/user/user.module').then(m => m.UserModule)
   },
   {
-    path: "search/:term", component: SearchPageComponent
+    path: 'search',
+    loadChildren: () => import('./components/search/search.module').then(m => m.SearchModule)
   },
   {
     path: "404", component: NotFoundComponent
@@ -50,7 +55,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled', relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

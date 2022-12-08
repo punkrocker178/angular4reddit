@@ -5,9 +5,9 @@
     </a>
     <span routerLink="/" class="d-flex align-items-center me-auto pointer">Angular Reddit</span>
 
-    <div *ngIf="!isMobile()" class="pt-2">
+    <!-- <div *ngIf="!isMobile()" class="pt-2">
       <app-search-bar [showSearchBtn]="true"></app-search-bar>
-    </div>
+    </div> -->
 
 
     <ng-container *ngIf="userSubscribtion | async">
@@ -55,7 +55,7 @@
 
   <div [ngClass]="{'side-menu-show': menuToggle, 'side-menu': !menuToggle}">
     <div class="mt-5" [ngClass]="{'mobile-nav-item-2': user.is_login}">
-      <app-search-bar [showSearchBtn]="false"></app-search-bar>
+      <!-- <app-search-bar [showSearchBtn]="false"></app-search-bar> -->
     </div>
 
     <ng-container *ngIf="!user.is_login">
