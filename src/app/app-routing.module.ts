@@ -10,7 +10,6 @@ import { SearchPageComponent } from './components/search/components/search-page/
 import { PreferencesComponent } from './components/preferences/preferences.component';
 import { AboutComponent } from './components/user/components/about/about.component';
 
-
 const routes: Routes = [
   {
     path: "",
@@ -50,7 +49,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled', relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

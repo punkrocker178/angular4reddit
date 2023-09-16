@@ -18,7 +18,7 @@ export class FormatNumberPipe implements PipeTransform {
         number = parseInt(value);
       }
 
-      if(number == NaN) {
+      if(Number.isNaN(number)) {
         return '';
       }
 
