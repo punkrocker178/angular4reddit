@@ -1,8 +1,7 @@
 <div class="d-flex flex-row">
-  <input #inputEl
-  type="text" placeholder="Search" class="form-control" [ngClass]="{'mobile-search-bar': !showSearchBtn}"
-  [(ngModel)]="model" [ngbTypeahead]="search" (selectItem)=navigateToSubreddit($event)
-  [resultFormatter]="resultFormatter" [focusFirst]="false"
-  >
-  <button *ngIf="showSearchBtn" (click)="navigateToSearchComponent()" class="btn btn-primary icon-before icon-search ms-1"></button>
+  <input #inputEl type="text" placeholder="Search" class="form-control"
+    [ngClass]="{'mobile-search-bar': !showSearchBtn}" [(ngModel)]="model" [ngbTypeahead]="search"
+    (selectItem)=navigateToSubreddit($event) [resultFormatter]="resultFormatter" [focusFirst]="false">
+  <button *ngIf="showSearchBtn" (click)="navigateToSearchComponent()"
+    class="btn btn-primary icon-before icon-search ms-1"></button>
 </div>

@@ -3,78 +3,85 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { environment } from 'src/environments/environment';
 import { HeadersUtils } from '../class/HeadersUtils';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Listings } from '../model/listings.interface';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class SubredditService {
 
-    private path = environment.functionUrl + '/oauth/';
-    constructor(private http: HttpClient,
-                private authenticateService: RedditAuthenticateService) { }
+  private path = environment.functionUrl + '/oauth/';
+  constructor(private http: HttpClient,
+    private authenticateService: RedditAuthenticateService) { }
 
-    getSubredditAbout(subbreddit) {
-        const aboutAPI = `${this.path}${subbreddit}/about`;
-        return this.http.get(aboutAPI);
+  getSubredditAbout(subbreddit) {
+    const aboutAPI = `${this.path}${subbreddit}/about`;
+    return this.http.get(aboutAPI);
+  }
+
+  subscribeSubreddit(action: string, fullname: string) {
+    let payload = {
+      action: action,
+      action_source: 'o',
+      sr: fullname
     }
 
-    subscribeSubreddit(action: string, fullname: string) {
-        let payload = {
-            action: action,
-            action_source: 'o',
-            sr: fullname
-        }
-
-        let body = new HttpParams();
-        for (const field in payload) {
-            body = body.set(field, payload[field]);
-        }
-
-        return this.http.post(HeadersUtils.buildUrl('/api/subscribe'), body.toString(),
-            {
-                headers:
-                {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
+    let body = new HttpParams();
+    for (const field in payload) {
+      body = body.set(field, payload[field]);
     }
 
-    searchInSubreddit(term, subreddit, after?, sort?): Observable<Listings> {
-        let payload = {
-            q: term,
-            restrict_sr: true,
+    return this.http.post(HeadersUtils.buildUrl('/api/subscribe'), body.toString(),
+      {
+        headers:
+        {
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
+      });
+  }
 
-        if (after) {
-            payload['after'] = after;
-        }
-
-        if (sort) {
-            payload['sort'] = sort
-        }
-
-        let param = new HttpParams();
-        for (const field in payload) {
-            param = param.set(field, payload[field]);
-        }
-
-        return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/search`), {
-            params: param
-        }).pipe(map((data: any) => {
-            return {
-                kind: data.kind,
-                after: data.data.after,
-                children: data.data.children
-            }
-        }));
+  searchInSubreddit(term, subreddit, after?, sort?): Observable<Listings> {
+    let payload = {
+      q: term,
+      restrict_sr: true,
     }
 
-    getSubredditRules(subreddit) {
-        return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/about/rules`));
+    if (after) {
+      payload['after'] = after;
     }
 
-    getSubredditLinkFlairs(subreddit) {
-        return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/api/link_flair_v2`));
+    if (sort) {
+      payload['sort'] = sort
     }
+
+    let param = new HttpParams();
+    for (const field in payload) {
+      param = param.set(field, payload[field]);
+    }
+
+    return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/search`), {
+      params: param
+    }).pipe(map((data: any) => {
+      return {
+        kind: data.kind,
+        after: data.data.after,
+        children: data.data.children
+      }
+    }));
+  }
+
+  getSubredditRules(subreddit) {
+    return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/about/rules`));
+  }
+
+  getSubredditLinkFlairs(subreddit) {
+    return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/api/link_flair_v2`)).pipe(
+      map((data: any) => {
+        if (data.json?.errors?.length > 0) {
+          return throwError(() => data.json);
+        }
+        return data;
+      }),
+    );
+  }
 }

@@ -16,15 +16,14 @@ import { SearchRoutingModule } from './search-routing.module';
     SharedModule,
     PipeModule,
     PostsModule,
+    SearchRoutingModule,
     SubredditModule,
-    SearchRoutingModule
+    SearchBarComponent
   ],
   declarations: [
-    SearchBarComponent,
     SearchPageComponent,
   ],
   exports: [
-    SearchBarComponent,
     SearchPageComponent
   ]
 })

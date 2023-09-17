@@ -8,7 +8,6 @@ import { SubbredditItemComponent } from './components/subreddit-item/subbreddit-
 import { SubscribeSubredditBtnComponent } from './components/subscribe-subreddit-btn/subscribe-subreddit-btn.component';
 import { SubredditRoutingModule } from './subreddit-routing.module';
 
-
 @NgModule({
   imports: [
     CommonModule,

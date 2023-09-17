@@ -72,6 +72,15 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "namedChunks": true,
+              "extractLicenses": true,
+              "vendorChunk": true,
+              "buildOptimizer": false
             }
           },
           "defaultConfiguration": "production"
@@ -84,6 +93,9 @@
           "configurations": {
             "production": {
               "browserTarget": "areddit:build:production"
+            },
+            "development": {
+              "browserTarget": "areddit:build:development"
             }
           }
         },

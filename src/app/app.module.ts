@@ -32,12 +32,12 @@ import { PreferencesComponent } from './components/preferences/preferences.compo
 import { PreferencesService } from './services/preferences.service';
 import { FeaturesModule } from './components/features.module';
 import { FormsModule } from '@angular/forms';
+import { NavbarModule } from './components/navbar/navbar.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    NavbarComponent,
     AuthenticateComponent,
     NotFoundComponent,
     ToastsContainerComponent,
@@ -55,6 +55,7 @@ import { FormsModule } from '@angular/forms';
     SharedModule,
     ModalModule,
 
+    NavbarModule,
     FeaturesModule
   ],
   providers: [
