@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { PipeModule } from 'src/app/pipe/pipe.module';
 import { SharedModule } from 'src/app/shared/components/shared-components.module';
 import { PostsModule } from '../post/posts.module';
-import { SubredditModule } from '../subreddit/components/subreddit.module';
+import { SubredditModule } from '../subreddit/subreddit.module';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
+import { SearchRoutingModule } from './search-routing.module';
 
 @NgModule({
   imports: [
@@ -15,14 +16,14 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
     SharedModule,
     PipeModule,
     PostsModule,
-    SubredditModule
+    SearchRoutingModule,
+    SubredditModule,
+    SearchBarComponent
   ],
   declarations: [
-    SearchBarComponent,
     SearchPageComponent,
   ],
   exports: [
-    SearchBarComponent,
     SearchPageComponent
   ]
 })

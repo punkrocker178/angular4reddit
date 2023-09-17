@@ -3,10 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { AuthenticateComponent } from './components/authenticate/authenticate.component';
 import { PostDetailComponent } from './components/post/components/post-detail/post-detail.component';
-import { SubredditComponent } from './components/subreddit/components/subreddit-detail/subreddit.component';
-import { UserProfileComponent } from './components/user/components/user/user-profile.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { SearchPageComponent } from './components/search/components/search-page/search-page.component';
 import { PreferencesComponent } from './components/preferences/preferences.component';
 import { AboutComponent } from './components/user/components/about/about.component';
 
@@ -29,16 +26,21 @@ const routes: Routes = [
     path: "about", component: AboutComponent
   },
   {
-    path: "r/:subreddit", component: SubredditComponent
+    path: "r/:subreddit/comments/:id",
+    pathMatch: 'full',
+    component: PostDetailComponent
   },
   {
-    path: "r/:subreddit/comments/:id", component: PostDetailComponent
+    path: 'r',
+    loadChildren: () => import('./components/subreddit/subreddit.module').then(m => m.SubredditModule)
   },
   {
-    path: "u/:user", component: UserProfileComponent
+    path: 'u',
+    loadChildren: () => import('./components/user/user.module').then(m => m.UserModule)
   },
   {
-    path: "search/:term", component: SearchPageComponent
+    path: 'search',
+    loadChildren: () => import('./components/search/search.module').then(m => m.SearchModule)
   },
   {
     path: "404", component: NotFoundComponent
