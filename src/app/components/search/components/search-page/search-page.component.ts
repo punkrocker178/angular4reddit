@@ -20,7 +20,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     subredditAfter: string;
     allSubredditResults = false;
 
-    submission$ = new BehaviorSubject([]);
+    submission$ = new BehaviorSubject(null);
     submissionLoading = true;
     oldestSubmission;
 
@@ -50,7 +50,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         this.paramSubscription = this.activatedRoute.paramMap.subscribe(params => {
             this.searchTerm = params.get('term');
             this.searchSubreddits(this.searchTerm).subscribe();
-            this.searchSubmissions(this.getSearchSubmissionPayload(this.searchTerm, null, null, null, this.getResultsLimit())).subscribe();
+            /* Disabled because pushshift now requires Moderators access */
+            /* https://www.reddit.com/r/pushshift/comments/14ei799/pushshift_live_again_and_how_moderators_can/ */
+            // this.searchSubmissions(this.getSearchSubmissionPayload(this.searchTerm, null, null, null, this.getResultsLimit())).subscribe();
         });
 
     }
