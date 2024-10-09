@@ -88,21 +88,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "areddit:build"
+            "buildTarget": "areddit:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "areddit:build:production"
+              "buildTarget": "areddit:build:production"
             },
             "development": {
-              "browserTarget": "areddit:build:development"
+              "buildTarget": "areddit:build:development"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "areddit:build"
+            "buildTarget": "areddit:build"
           }
         },
         "test": {
