@@ -23,6 +23,7 @@
     "@angular/router": "^17.3.12",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@popperjs/core": "^2.11.0",
+    "@rx-angular/template": "^17.1.0",
     "@types/marked": "^5.0.1",
     "dashjs": "^4.0.1",
     "hls.js": "^1.0.10",

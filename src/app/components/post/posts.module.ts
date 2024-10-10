@@ -17,6 +17,9 @@ import { GalleryComponent } from '../gallery/gallery.component';
 import { ListingsComponent } from '../listings/listings.component';
 import { FlairComponent } from './components/flair/flair.component';
 import { FormsModule } from '@angular/forms';
+import {
+  RxFor
+} from '@rx-angular/template/for';
 
 @NgModule({
   imports: [
@@ -26,6 +29,7 @@ import { FormsModule } from '@angular/forms';
     RouterModule,
     DirectivesModule,
     SharedModule,
+    RxFor
   ],
   declarations: [
     ListingsComponent,
