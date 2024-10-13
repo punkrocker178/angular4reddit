@@ -9,8 +9,15 @@
                     <span class="align-self-center">Oops there is an error :( </span>
                     <pre>{{errorMsg}}</pre>
                 </div>
-                <button (click)="loadMore($event); isError = false;" class="btn btn-outline-secondary rounded-btn">Try
-                    again</button>
+                <button (click)="loadMore($event); isError = false;" class="btn btn-outline-secondary rounded-btn">
+                    Try again
+                </button>
+            </div>
+
+            <div>
+                <button (click)="loadPrevious()" class="btn btn-outline-secondary">
+                    Previous
+                </button>
             </div>
 
             <div *rxFor="let post of posts$ | async">
@@ -22,7 +29,7 @@
 
             <app-scroll-top-button [targetElementId]="'navbar-top'"></app-scroll-top-button>
 
-            <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="1500"
+            <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="1500"
                 (scrolled)="loadMore($event)"></div>
         </div>
 

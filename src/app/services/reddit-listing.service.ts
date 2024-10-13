@@ -48,7 +48,7 @@ export class RedditListingService {
     }
 
     get listingPreviousData() {
-        return this.previousListingSubject.getValue();;
+        return this.previousListingSubject.getValue();
     }
 
     set listingPreviousData(data) {
