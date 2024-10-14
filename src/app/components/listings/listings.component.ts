@@ -1,22 +1,20 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { BehaviorSubject, of, combineLatest, Subject } from 'rxjs';
+import { BehaviorSubject, of, combineLatest, Subject, timer } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
-import { tap, switchMap, filter, takeUntil, catchError, finalize } from 'rxjs/operators';
+import { tap, switchMap, filter, takeUntil, catchError, finalize, debounceTime } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { Post } from 'src/app/model/post';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { QueryRequest } from 'src/app/model/query-request';
+import { MAX_POST_LIMIT, QUERY_LIMIT } from 'src/app/constants/constants';
 
 @Component({
   selector: 'app-listings-component',
   templateUrl: './listings.html'
 })
 export class ListingsComponent implements OnInit, OnDestroy {
-  public readonly MAX_POST_LIMIT = 10;
-  public readonly QUERY_LIMIT = 5;
-
   @Input() type: string;
   @Input() username: string;
 
@@ -94,6 +92,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   private _subscribeScrollDownChanges(): void {
     this.scroll$.pipe(
+      debounceTime(500),
       takeUntil(this.destroy$),
       filter(event => event !== null && !this.isLoading),
       switchMap(_ => this.fetchData(this.after))
@@ -114,7 +113,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     let queryParams = {
       // limit: RedditListingService.QUERY_LIMIT
-      limit: this.QUERY_LIMIT 
+      limit: QUERY_LIMIT 
     } as QueryRequest;
 
     if (after) {
@@ -129,13 +128,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     return this.redditService.getListigs(this.defaultListingsTypeApi(), queryParams).pipe(
       catchError(err => {
+        this.isLoading = false;
         this.isError = true;
         this.errorMsg = `Code: ${err.status} -  Message: ${err.error.message}`;
-        console.log(err);
         return err;
       }),
-      tap(next => this.updateListingData(next)),
-      finalize(() => this.isLoading = false)
+      tap(next => this.updateListingData(next))
     );
   }
 
@@ -145,14 +143,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.after = next.after;
     let currentPosts = this.posts$.getValue();
 
-    if (currentPosts.length >= this.MAX_POST_LIMIT) {
-      this.beforeData.push(...currentPosts.slice(0, this.QUERY_LIMIT));
-      currentPosts = currentPosts.slice(this.QUERY_LIMIT);
+    if (currentPosts.length >= MAX_POST_LIMIT) {
+      this.beforeData.push(...currentPosts.slice(0, QUERY_LIMIT));
+      currentPosts = currentPosts.slice(QUERY_LIMIT);
     }
 
-    console.log('before data added', this.beforeData);
-
     this.posts$.next([...currentPosts, ...next.children]);
+    timer(100).subscribe(() => this.isLoading = false);
   }
 
   public changeSort(value) {
@@ -234,20 +231,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   public loadPrevious() {
-    console.log(this.pagingStack);
-    if (this.pagingStack.length <= this.MAX_POST_LIMIT / this.QUERY_LIMIT) {
+    if (this.pagingStack.length <= MAX_POST_LIMIT / QUERY_LIMIT) {
       return;
     }
 
     let currentPost = this.posts$.getValue();
-    const beforeToBePrepend = this.beforeData.splice(- this.QUERY_LIMIT, this.QUERY_LIMIT);
+    const beforeToBePrepend = this.beforeData.splice(- QUERY_LIMIT, QUERY_LIMIT);
 
-    const end = this.MAX_POST_LIMIT - this.QUERY_LIMIT;
+    const end = MAX_POST_LIMIT - QUERY_LIMIT;
     currentPost = currentPost.slice(0 , end);
     currentPost.unshift(...beforeToBePrepend);
     this.after = this.pagingStack.pop();
 
-    console.log(currentPost);
     this.posts$.next([...currentPost]);
   }
 

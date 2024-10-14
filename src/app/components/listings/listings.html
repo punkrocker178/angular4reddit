@@ -20,17 +20,23 @@
                 </button>
             </div>
 
-            <div *rxFor="let post of posts$ | async">
-                <post-item [post]="post"></post-item>
-            </div>
-            <div *ngIf="isLoading" class="d-flex justify-content-center loading-spinner mt-2 mb-4">
-                <i class="fa-3x fas fa-sync-alt fa-spin"></i>
+
+
+
+            <div infiniteScroll [infiniteScrollDistance]="2"
+                (scrolled)="loadMore($event)" [infiniteScrollDisabled]="isLoading">
+
+                <ng-container *rxFor="let post of posts$ | async">
+                    <post-item [post]="post"></post-item>
+                </ng-container>
             </div>
 
             <app-scroll-top-button [targetElementId]="'navbar-top'"></app-scroll-top-button>
 
-            <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="1500"
-                (scrolled)="loadMore($event)"></div>
+            <div class="d-flex justify-content-center loading-spinner mt-2 mb-4">
+                <i class="fa-3x fas fa-sync-alt fa-spin"></i>
+            </div>
+
         </div>
 
     </div>
