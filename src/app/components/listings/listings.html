@@ -14,18 +14,19 @@
                 </button>
             </div>
 
-            <div>
+            @if (beforeData.length > 0) {
+            <div class="d-flex justify-content-center">
                 <button (click)="loadPrevious()" class="btn btn-outline-secondary">
-                    Previous
+                    Load Previous
                 </button>
             </div>
+            }
 
 
 
 
-            <div infiniteScroll [infiniteScrollDistance]="2"
-                (scrolled)="loadMore($event)" [infiniteScrollDisabled]="isLoading">
-
+            <div infiniteScroll [infiniteScrollDistance]="2" (scrolled)="loadMore($event)"
+                [infiniteScrollDisabled]="isLoading">
                 <ng-container *rxFor="let post of posts$ | async">
                     <post-item [post]="post"></post-item>
                 </ng-container>
