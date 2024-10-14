@@ -7,13 +7,10 @@ import { Listings } from '../model/listings.interface';
 import { PostDetail } from '../model/post-detail';
 import { Router } from '@angular/router';
 import { Post } from '../model/post';
+import { MAX_POST_LIMIT, QUERY_LIMIT } from '../constants/constants';
 
 @Injectable()
 export class RedditListingService {
-
-    static MAX_POST_LIMIT = 100;
-    static QUERY_LIMIT = 25;
-
     previousListingSubject = new BehaviorSubject<Post[]>([]);
     listingSubject = new BehaviorSubject<Listings>(null);
     visitedSubredditSubject = new BehaviorSubject<string>(null);
@@ -48,7 +45,7 @@ export class RedditListingService {
     }
 
     get listingPreviousData() {
-        return this.previousListingSubject.getValue();;
+        return this.previousListingSubject.getValue();
     }
 
     set listingPreviousData(data) {
@@ -84,8 +81,8 @@ export class RedditListingService {
 
                 let children = listing.children;
 
-                if (listing.children.length >= RedditListingService.MAX_POST_LIMIT) {
-                    children = listing.children.slice(RedditListingService.QUERY_LIMIT);
+                if (listing.children.length >= MAX_POST_LIMIT) {
+                    children = listing.children.slice(QUERY_LIMIT);
                 }
 
                 listing.children = [...children, ...next.children];
