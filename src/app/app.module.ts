@@ -33,6 +33,8 @@ import { PreferencesService } from './services/preferences.service';
 import { FeaturesModule } from './components/features.module';
 import { FormsModule } from '@angular/forms';
 import { NavbarModule } from './components/navbar/navbar.module';
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomReuseStrategy } from './routing';
 
 @NgModule({
   declarations: [
@@ -72,7 +74,8 @@ import { NavbarModule } from './components/navbar/navbar.module';
     ToastService,
     ThemeService,
     PreferencesService,
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
   ],
   bootstrap: [AppComponent]
 })
