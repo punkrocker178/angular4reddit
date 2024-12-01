@@ -24,7 +24,7 @@
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@popperjs/core": "^2.11.0",
     "@rx-angular/template": "^17.1.0",
-    "@types/marked": "^5.0.1",
+    "@types/marked": "^6.0.0",
     "dashjs": "^4.0.1",
     "hls.js": "^1.0.10",
     "jquery": "^3.5.1",
