@@ -3,7 +3,6 @@ Check it out: [App](https://dbqo2nayu6ql6.cloudfront.net)
   
 This app is a simple reddit's client using Angular.  
 The app will call to AWS Lambda & AWS API Gateway to bypass CORS policy to get actual Reddit's API responses.  
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.13.
 
 ## Features
 
