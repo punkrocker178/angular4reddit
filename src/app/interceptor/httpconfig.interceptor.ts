@@ -5,14 +5,7 @@
  *  **/
 
 import { Injectable } from '@angular/core';
-import {
-    HttpInterceptor,
-    HttpRequest,
-    HttpResponse,
-    HttpHandler,
-    HttpEvent,
-    HttpErrorResponse
-} from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError, switchMap, filter, take } from 'rxjs/operators';
