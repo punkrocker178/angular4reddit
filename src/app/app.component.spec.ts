@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -36,20 +36,12 @@ import { SharedDirectivesModule } from './shared/directives/directives.module';
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [
-        AppComponent,
-        HomeComponent,
-        SubredditComponent,
-        UserProfileComponent,
-        ListingsComponent,
-        NavbarComponent,
-        AuthenticateComponent,
-        NotFoundComponent
-    ],
-    imports: [RouterTestingModule,
+      imports: [
+        RouterTestingModule,
         CommonModule,
         BrowserModule,
         AppRoutingModule,
+        HttpClientModule,
         HeaderFooterModule,
         PipeModule,
         PostsModule,
@@ -58,8 +50,19 @@ describe('AppComponent', () => {
         SharedDirectivesModule,
         SharedModule,
         NgbModule,
-        SearchModule],
-    providers: [
+        SearchModule
+      ],
+      declarations: [
+        AppComponent,
+        HomeComponent,
+        SubredditComponent,
+        UserProfileComponent,
+        ListingsComponent,
+        NavbarComponent,
+        AuthenticateComponent,
+        NotFoundComponent
+      ],
+      providers: [
         RedditAuthenticateService,
         HttpClient,
         RedditListingService,
@@ -71,10 +74,10 @@ describe('AppComponent', () => {
         RedditSubmitService,
         RedditSearchService,
         CheckDeviceFeatureService,
-        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
-        provideHttpClient(withInterceptorsFromDi())
-    ]
-}).compileComponents();
+        {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
+
+      ]
+    }).compileComponents();
   }));
 
   it('should create the app', () => {
