@@ -1,5 +1,4 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { EventEmitter } from 'events';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Theme } from 'src/app/model/theme.interface';
 import { ThemeService } from 'src/app/services/theme.service';
 
@@ -12,7 +11,7 @@ export class ThemeSelectorComponent implements OnInit {
     themes: Theme[];
     selectedThemeIndex: boolean[];
     @Input() selectedTheme: string;
-    @Output() themeEmitter: EventEmitter = new EventEmitter();
+    @Output() themeEmitter: EventEmitter<any> = new EventEmitter();
 
     constructor(private themeService: ThemeService) {}
 
