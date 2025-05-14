@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,47 +36,40 @@ import { NavbarModule } from './components/navbar/navbar.module';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './routing';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    AuthenticateComponent,
-    NotFoundComponent,
-    ToastsContainerComponent,
-    PreferencesComponent
-  ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    HeaderFooterModule,
-    PipeModule,
-    DirectivesModule,
-    SharedModule,
-    ModalModule,
-
-    NavbarModule,
-    FeaturesModule
-  ],
-  providers: [
-    RedditListingService,
-    RedditAuthenticateService,
-    LocalStorageService,
-    VotingService,
-    SubredditService,
-    UserService,
-    TrumbowygService,
-    RedditSubmitService,
-    RedditSearchService,
-    CheckDeviceFeatureService,
-    ToastService,
-    ThemeService,
-    PreferencesService,
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
-    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        AuthenticateComponent,
+        NotFoundComponent,
+        ToastsContainerComponent,
+        PreferencesComponent
+    ],
+    bootstrap: [AppComponent], imports: [CommonModule,
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        HeaderFooterModule,
+        PipeModule,
+        DirectivesModule,
+        SharedModule,
+        ModalModule,
+        NavbarModule,
+        FeaturesModule], providers: [
+        RedditListingService,
+        RedditAuthenticateService,
+        LocalStorageService,
+        VotingService,
+        SubredditService,
+        UserService,
+        TrumbowygService,
+        RedditSubmitService,
+        RedditSearchService,
+        CheckDeviceFeatureService,
+        ToastService,
+        ThemeService,
+        PreferencesService,
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+        { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }

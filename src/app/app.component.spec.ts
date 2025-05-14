@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -36,23 +36,7 @@ import { SharedDirectivesModule } from './shared/directives/directives.module';
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        CommonModule,
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        HeaderFooterModule,
-        PipeModule,
-        PostsModule,
-        InfiniteScrollModule,
-        DirectivesModule,
-        SharedDirectivesModule,
-        SharedModule,
-        NgbModule,
-        SearchModule
-      ],
-      declarations: [
+    declarations: [
         AppComponent,
         HomeComponent,
         SubredditComponent,
@@ -61,8 +45,21 @@ describe('AppComponent', () => {
         NavbarComponent,
         AuthenticateComponent,
         NotFoundComponent
-      ],
-      providers: [
+    ],
+    imports: [RouterTestingModule,
+        CommonModule,
+        BrowserModule,
+        AppRoutingModule,
+        HeaderFooterModule,
+        PipeModule,
+        PostsModule,
+        InfiniteScrollModule,
+        DirectivesModule,
+        SharedDirectivesModule,
+        SharedModule,
+        NgbModule,
+        SearchModule],
+    providers: [
         RedditAuthenticateService,
         HttpClient,
         RedditListingService,
@@ -74,10 +71,10 @@ describe('AppComponent', () => {
         RedditSubmitService,
         RedditSearchService,
         CheckDeviceFeatureService,
-        {provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true}
-
-      ]
-    }).compileComponents();
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+}).compileComponents();
   }));
 
   it('should create the app', () => {
