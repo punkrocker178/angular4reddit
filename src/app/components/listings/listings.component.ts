@@ -47,7 +47,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._subscribeQueryParamChanges();
     this._subscribeScrollDownChanges();
-    this._subscribePostChanges();
     this.loadMore(new Event('init'));
 
     this.isLoggedIn = this._authenticateService.getIsLoggedIn();
@@ -137,14 +136,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
       }),
       tap(next => this._updateListingData(next))
     );
-  }
-
-  private _subscribePostChanges(): void {
-    this.posts$.pipe(
-      takeUntil(this.destroy$),
-      debounceTime(1000),
-      tap(posts => this.isLoading = false)
-    ).subscribe();
   }
 
   // Update listing, will remove old post if reaches limit
