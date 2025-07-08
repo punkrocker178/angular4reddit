@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { BehaviorSubject, of, combineLatest, Subject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
-import { tap, switchMap, filter, takeUntil, catchError, debounceTime } from 'rxjs/operators';
+import { tap, switchMap, filter, takeUntil, catchError, debounceTime, finalize } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { Post } from 'src/app/model/post';
@@ -124,17 +124,19 @@ export class ListingsComponent implements OnInit, OnDestroy {
     if (this.flairFilter) {
       const searchTerm = `flair_name:"${this.flairFilter}"`;
       return this._subredditService.searchInSubreddit(searchTerm, this.subreddit, this.after).pipe(
-        tap(next => this._updateListingData(next)));
+        tap(next => this._updateListingData(next)),
+        finalize(() => this.isLoading = false)
+      );
     }
 
     return this._redditService.getListigs(this._defaultListingsTypeApi(), queryParams).pipe(
       catchError(err => {
-        this.isLoading = false;
         this.isError = true;
         this.errorMsg = `Code: ${err.status} -  Message: ${err.error.message}`;
         return err;
       }),
-      tap(next => this._updateListingData(next))
+      tap(next => this._updateListingData(next)),
+      finalize(() => this.isLoading = false)
     );
   }
 
@@ -239,7 +241,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const beforeToBePrepend = this.beforeData.splice(- QUERY_LIMIT, QUERY_LIMIT);
 
     const end = MAX_POST_LIMIT - QUERY_LIMIT;
-    currentPost = currentPost.slice(0 , end);
+    currentPost = currentPost.slice(0, end);
     currentPost.unshift(...beforeToBePrepend);
     this.after = this.pagingStack.pop();
 
