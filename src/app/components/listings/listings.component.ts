@@ -36,27 +36,26 @@ export class ListingsComponent implements OnInit, OnDestroy {
   public errorMsg = '';
 
   public isLoggedIn: boolean;
-  public isRouteBeingReused: boolean;
 
   constructor(
-    private authenticateService: RedditAuthenticateService,
-    private redditService: RedditListingService,
-    private subredditService: SubredditService,
-    private activatedRoute: ActivatedRoute,
+    private _authenticateService: RedditAuthenticateService,
+    private _redditService: RedditListingService,
+    private _subredditService: SubredditService,
+    private _activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
     this._subscribeQueryParamChanges();
     this._subscribeScrollDownChanges();
     this._subscribePostChanges();
-    this.loadMore(new Event('click'));
+    this.loadMore(new Event('init'));
 
-    this.isLoggedIn = this.authenticateService.getIsLoggedIn();
+    this.isLoggedIn = this._authenticateService.getIsLoggedIn();
   }
 
   private _subscribeQueryParamChanges(): void {
-    const queryParamMap = this.activatedRoute.queryParamMap;
-    const paramMap = this.activatedRoute.paramMap;
+    const queryParamMap = this._activatedRoute.queryParamMap;
+    const paramMap = this._activatedRoute.paramMap;
 
     combineLatest([paramMap, queryParamMap]).pipe(
       takeUntil(this.destroy$),
@@ -71,15 +70,15 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         if (pathParam.has('subreddit')) {
           this.subreddit = pathParam.get('subreddit');
-          this.redditService.visitedSubreddit = this.subreddit;
+          this._redditService.visitedSubreddit = this.subreddit;
         } else {
-          this.redditService.visitedSubreddit = null;
+          this._redditService.visitedSubreddit = null;
         }
 
         if (pathParam.has('user')) {
-          this.redditService.visitedUser = pathParam.get('user');
+          this._redditService.visitedUser = pathParam.get('user');
         } else {
-          this.redditService.visitedUser = null;
+          this._redditService.visitedUser = null;
         }
 
         this.scroll$.next(true);
@@ -125,11 +124,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     if (this.flairFilter) {
       const searchTerm = `flair_name:"${this.flairFilter}"`;
-      return this.subredditService.searchInSubreddit(searchTerm, this.subreddit, this.after).pipe(
+      return this._subredditService.searchInSubreddit(searchTerm, this.subreddit, this.after).pipe(
         tap(next => this._updateListingData(next)));
     }
 
-    return this.redditService.getListigs(this._defaultListingsTypeApi(), queryParams).pipe(
+    return this._redditService.getListigs(this._defaultListingsTypeApi(), queryParams).pipe(
       catchError(err => {
         this.isLoading = false;
         this.isError = true;
@@ -208,29 +207,29 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   private _flushDataOnSubredditChange(pathParam) {
     // Flush stored data when subreddit changes
-    const subredditChange = pathParam.has('subreddit') && pathParam.get('subreddit') !== this.redditService.visitedSubreddit;
+    const subredditChange = pathParam.has('subreddit') && pathParam.get('subreddit') !== this._redditService.visitedSubreddit;
 
     // Flush stored data when going back to home from a subreddit page
-    const goToHome = !pathParam.has('subreddit') && this.redditService.visitedSubreddit;
+    const goToHome = !pathParam.has('subreddit') && this._redditService.visitedSubreddit;
 
     if (subredditChange || goToHome) {
-      this.redditService.listingStoredData = null;
+      this._redditService.listingStoredData = null;
     }
   }
 
   private _flushDataOnUserChange(pathParam) {
-    const userChange = pathParam.has('user') && pathParam.get('user') !== this.redditService.visitedUser;
-    const goToHome = !pathParam.has('user') && this.redditService.visitedUser;
+    const userChange = pathParam.has('user') && pathParam.get('user') !== this._redditService.visitedUser;
+    const goToHome = !pathParam.has('user') && this._redditService.visitedUser;
 
     if (userChange || goToHome) {
-      this.redditService.listingStoredData = null;
+      this._redditService.listingStoredData = null;
     }
   }
 
   private _flushDataOnFlairChange(queryParam) {
     if (queryParam.has('flair')) {
       this.flairFilter = queryParam.get('flair');
-      this.redditService.listingStoredData = null;
+      this._redditService.listingStoredData = null;
     } else {
       this.flairFilter = null;
     }
