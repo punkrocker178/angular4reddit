@@ -33,7 +33,7 @@ The app will call to AWS Lambda & AWS API Gateway to bypass CORS policy to get a
 ## Install
 
 Run `npm i` or  
- ```docker run -rm -it -v $PWD/:/app -w /app node:latest npm i```
+ ```docker run --rm -it -v $PWD/:/app -w /app node:latest npm i```
 
 ## Development server
 
