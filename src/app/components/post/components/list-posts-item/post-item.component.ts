@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, Renderer2, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, Input, ElementRef, Renderer2, ViewChild, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { Router } from '@angular/router';
 import { Utils } from 'src/app/class/Utils';
@@ -26,19 +26,29 @@ declare var twttr: any;
   selector: 'post-item',
   templateUrl: './post-item.html'
 })
-export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Input() post: Post;
   @Input() options;
   @ViewChild('twitterEmbed') tweet: ElementRef;
   @ViewChild('videoPlayer') videoPlayer: ElementRef;
   @ViewChild('flairElement') flairEl: ElementRef
 
-  isUpVoted = false;
-  isDownVoted = false;
+  isUpVoted: boolean;
+  isDownVoted: boolean = false;
   isSaved: boolean;
   isSaving: boolean;
-  liked: boolean;
-  over18Consent: boolean;
+  isLiked: boolean;
+  isOver18Consent: boolean;
+  hasImages: boolean;
+  isGallery: boolean;
+  isVideo: boolean;
+  isComment: boolean;
+  isOver18: boolean;
+  isMediaEmbeded: boolean;
+  isTwitchEmbedded: boolean;
+  isTwitterEmbedded: boolean;
+  isEmbededLink: boolean;
+  isCrossPost: boolean;
   embedSrc: string;
 
   hlsPlayer: Hls;
@@ -77,43 +87,70 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
     private checkDeviceFeatureService: CheckDeviceFeatureService,
     private preferenceService: PreferencesService) { }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.post && changes.post.currentValue) {
+      if (!this.options) {
+        this.options = {
+          isDetail: false
+        };
+      }
 
-    if (!this.options) {
-      this.options = {
-        isDetail: false
-      };
+      this._bindData();
     }
+  }
 
-    this.over18Consent = this.userService.isNSFWAllowed() && !this.preferenceService.preferenceValue.safeBrowsing;
+  ngOnInit() {
+    this.isOver18Consent = this.userService.isNSFWAllowed() && !this.preferenceService.preferenceValue.safeBrowsing;
 
-    this.isSaved = this.post.data['saved'];
-
-    if (this.isGallery()) {
+    if (this.isGallery) {
       this.initGallery();
     }
 
-    if (this.isTwitchEmbedded()) {
-      const src = this.getVideoSource();
-      if (src) {
-        const srcArr = src.split('src=');
-        let twitchSrc;
-
-        if (srcArr.length > 0 && srcArr[0]) {
-          twitchSrc = srcArr[1];
-        } else {
-          twitchSrc = srcArr[0];
-        }
-
-        this.embedSrc = decodeURIComponent(twitchSrc) + '&parent=localhost&parent=angular4reddit.me';
-      } else {
-        this.noSelfText = true;
-      }
+    if (this.isTwitchEmbedded) {
+      this._initTwitchEmbed()
     }
 
     this.formatThumbnail();
+  }
 
-    if (this.hasImages()) {
+  ngAfterViewInit() {
+    if (this.isEmbededLink && this.isTwitterEmbedded) {
+      this.initTwitter();
+    }
+  }
+
+  private _bindData() {
+    this.isSaved = this.post.data['saved'];
+
+    this.hasImages = !!this.post.data['preview'] && this.post.data['preview']['enabled']
+      && Domains.imagesDomains.includes(this.post.data['domain']);
+
+    this.isVideo = (this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded && !this.isTwitchEmbedded;
+
+    this.isGallery = this.post.data['is_gallery'] &&
+      this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
+
+    this.isComment = this.post.kind === 't1';
+
+    this.isTwitterEmbedded = this.post.data['domain'] === Domains.twitterDomain;
+    this.isTwitchEmbedded = this.post.data['domain'] === Domains.twitchDomain;
+
+    this.isMediaEmbeded = this.post.data['media'] ? Domains.mediaEmbed.includes(this.post.data['media']['type']) : false;
+    this.isOver18 = this.post.data['over_18'];
+
+    // Needs enhancement. The logic does not cover all cases
+    this.isEmbededLink = !this.post.data['is_self']
+      && !this.post.data['selftext']
+      && !this.post.data['is_reddit_media_domain']
+      && !this.hasImages
+      && !this.isTwitterEmbedded
+      && !this.isTwitchEmbedded
+      && !this.isVideo
+      && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
+
+    this.isCrossPost = this.post.data['crosspost_parent_list'] && this.post.data['crosspost_parent_list'].length > 0;
+
+    if (this.hasImages) {
       this.imageSrc = this.getImageSource();
     }
 
@@ -127,17 +164,10 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
     this.flair['flair_text'] = this.post.data['link_flair_text'];
     this.flair['flair_richtext'] = this.post.data['link_flair_richtext'];
     this.flair['flair_background_color'] = this.post.data['link_flair_background_color'];
-
-  }
-
-  ngAfterViewInit() {
-    if (this.isEmbededLink() && this.isTwitterEmbedded()) {
-      this.initTwitter();
-    }
   }
 
   playVideo() {
-    if (!this.isEmbededLink() && !this.isMediaEmbed() && this.isVideo()) {
+    if (!this.isEmbededLink && !this.isMediaEmbeded && this.isVideo) {
       this.initVideo();
     }
   }
@@ -170,7 +200,6 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dashPlayer.setVolume(0.5);
     } catch (err) {
       throw err;
-
     }
   }
 
@@ -200,63 +229,32 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private _initTwitchEmbed() {
+    const src = this.getVideoSource();
+    if (src) {
+      const srcArr = src.split('src=');
+      let twitchSrc;
+
+      if (srcArr.length > 0 && srcArr[0]) {
+        twitchSrc = srcArr[1];
+      } else {
+        twitchSrc = srcArr[0];
+      }
+
+      this.embedSrc = `${decodeURIComponent(twitchSrc)}&parent=${window.location.hostname}`;
+    } else {
+      this.noSelfText = true;
+    }
+  }
+
   formatThumbnail() {
     if (this.post.data['thumbnail'] && !this.post.data['thumbnail'].includes('https://')) {
       this.post.data['thumbnail'] = '';
     }
   }
 
-  hasImages() {
-    return !!this.post.data['preview'] && this.post.data['preview']['enabled']
-      && Domains.imagesDomains.includes(this.post.data['domain']);
-  }
-
-  isVideo() {
-    return (this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded() && !this.isTwitchEmbedded();
-  }
-
-  isGallery() {
-    return this.post.data['is_gallery'] &&
-      this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
-  }
-
-  isComment() {
-    return this.post.kind === 't1';
-  }
-
-  // Needs enhancement. The logic does not cover all cases
-  isEmbededLink() {
-    return !this.post.data['is_self']
-      && !this.post.data['selftext']
-      && !this.post.data['is_reddit_media_domain']
-      && !this.hasImages()
-      && !this.isTwitterEmbedded()
-      && !this.isTwitchEmbedded()
-      && !this.isVideo()
-      && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
-  }
-
-  isTwitterEmbedded() {
-    return this.post.data['domain'] === Domains.twitterDomain;
-  }
-
-  isMediaEmbed() {
-    if (!this.post.data['media']) {
-      return false;
-    }
-    return Domains.mediaEmbed.includes(this.post.data['media']['type']);
-  }
-
-  isTwitchEmbedded() {
-    return this.post.data['domain'] === Domains.twitchDomain;
-  }
-
-  isOver18() {
-    return this.post.data['over_18'];
-  }
-
-  isWideScreen (images): boolean {
-    const image = images[0].hasOwnProperty('metadata') ? images[0]['metadata']: images[0];
+  isWideScreen(images): boolean {
+    const image = images[0].hasOwnProperty('metadata') ? images[0]['metadata'] : images[0];
     const source = image.hasOwnProperty('source') ? 'source' : 's';
     const width = image[source]['width'] || image[source]['x'];
     const height = image[source]['height'] || image[source]['y'];
@@ -292,7 +290,7 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getThumbnailSource() {
 
-    if(this.post.data['preview'] && this.post.data['preview']['images'].length > 0) {
+    if (this.post.data['preview'] && this.post.data['preview']['images'].length > 0) {
       const images = this.post.data['preview']['images'];
       const resolutionIndex = Math.floor(images[0]['resolutions'].length / 2);
       return this.getSmallerImage(images[0]['resolutions'], resolutionIndex);
@@ -337,7 +335,7 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       try {
         image = this.getSmallerImage(resolutions, resolutions.length - 1);
-      } catch(err) {
+      } catch (err) {
         image = this.getSmallerImage(resolutions, Math.ceil(resolutions.length / 2));
       }
     }
@@ -356,7 +354,7 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Needs refactor
   viewDetail(isComment?: boolean) {
-    if (this.isOver18() && !this.over18Consent) {
+    if (this.isOver18 && !this.isOver18Consent) {
       const modalRef = this.modalService.open(NsfwPopupComponent);
       modalRef.result.then(result => {
         this.navigateToDetail(isComment);
@@ -394,10 +392,6 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.router.navigateByUrl(path);
     }
-  }
-
-  isCrossPost() {
-    return this.post.data['crosspost_parent'] && this.post.data['crosspost_parent_list'];
   }
 
   initTwitter() {

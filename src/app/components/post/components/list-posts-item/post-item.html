@@ -1,5 +1,6 @@
+@if (post?.data) {
 <div class="card mt-3" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
-  <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': (!isGallery() && !options.isDetail)}">
+  <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': (!isGallery && !options.isDetail)}">
 
     <div class="card-side-padding pointer">
       <div *ngIf="post?.data['stickied']" class="mt-2">
@@ -36,18 +37,18 @@
           <app-flair (click)="filterByFlair()" [flairInput]="flair"></app-flair>
         </ng-container>
 
-        <div *ngIf="isOver18()">
+        <div *ngIf="isOver18">
           <span class="ms-2 me-2 nsfw-text">NSFW</span>
         </div>
       </div>
 
-      <ng-container *ngIf="isCrossPost()">
+      <ng-container *ngIf="isCrossPost">
         <h5>Crosspost: {{post.data['crosspost_parent']}}</h5>
       </ng-container>
     </div>
 
     <ng-container *ngIf="imageSrc">
-      <div [ngClass]="{'blur-img': isOver18() && !over18Consent}" class="img-container pointer" (click)="viewDetail()">
+      <div [ngClass]="{'blur-img': isOver18 && !isOver18Consent}" class="img-container pointer" (click)="viewDetail()">
         <img class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe" [alt]="post.data['title']">
       </div>
     </ng-container>
@@ -61,10 +62,10 @@
       </app-gallery>
     </ng-container>
 
-    <ng-container *ngIf="isVideo()">
+    <ng-container *ngIf="isVideo">
 
       <!-- Video thumbnail container -->
-      <ng-container *ngIf="!isInitVideoErr && (!isMediaEmbed() && !isEmbededLink())">
+      <ng-container *ngIf="!isInitVideoErr && (!isMediaEmbeded && !isEmbededLink)">
         <div (click)="playVideo()" *ngIf="!isInitVideo"
         [ngClass]="{'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}"
         class="letter-box-color d-flex video-thumbnail-container">
@@ -79,17 +80,17 @@
       </div>
 
       <!-- Video player -->
-      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18() && !over18Consent}"
+      <div [hidden]="!isInitVideo" [ngClass]="{'blur-img': isOver18 && !isOver18Consent}"
         [ngClass]="{'ratio-16x9': isWidescreenVideo,'ratio-4x3': !isWidescreenVideo, 'scale-media': isWidescreenVideo, 'scale-media-4x3': !isWidescreenVideo}"
         class="ratio">
-        <video *ngIf="!isEmbededLink() && !isMediaEmbed()" #videoPlayer preload="metadata" controls autoplay muted
+        <video *ngIf="!isEmbededLink && !isMediaEmbeded" #videoPlayer preload="metadata" controls autoplay muted
           class="letter-box-color">
         </video>
       </div>
 
       <!-- Iframe -->
-      <div *ngIf="isEmbededLink() || isMediaEmbed()"
-        [ngClass]="{'blur-img': isOver18() && !over18Consent, 'ratio-16x9': isWidescreenVideo, 'ratio-4x3': !isWidescreenVideo}"
+      <div *ngIf="isEmbededLink || isMediaEmbeded"
+        [ngClass]="{'blur-img': isOver18 && !isOver18Consent, 'ratio-16x9': isWidescreenVideo, 'ratio-4x3': !isWidescreenVideo}"
         class="scale-media ratio">
         <iframe [src]="videoSrc | safe: 'resourceUrl'"></iframe>
       </div>
@@ -97,25 +98,25 @@
     </ng-container>
 
     <!-- Link & thumbnail -->
-    <div class="card-side-padding pointer" *ngIf="isEmbededLink() || noSelfText">
+    <div class="card-side-padding pointer" *ngIf="isEmbededLink || noSelfText">
       <a class="d-flex flex-row flex-wrap" [href]="post.data['url']" target="_blank">
         <span class="w-100 me-auto">{{ post.data['url'] }}</span>
         <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
       </a>
     </div>
 
-    <ng-container *ngIf="isTwitchEmbedded() && !noSelfText">
+    <ng-container *ngIf="isTwitchEmbedded && !noSelfText">
       <div class="scale-media ratio ratio-16x9">
         <iframe class="embedly-embed" allowfullscreen="true" [src]="embedSrc | safe: 'resourceUrl'"></iframe>
       </div>
     </ng-container>
 
 
-    <div class="d-flex justify-content-center" #twitterEmbed *ngIf="isEmbededLink() && isTwitterEmbedded()">
+    <div class="d-flex justify-content-center" #twitterEmbed *ngIf="isEmbededLink && isTwitterEmbedded">
     </div>
 
     <!-- Post text content -->
-    <ng-container *ngIf="!isComment(); else commentBlock">
+    <ng-container *ngIf="!isComment; else commentBlock">
       <div (click)="viewDetail()" class="parsed-html card-side-padding pointer" appHTML
         [selfText]="post?.data['selftext_html']">
       </div>
@@ -173,7 +174,7 @@
 
   </div>
 </div>
-
+}
 <ng-template #toastClipboardCopied>
   Link copied to clipboard (ᵔᴥᵔ)
 </ng-template>
