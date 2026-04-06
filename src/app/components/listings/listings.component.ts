@@ -60,7 +60,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       switchMap(([pathParam, queryParam]) => {
         this.after = null;
-        console.log(paramMap, queryParam);
         this._flushDataOnSubredditChange(pathParam);
 
         this._flushDataOnUserChange(pathParam);
