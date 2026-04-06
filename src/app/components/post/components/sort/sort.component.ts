@@ -11,7 +11,7 @@ export class SortComponent {
 
   sortTypes = [ApiList.LISTINGS_BEST_LABEL, ApiList.LISTINGS_HOT_LABEL, ApiList.LISTINGS_RISING_LABEL, ApiList.LISTINGS_NEW_LABEL];
   selectedValue = ApiList.LISTINGS_HOT_LABEL;
-  currentFeed = 'my feed';
+  currentFeed = ApiList.LISTINGS_MY_FEED;
 
   clickState: boolean;
 
@@ -38,7 +38,7 @@ export class SortComponent {
         case ApiList.LISTINGS_ALL:
           this.changeFeedEmitter.emit(ApiList.LISTINGS_ALL);
           break;
-        case "my feed":
+        case ApiList.LISTINGS_MY_FEED:
           this.changeFeedEmitter.emit(ApiList.LISTINGS_HOT_LABEL);
           break;
       }
