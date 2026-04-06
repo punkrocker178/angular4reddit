@@ -88,7 +88,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "areddit:build"
+            "buildTarget": "areddit:build:development"
           },
           "configurations": {
             "production": {
@@ -97,7 +97,8 @@
             "development": {
               "buildTarget": "areddit:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

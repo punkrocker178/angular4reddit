@@ -8,6 +8,8 @@ export class ApiList {
 
     /* Listtings APIs */
     public static readonly LISTINGS_ALL: string = '/r/all';
+    // Workaround to make r/All to work
+    public static readonly LISTINGS_ALL_JSON: string = 'all.json';
     public static readonly LISTINGS_HOT: string = '/hot';
     public static readonly LISTINGS_BEST: string = '/best';
     public static readonly LISTINGS_NEW: string = '/new';

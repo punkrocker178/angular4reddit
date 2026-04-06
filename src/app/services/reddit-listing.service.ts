@@ -43,7 +43,7 @@ export class RedditListingService {
             return this.visitedUserSubject.getValue();
         }
 
-    set visitedSubreddit(subreddit: string) {
+    set visitedSubreddit(subreddit: string | null) {
             this.visitedSubredditSubject.next(subreddit);
         }
 
