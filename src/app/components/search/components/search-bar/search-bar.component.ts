@@ -31,7 +31,7 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     const keyEvent = fromEvent(this.inputElement.nativeElement, 'keydown');
-    this.keyEventSubscription = keyEvent.pipe(tap((event: any) => {
+    this.keyEventSubscription = keyEvent.pipe(tap((event: KeyboardEvent) => {
       if (event.keyCode === 13) {
         this.navigateToSearchComponent();
       }

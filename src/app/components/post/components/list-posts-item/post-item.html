@@ -19,7 +19,7 @@
       </div>
 
       <!-- Awards -->
-      <ng-container *ngIf="post.data['all_awardings'] && post.data['all_awardings'].length > 0">
+      <ng-container *ngIf="post.data.all_awardings && post.data.all_awardings.length > 0">
         <app-award [isDetail]="options.isDetail" [awards]="post.data['all_awardings']"></app-award>
       </ng-container>
 

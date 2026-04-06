@@ -66,7 +66,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.authenService.logout().pipe(take(1),
         switchMap(_ => this.authenService.revokeToken()),
         tap(_ => {
-            this.userService.setUser({
+            this.userService.intializeUser({
                 name: 'redditor',
                 icon_img: '/assets/images/snoo-profile.png',
                 is_login: false
@@ -125,7 +125,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
     }
 
-    themeToggle(value) {
+    themeToggle(value: boolean) {
         const theme = value ? 'light' : 'dark';
         this.themeToggleState = value;
         this.themeService.changeTheme(theme);

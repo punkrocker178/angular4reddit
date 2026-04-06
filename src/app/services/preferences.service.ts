@@ -5,7 +5,7 @@ import { LocalStorageService } from './localStorage.service';
 
 @Injectable()
 export class PreferencesService {
-    _preferences: BehaviorSubject<Preferences> = new BehaviorSubject(null);
+    _preferences: BehaviorSubject<Preferences | null> = new BehaviorSubject<Preferences | null>(null);
 
     get preference() {
         return this._preferences.asObservable();
@@ -30,12 +30,13 @@ export class PreferencesService {
 
             this.localStorage.set('prefs',prefs);
         } else {
-            this._preferences.next(this.localStorage.get('prefs'));
+            this._preferences.next(this.localStorage.get('prefs')!);
         }
     }
 
-    setPreference(setting: string, value) {
+    setPreference<K extends keyof Preferences>(setting: K, value: Preferences[K]) {
         let prefs = this._preferences.value;
+        if (!prefs) return;
         prefs[setting] = value;
         this._preferences.next(prefs);
         this.localStorage.set('prefs', prefs);

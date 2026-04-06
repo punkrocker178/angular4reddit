@@ -12,10 +12,10 @@ export class ReplacePipe implements PipeTransform {
    * @param regex: string
    * @param replace: string
    */
-  transform(value: string, regex?: string| RegExp, replace?: any): string {
+  transform(value: string, regex?: string | RegExp, replace?: string | ((match: string) => string)): string {
       let result = '';
 
-      const replaceObj = {
+      const replaceObj: Record<string, string> = {
         '&amp;': '&',
         '&gt;': '>',
         '&lt;': '<',
@@ -32,7 +32,11 @@ export class ReplacePipe implements PipeTransform {
       }
 
       if (value) {
-        result = value.replace(regex, replace);
+        if (typeof replace === 'function') {
+          result = value.replace(regex, replace);
+        } else {
+          result = value.replace(regex, replace);
+        }
       }
 
       return result;

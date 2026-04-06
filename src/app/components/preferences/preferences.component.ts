@@ -17,9 +17,9 @@ export class PreferencesComponent implements OnInit, OnDestroy {
         private authenService: RedditAuthenticateService,
         private userService: UserService) { }
     destroy$: Subject<boolean> = new Subject();
-    preferences: Preferences;
-    showNSFW: boolean;
-    updating: boolean;
+    preferences: Preferences | null = null;
+    showNSFW = false;
+    updating = false;
 
     ngOnInit() {
         this.preferencesService.preference.pipe(
@@ -31,7 +31,7 @@ export class PreferencesComponent implements OnInit, OnDestroy {
 
         if (this.authenService.getIsLoggedIn()) {
             this.authenService.getUserInfo().pipe(takeUntil(this.destroy$), tap(
-                (next: UserInterface) => this.showNSFW = next.over_18
+                (next: UserInterface) => this.showNSFW = next.over_18 ? next.over_18 : false
             )).subscribe();
         } else {
             this.userService.user$.pipe(takeUntil(this.destroy$), tap((next: UserInterface) => {
@@ -41,8 +41,7 @@ export class PreferencesComponent implements OnInit, OnDestroy {
 
     }
 
-    updateTogglePreference(setting: string, value: boolean) {
-
+    updateTogglePreference(setting: keyof Preferences, value: boolean) {
         if (this.updating) {
             return;
         }
@@ -50,7 +49,7 @@ export class PreferencesComponent implements OnInit, OnDestroy {
         this.updating = true;
         this.preferencesService.setPreference(setting, value);
 
-        if (setting === 'nsfw') {
+        if (setting === 'showNSFW') {
             this.userService.updateNSFW(value).subscribe(_ => this.updating = false);
         } else {
             this.updating = false;

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { LocalStorageService } from './localStorage.service';
 import { UserInterface } from '../model/user.interface';
 import { HeadersUtils } from '../class/HeadersUtils';
@@ -19,7 +19,7 @@ export class UserService {
         name: 'redditor',
         icon_img: '/assets/images/snoo-profile.png',
         is_login: false
-    });
+    } as UserInterface);
 
     public user$ = this.userSubject.asObservable();
 
@@ -27,18 +27,18 @@ export class UserService {
         private authenticateService: RedditAuthenticateService,
         private localStorage: LocalStorageService) {
 
-        const userObject = localStorage.get('userObject');
+        const userObject = localStorage.get('userObject') as UserInterface;
 
         if (userObject) {
             this.userSubject.next(userObject);
         }
-    
-        if (this.userSubject.getValue().over_18) {
-            this.allowNSFW.next(this.userSubject.getValue().over_18);
+
+        if (userObject && userObject.over_18) {
+            this.allowNSFW.next(userObject.over_18);
         }
     }
 
-    setUser(user) {
+    intializeUser(user: UserInterface) {
         this.userSubject.next(user);
     }
 
@@ -46,18 +46,18 @@ export class UserService {
         return this.userSubject.getValue();
     }
 
-    getUserAbout(user) {
-        const aboutAPI = `/u/${user}/about`;
+    getUserAbout(username: string) {
+        const aboutAPI = `/u/${username}/about`;
         return this.http.get(HeadersUtils.buildUrl(aboutAPI));
     }
 
-    getUserOverview(user) {
-        const overviewAPI = `/u/${user}/overview`;
+    getUserOverview(username: string) {
+        const overviewAPI = `/u/${username}/overview`;
         return this.http.get(HeadersUtils.buildUrl(overviewAPI));
     }
 
-    getUserComments(user) {
-        const commentsAPI = `/u/${user}/comments`;
+    getUserComments(username: string) {
+        const commentsAPI = `/u/${username}/comments`;
         return this.http.get(HeadersUtils.buildUrl(commentsAPI));
     }
 
@@ -65,20 +65,22 @@ export class UserService {
         return this.http.get(HeadersUtils.buildUrl(this.preferencesAPI));
     }
 
-    updateUserPreference(body) {
-        return this.http.patch(HeadersUtils.buildUrl(this.preferencesAPI), body);
+    updateUserPreference(body: any): Observable<UserInterface> {
+        return this.http.patch<UserInterface>(HeadersUtils.buildUrl(this.preferencesAPI), body);
     }
 
-    updateNSFW(flag: boolean): Observable<any> {
+    updateNSFW(flag: boolean): Observable<never> {
         if (this.authenticateService.getIsLoggedIn()) {
             const userPreferencePayload = this.getUpdateNSFWPayload(flag);
-            return this.updateUserPreference(userPreferencePayload).pipe(tap((next: UserInterface) => {
-                console.log(next.over_18);
-                this.storeNSFW(next.over_18);
-            }));
+            return this.updateUserPreference(userPreferencePayload).pipe(
+              tap((next: UserInterface) => {
+                this.storeNSFW(next.over_18 || false);
+              }),
+              mergeMap(() => EMPTY)
+          );
         } else {
             this.storeNSFW(flag);
-            return of(flag);
+            return EMPTY;
         }
 
     }

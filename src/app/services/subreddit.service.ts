@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { RedditAuthenticateService } from './reddit-authenticate.service';
 import { environment } from 'src/environments/environment';
 import { HeadersUtils } from '../class/HeadersUtils';
 import { Observable, of, throwError } from 'rxjs';
 import { Listings } from '../model/listings.interface';
 import { catchError, map } from 'rxjs/operators';
+import { SubredditAbout, SubredditRulesResponse, LinkFlair } from '../model/subreddit.interface';
+import { Post } from '../model/post';
+
+interface RedditListingApiResponse {
+  kind: string;
+  data: {
+    after: string;
+    children: Post[];
+  };
+}
 
 @Injectable()
 export class SubredditService {
@@ -14,9 +24,9 @@ export class SubredditService {
   constructor(private http: HttpClient,
     private authenticateService: RedditAuthenticateService) { }
 
-  getSubredditAbout(subbreddit) {
+  getSubredditAbout(subbreddit: string): Observable<SubredditAbout> {
     const aboutAPI = `${this.path}${subbreddit}/about`;
-    return this.http.get(aboutAPI);
+    return this.http.get<SubredditAbout>(aboutAPI);
   }
 
   subscribeSubreddit(action: string, fullname: string) {
@@ -40,8 +50,8 @@ export class SubredditService {
       });
   }
 
-  searchInSubreddit(term, subreddit, after?, sort?): Observable<Listings> {
-    let payload = {
+  searchInSubreddit(term: string, subreddit: string, after?: string, sort?: string): Observable<Listings> {
+    let payload: Record<string, string | boolean> = {
       q: term,
       restrict_sr: true,
     }
@@ -51,17 +61,17 @@ export class SubredditService {
     }
 
     if (sort) {
-      payload['sort'] = sort
+      payload['sort'] = sort;
     }
 
     let param = new HttpParams();
     for (const field in payload) {
-      param = param.set(field, payload[field]);
+      param = param.set(field, String(payload[field]));
     }
 
-    return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/search`), {
+    return this.http.get<RedditListingApiResponse>(HeadersUtils.buildUrl(`/r/${subreddit}/search`), {
       params: param
-    }).pipe(map((data: any) => {
+    }).pipe(map((data: RedditListingApiResponse) => {
       return {
         kind: data.kind,
         after: data.data.after,
@@ -70,15 +80,15 @@ export class SubredditService {
     }));
   }
 
-  getSubredditRules(subreddit) {
-    return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/about/rules`));
+  getSubredditRules(subreddit: string): Observable<SubredditRulesResponse> {
+    return this.http.get<SubredditRulesResponse>(HeadersUtils.buildUrl(`/r/${subreddit}/about/rules`));
   }
 
-  getSubredditLinkFlairs(subreddit) {
-    return this.http.get(HeadersUtils.buildUrl(`/r/${subreddit}/api/link_flair_v2`)).pipe(
-      map((data: any) => {
-        if (data.json?.errors?.length > 0) {
-          return throwError(() => data.json);
+  getSubredditLinkFlairs(subreddit: string): Observable<LinkFlair[]> {
+    return this.http.get<LinkFlair[]>(HeadersUtils.buildUrl(`/r/${subreddit}/api/link_flair_v2`)).pipe(
+      map((data: LinkFlair[]) => {
+        if ((data as unknown as { json?: { errors?: unknown[] } })?.json?.errors?.length > 0) {
+          return throwError(() => (data as unknown as { json: unknown }).json) as unknown as LinkFlair[];
         }
         return data;
       }),

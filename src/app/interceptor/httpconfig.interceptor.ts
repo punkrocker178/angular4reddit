@@ -1,16 +1,17 @@
-/** 
- * 
- *  Code is heavily referenced from https://dev-academy.com/angular-jwt 
- * 
+/**
+ *
+ *  Code is heavily referenced from https://dev-academy.com/angular-jwt
+ *
  *  **/
 
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { map, catchError, switchMap, filter, take } from 'rxjs/operators';
+import { catchError, switchMap, filter, take } from 'rxjs/operators';
 import { LocalStorageService } from '../services/localStorage.service';
 import { RedditAuthenticateService } from '../services/reddit-authenticate.service';
+import { TokenResponse } from '../model/token-response.interface';
 
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
@@ -19,20 +20,20 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     acessTokenAPIs = ['api/v1/access_token', 'api/v1/revoke_token'];
 
     private isRefreshing = false;
-    private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
     constructor(
         private localStorage: LocalStorageService,
         private authenService: RedditAuthenticateService
     ) { }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
         if (!req.headers.get('Content-Type')) {
             req = req.clone({ headers: req.headers.set('Content-Type', 'application/json') });
         }
 
-        if (!this.isValidRequestToIntercept(req.url, req.headers.get('skip'))) {
+        if (!this.isValidRequestToIntercept(req.url, req.headers.get('skip') ? Boolean(req.headers.get('skip')) : false)) {
             return next.handle(req);
         }
 
@@ -40,14 +41,14 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             return this.handle401Error(req, next);
         }
 
-        const token = this.localStorage.get('userToken') || this.refreshTokenSubject.getValue();
+        const token = this.localStorage.get<string>('userToken') || this.refreshTokenSubject.getValue();
 
         if (token) {
             req = this.setToken(req, token);
         }
 
         return next.handle(req).pipe(
-            catchError(error => {
+            catchError((error: HttpErrorResponse) => {
 
                 if (error.status === 404) {
                     return this.handle404Error(error);
@@ -64,7 +65,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         );
     }
 
-    isValidRequestToIntercept(url: string, skip) {
+    isValidRequestToIntercept(url: string, skip: boolean | null): boolean {
         this.acessTokenAPIs.forEach(api => {
             if(url.toLowerCase().includes(api)) {
                 skip = true;
@@ -77,17 +78,17 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         return true;
     }
 
-    isExpiredToken() {
-        return Math.floor((Date.now() / 1000) - (this.localStorage.get('initTime') / 1000)) > 3599;
+    isExpiredToken(): boolean {
+        return Math.floor((Date.now() / 1000) - (this.localStorage.get<number>('initTime') / 1000)) > 3599;
     }
 
-    setToken(request: HttpRequest<any>, token) {
+    setToken(request: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
         return request.clone({
             headers: request.headers.set('Authorization', 'Bearer ' + token)
         });
     }
 
-    handle404Error(error) {
+    handle404Error(error: HttpErrorResponse): Observable<never> {
         let err = error.error;
         if (err == null) {
             err = {
@@ -99,12 +100,12 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         return throwError(err);
     }
 
-    handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
+    handle401Error(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         if (!this.isRefreshing) {
             this.isRefreshing = true;
             this.refreshTokenSubject.next(null);
 
-            let authOb = switchMap((res: any) => {
+            let authOb = switchMap((res: TokenResponse) => {
                 this.isRefreshing = false;
                 this.refreshTokenSubject.next(res.access_token);
                 req = req.clone({
