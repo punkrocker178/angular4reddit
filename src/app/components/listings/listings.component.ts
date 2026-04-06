@@ -169,7 +169,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.sort = ApiList.LISTINGS_NEW;
         break;
       case ApiList.LISTINGS_ALL:
-        this.sort = ApiList.LISTINGS_ALL;
+        this.type = 'subreddit';
+        this.subreddit = 'all.json';
+        this.sort = '';
         break;
     }
     this.posts$.next([]);

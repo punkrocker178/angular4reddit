@@ -19,6 +19,7 @@ export class ApiList {
     public static readonly LISTINGS_TRENDING_SUB: string = '/api/trending_subreddits';
     public static readonly LISTINGS_BY_ID: string = '/by_id';
     public static readonly LISTINGS_COMMENTS: string = '/comments';
+    public static readonly LISTINGS_MY_FEED: string = 'my feed';
 
     /* Get user info */
     public static readonly USER_INFO: string = '/api/v1/me';
