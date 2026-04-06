@@ -4,4 +4,5 @@ export interface TokenResponse {
   expires_in: number;
   scope: string;
   refresh_token?: string;
+  error?: string;
 }

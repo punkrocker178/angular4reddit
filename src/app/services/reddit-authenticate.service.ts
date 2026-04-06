@@ -127,7 +127,7 @@ export class RedditAuthenticateService {
 
     getUserInfo() {
         const url = HeadersUtils.buildUrl(ApiList.USER_INFO);
-        return this.http.get(url);
+        return this.http.get<UserInterface>(url);
     }
 
     getRedirectUri() {

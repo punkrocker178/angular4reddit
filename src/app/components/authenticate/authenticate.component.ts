@@ -2,11 +2,10 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { LocalStorageService } from 'src/app/services/localStorage.service';
-import { of, Subject, throwError } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { catchError, mergeMap, takeUntil } from 'rxjs/operators';
 import { UserService } from "src/app/services/user.service";
 import { PreferencesService } from "src/app/services/preferences.service";
-import { UserInterface } from "src/app/model/user.interface";
 import { TokenResponse } from "src/app/model/token-response.interface";
 
 @Component({
@@ -17,8 +16,8 @@ import { TokenResponse } from "src/app/model/token-response.interface";
 export class AuthenticateComponent implements OnInit, OnDestroy {
     private ngUnsubscribe = new Subject<void>();
 
-    isError: boolean;
-    errorMsg: string;
+    isError = false;
+    errorMsg = '';
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -31,43 +30,39 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
         const getUserInfo = (res: TokenResponse) => {
-            if (res['token_type'] === 'bearer') {
-                return this.authenService.getUserInfo()
+            if (res.token_type === 'bearer') {
+                return this.authenService.getUserInfo();
             }
 
-            if (res['error']) {
-                throw throwError(res['error']);
-            }
+            return throwError(() => res.error ?? 'Unknown token error');
         };
 
         const getAccessToken = (params: Params) => {
             if (params['code'] && params['state'] === this.localStorage.get<string>('state')) {
                 return this.authenService.getBearerToken(params['code']).pipe(
                     mergeMap(getUserInfo)
-                )
+                );
             }
 
-            if (params['error']) {
-                throw throwError(params['error']);
-            }
+            return throwError(() => params['error'] ?? 'Unknown auth error');
         };
 
         this.activatedRoute.queryParams.pipe(
             takeUntil(this.ngUnsubscribe),
             mergeMap(getAccessToken),
-            catchError(error => {
-                return error;
-            })
-        ).subscribe(
-            (data: UserInterface) => {
+            catchError((error) => throwError(() => error))
+        ).subscribe({
+            next: (data) => {
                 this.authenService.storeUserToStorage({ ...data, is_login: true });
                 this.userService.intializeUser({ ...data, is_login: true });
-                this.preferenceService.setPreference('safeBrowsing', !data.over_18)
+                this.preferenceService.setPreference('safeBrowsing', !data.over_18);
                 this.router.navigateByUrl('/home');
-            }, err => {
+            },
+            error: err => {
+              console.log(err);
                 this.errorMsg = err;
             }
-        );
+        });
     }
 
     ngOnDestroy() {

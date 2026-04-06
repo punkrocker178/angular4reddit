@@ -38,7 +38,7 @@
 
       @if ((posts$ | async).length > 0 && !isLoading && !isError) {
       <div class="d-flex justify-content-center">
-        <button (click)="loadMore($event)" class="btn btn-outline-secondary">
+        <button (click)="loadMore($event)" class="btn btn-outline-secondary mb-4">
           Load More
         </button>
       </div>
