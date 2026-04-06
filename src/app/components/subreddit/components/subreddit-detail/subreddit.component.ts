@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { Utils } from '../../../../class/Utils';
 import { Observable, of } from 'rxjs';
+import { SubredditAbout, SubredditData, SubredditRule, SubredditRulesResponse, LinkFlair } from 'src/app/model/subreddit.interface';
 
 
 @Component({
@@ -13,14 +14,14 @@ import { Observable, of } from 'rxjs';
 
 export class SubredditComponent implements OnInit {
 
-  subredditAboutOb: Observable<any[]>;
-  subredditRulesOb: Observable<any[]>;
-  subredditLinkFlairsOb: Observable<any[]>;
+  subredditAboutOb: Observable<SubredditAbout>;
+  subredditRulesOb: Observable<SubredditRulesResponse>;
+  subredditLinkFlairsOb: Observable<LinkFlair[]>;
   subreddit: string;
   isRuleLoading: boolean;
   listingType = 'subreddit';
-  subredditData: any;
-  subredditRulesData: any;
+  subredditData: SubredditData;
+  subredditRulesData: SubredditRule[];
   subredditFlairData = [];
   activeBannerTab = 0;
 
@@ -42,11 +43,11 @@ export class SubredditComponent implements OnInit {
   ngOnInit() {
     this.isRuleLoading = true;
     this.subredditAboutOb = this.activatedRoute.paramMap.pipe(
-      tap((param: any) => {
+      tap((param: ParamMap) => {
         const subreddit = param.get('subreddit');
         this.subreddit = subreddit;
 
-        this.subredditRulesOb = this.subredditService.getSubredditRules(subreddit).pipe(tap((next: any) => {
+        this.subredditRulesOb = this.subredditService.getSubredditRules(subreddit).pipe(tap((next: SubredditRulesResponse) => {
           this.isRuleLoading = false;
           this.subredditRulesData = next.rules;
           this.collapseElementStatusArr = new Array(this.subredditRulesData.length);
@@ -54,7 +55,7 @@ export class SubredditComponent implements OnInit {
 
         this.subredditLinkFlairsOb = this.subredditService.getSubredditLinkFlairs(subreddit).pipe(
           filter(data => !!data),
-          tap((next: any) => {
+          tap((next: LinkFlair[]) => {
             this.subredditFlairData = [];
             next.map(flair => {
               this.subredditFlairData.push({
@@ -70,12 +71,12 @@ export class SubredditComponent implements OnInit {
           })
         );
       }),
-      switchMap((param) => {
+      switchMap((param: ParamMap) => {
         const subreddit = param.get('subreddit');
         this.subredditRulesData = null;
         return this.subredditService.getSubredditAbout(`r/${subreddit}`);
       }),
-      tap((next: any) => {
+      tap((next: SubredditAbout) => {
         this.subredditData = next.data;
         this.clearImages();
       }));

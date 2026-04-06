@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { LocalStorageService } from 'src/app/services/localStorage.service';
 import { of, Subject, throwError } from 'rxjs';
@@ -7,6 +7,7 @@ import { catchError, mergeMap, takeUntil } from 'rxjs/operators';
 import { UserService } from "src/app/services/user.service";
 import { PreferencesService } from "src/app/services/preferences.service";
 import { UserInterface } from "src/app/model/user.interface";
+import { TokenResponse } from "src/app/model/token-response.interface";
 
 @Component({
     selector: 'app-authenticate',
@@ -29,7 +30,7 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-        const getUserInfo = (res: any) => {
+        const getUserInfo = (res: TokenResponse) => {
             if (res['token_type'] === 'bearer') {
                 return this.authenService.getUserInfo()
             }
@@ -39,8 +40,8 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
             }
         };
 
-        const getAccessToken = (params: any) => {
-            if (params['code'] && params['state'] === this.localStorage.get('state')) {
+        const getAccessToken = (params: Params) => {
+            if (params['code'] && params['state'] === this.localStorage.get<string>('state')) {
                 return this.authenService.getBearerAPI(params['code']).pipe(
                     mergeMap(getUserInfo)
                 )

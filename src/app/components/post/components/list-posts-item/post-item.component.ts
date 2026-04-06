@@ -120,7 +120,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   private _bindData() {
-    this.isSaved = this.post.data['saved'];
+    this.isSaved = this.post.data.saved;
 
     this.hasImages = !!this.post.data['preview'] && this.post.data['preview']['enabled']
       && Domains.imagesDomains.includes(this.post.data['domain']);

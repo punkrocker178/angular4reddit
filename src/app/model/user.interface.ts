@@ -14,7 +14,7 @@ export interface UserInterface {
     has_gold_subscription?: boolean;
     is_sponsor?: boolean;
     num_friends?: number;
-    features?: any;
+    features?: Record<string, boolean>;
     can_edit_name?: boolean;
     verified?: boolean;
     pref_autoplay?: boolean;
@@ -49,7 +49,7 @@ export interface UserInterface {
     name: string;
     pref_clickgadget?: number;
     created?: number;
-    gold_creddits?;
+    gold_creddits?: number;
     created_utc?: number;
     has_ios_subscription?: boolean;
     pref_show_twitter?: boolean;

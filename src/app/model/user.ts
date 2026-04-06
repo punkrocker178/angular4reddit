@@ -15,7 +15,7 @@ export class User implements UserInterface {
     }
 
     set name(name: string) {
-        this._name = name; 
+        this._name = name;
     }
 
     set karma(karma: number) {
@@ -28,9 +28,5 @@ export class User implements UserInterface {
 
     get karma() {
         return this._karma;
-    }
-
-    public static getKarma(userObject: any): number {
-        return userObject['comment_karma'] + userObject['link_karma'];
     }
 }

@@ -8,12 +8,10 @@ import { Utils } from '../class/Utils';
 import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { UserInterface } from '../model/user.interface';
 
 @Injectable()
 export class RedditAuthenticateService {
-
-    redirectURI: string;
-
     private getAccessTokenAPI = environment.functionUrl + '/oauth/api/v1/access_token';
     private getRevokeTokenAPI = environment.functionUrl + '/oauth/api/v1/revoke_token';
 
@@ -23,11 +21,12 @@ export class RedditAuthenticateService {
         private router: Router) {
     }
 
-    getIsLoggedIn() {
-        return this.localStorage.get('isLoggedIn');
+    getIsLoggedIn(): boolean {
+        const isLoggedIn = this.localStorage.get<boolean>('isLoggedIn') ? true : false;
+        return isLoggedIn;
     }
 
-    storeUserToStorage(user: any) {
+    storeUserToStorage(user: UserInterface) {
         this.localStorage.set('userObject', user);
     }
 
@@ -129,10 +128,7 @@ export class RedditAuthenticateService {
     }
 
     getRedirectUri() {
-        if (!this.redirectURI) {
-            return environment.appURL + 'authenticate';
-        }
-        return this.redirectURI;
+      return environment.appURL + 'authenticate';
     }
 
     getToken() {
