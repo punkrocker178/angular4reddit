@@ -11,7 +11,7 @@ export class ThemeSelectorComponent implements OnInit {
     themes: Theme[];
     selectedThemeIndex: boolean[];
     @Input() selectedTheme: string;
-    @Output() themeEmitter: EventEmitter<any> = new EventEmitter();
+    @Output() themeEmitter: EventEmitter<Theme> = new EventEmitter<Theme>();
 
     constructor(private themeService: ThemeService) {}
 

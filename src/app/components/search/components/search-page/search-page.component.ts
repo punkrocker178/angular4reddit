@@ -3,6 +3,20 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
+import { Post } from 'src/app/model/post';
+
+interface SearchSubredditResult {
+  after: string;
+  children: Post[];
+}
+
+interface SearchSubmissionPayload {
+  term: string;
+  subredditFilter?: string;
+  before?: string | number;
+  after?: string | number;
+  limit?: number;
+}
 
 @Component({
     selector: 'app-search',
@@ -83,7 +97,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         };
 
         return this.redditSearchService.searchSubreddit(payload).pipe(
-            tap((next:any) => {
+            tap((next: SearchSubredditResult) => {
                 const currentSubreddits = this.subreddit$.getValue();
                 this.subreddit$.next([...currentSubreddits, ...next.children]);
                 if (next.after) {
@@ -97,7 +111,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         );
     }
 
-    searchSubmissions(searchPayload: any) {
+    searchSubmissions(searchPayload: SearchSubmissionPayload) {
         const payload = {
             q: searchPayload.term,
             sort: 'desc',

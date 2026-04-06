@@ -8,12 +8,11 @@ import { Utils } from '../class/Utils';
 import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { UserInterface } from '../model/user.interface';
+import { TokenResponse } from '../model/token-response.interface';
 
 @Injectable()
 export class RedditAuthenticateService {
-
-    redirectURI: string;
-
     private getAccessTokenAPI = environment.functionUrl + '/oauth/api/v1/access_token';
     private getRevokeTokenAPI = environment.functionUrl + '/oauth/api/v1/revoke_token';
 
@@ -23,11 +22,12 @@ export class RedditAuthenticateService {
         private router: Router) {
     }
 
-    getIsLoggedIn() {
-        return this.localStorage.get('isLoggedIn');
+    getIsLoggedIn(): boolean {
+        const isLoggedIn = this.localStorage.get<boolean>('isLoggedIn') ? true : false;
+        return isLoggedIn;
     }
 
-    storeUserToStorage(user: any) {
+    storeUserToStorage(user: UserInterface) {
         this.localStorage.set('userObject', user);
     }
 
@@ -50,16 +50,18 @@ export class RedditAuthenticateService {
 
     loginAppOnly() {
         let body = new HttpParams().set('grant_type', 'client_credentials');
-        return this.http.post(this.getAccessTokenAPI, body.toString(),
+        return this.http.post<TokenResponse>(this.getAccessTokenAPI, body.toString(),
             {
                 headers:
                 {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-            }).pipe(tap(next => {
-                this.localStorage.set('userToken', next['access_token']);
+            }).pipe(
+              tap((next: TokenResponse) => {
+                this.localStorage.set('userToken', next.access_token);
                 this.localStorage.set('initTime', Date.now().toString());
-            }));
+              })
+          );
     }
 
     logout() {
@@ -71,13 +73,13 @@ export class RedditAuthenticateService {
         return of(true);
     }
 
-    getBearerAPI(code: string) {
+    getBearerToken(code: string) {
         let body = new HttpParams()
             .set('grant_type', 'authorization_code')
             .set('code', code)
             .set('redirect_uri', this.getRedirectUri());
 
-        return this.http.post(this.getAccessTokenAPI, body.toString(),
+        return this.http.post<TokenResponse>(this.getAccessTokenAPI, body.toString(),
             {
                 headers:
                 {
@@ -85,7 +87,7 @@ export class RedditAuthenticateService {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).pipe(tap(next => {
-                if (next['token_type'] === 'bearer') {
+                if (next.token_type === 'bearer') {
                     this.localStorage.set('userToken', next['access_token']);
                     this.localStorage.set('refreshToken', next['refresh_token']);
                     this.localStorage.set('initTime', Date.now().toString());
@@ -97,7 +99,7 @@ export class RedditAuthenticateService {
     refreshToken() {
         let body = new HttpParams()
             .set('grant_type', 'refresh_token')
-            .set('refresh_token', this.localStorage.get('refreshToken'));
+            .set('refresh_token', this.localStorage.get('refreshToken') || '');
 
         return this.http.post(this.getAccessTokenAPI, body.toString(),
             {
@@ -110,7 +112,7 @@ export class RedditAuthenticateService {
 
     revokeToken() {
         let body = new HttpParams()
-            .set('token', this.localStorage.get('refreshToken'))
+            .set('token', this.localStorage.get('refreshToken') || '')
             .set('token_type_hint', 'refresh_token');
 
         return this.http.post(this.getRevokeTokenAPI, body.toString(),
@@ -125,14 +127,11 @@ export class RedditAuthenticateService {
 
     getUserInfo() {
         const url = HeadersUtils.buildUrl(ApiList.USER_INFO);
-        return this.http.get(url);
+        return this.http.get<UserInterface>(url);
     }
 
     getRedirectUri() {
-        if (!this.redirectURI) {
-            return environment.appURL + 'authenticate';
-        }
-        return this.redirectURI;
+      return environment.appURL + 'authenticate';
     }
 
     getToken() {

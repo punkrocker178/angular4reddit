@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { PreferencesService } from "src/app/services/preferences.service";
 import { UserService } from "src/app/services/user.service";
@@ -10,8 +10,6 @@ import { UserService } from "src/app/services/user.service";
 
 
 export class NsfwPopupComponent {
-    @Input() input;
-
     constructor(public activeModal: NgbActiveModal,
         private userService: UserService,
         private preferenceService: PreferencesService) {}

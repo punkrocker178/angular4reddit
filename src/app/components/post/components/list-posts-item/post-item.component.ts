@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, Renderer2, ViewChild, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ElementRef, Renderer2, TemplateRef, ViewChild, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { Router } from '@angular/router';
 import { Utils } from 'src/app/class/Utils';
@@ -27,53 +27,56 @@ declare var twttr: any;
   templateUrl: './post-item.html'
 })
 export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
-  @Input() post: Post;
-  @Input() options;
-  @ViewChild('twitterEmbed') tweet: ElementRef;
-  @ViewChild('videoPlayer') videoPlayer: ElementRef;
-  @ViewChild('flairElement') flairEl: ElementRef
+  @Input() post!: Post;
+  @Input() options: { isDetail?: boolean, isArchive?: boolean } = {
+    isDetail: false,
+    isArchive: false
+  };
+  @ViewChild('twitterEmbed') tweet!: ElementRef;
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef;
+  @ViewChild('flairElement') flairEl!: ElementRef;
 
-  isUpVoted: boolean;
-  isDownVoted: boolean = false;
-  isSaved: boolean;
-  isSaving: boolean;
-  isLiked: boolean;
-  isOver18Consent: boolean;
-  hasImages: boolean;
-  isGallery: boolean;
-  isVideo: boolean;
-  isComment: boolean;
-  isOver18: boolean;
-  isMediaEmbeded: boolean;
-  isTwitchEmbedded: boolean;
-  isTwitterEmbedded: boolean;
-  isEmbededLink: boolean;
-  isCrossPost: boolean;
-  embedSrc: string;
+  isUpVoted = false;
+  isDownVoted = false;
+  isSaved = false;
+  isSaving = false;
+  isLiked = false;
+  isOver18Consent = false;
+  hasImages = false;
+  isGallery = false;
+  isVideo = false;
+  isComment = false;
+  isOver18 = false;
+  isMediaEmbeded = false;
+  isTwitchEmbedded = false;
+  isTwitterEmbedded = false;
+  isEmbededLink = false;
+  isCrossPost = false;
+  embedSrc = '';
 
-  hlsPlayer: Hls;
-  dashPlayer: dashjs.MediaPlayerClass;
+  hlsPlayer?: Hls;
+  dashPlayer?: dashjs.MediaPlayerClass;
 
-  flair = {};
+  flair: { flair_text?: string; flair_richtext?: any; flair_background_color?: string } = {};
 
-  imageSrc: string;
-  videoSrc: string;
-  videoThumbnailSrc: string;
+  imageSrc = '';
+  videoSrc = '';
+  videoThumbnailSrc = '';
 
-  isInitVideo: boolean;
-  isInitVideoErr: boolean;
-  videoPlayerError: string;
-  isWidescreenVideo: boolean;
+  isInitVideo = false;
+  isInitVideoErr = false;
+  videoPlayerError = '';
+  isWidescreenVideo = false;
 
   // Posts that don't have selft text, images, videos
-  noSelfText: boolean;
+  noSelfText = false;
 
   galleryConfigs = {
     position: 'top-left',
     class: ''
   }
 
-  galleryData = {
+  galleryData: { items: any[] } = {
     items: []
   };
 
@@ -100,7 +103,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   ngOnInit() {
-    this.isOver18Consent = this.userService.isNSFWAllowed() && !this.preferenceService.preferenceValue.safeBrowsing;
+    this.isOver18Consent = this.userService.isNSFWAllowed() && !(this.preferenceService.preferenceValue?.safeBrowsing ?? false);
 
     if (this.isGallery) {
       this.initGallery();
@@ -120,50 +123,50 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   private _bindData() {
-    this.isSaved = this.post.data['saved'];
+    this.isSaved = !!this.post.data.saved;
 
     this.hasImages = !!this.post.data['preview'] && this.post.data['preview']['enabled']
-      && Domains.imagesDomains.includes(this.post.data['domain']);
+      && Domains.imagesDomains.includes(this.post.data['domain'] ?? '');
 
-    this.isVideo = (this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded && !this.isTwitchEmbedded;
+    this.isVideo = !!(this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded && !this.isTwitchEmbedded;
 
-    this.isGallery = this.post.data['is_gallery'] &&
-      this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0;
+    this.isGallery = !!(this.post.data['is_gallery'] &&
+      this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0);
 
     this.isComment = this.post.kind === 't1';
 
     this.isTwitterEmbedded = this.post.data['domain'] === Domains.twitterDomain;
     this.isTwitchEmbedded = this.post.data['domain'] === Domains.twitchDomain;
 
-    this.isMediaEmbeded = this.post.data['media'] ? Domains.mediaEmbed.includes(this.post.data['media']['type']) : false;
-    this.isOver18 = this.post.data['over_18'];
+    this.isMediaEmbeded = this.post.data['media'] ? Domains.mediaEmbed.includes(this.post.data['media']['type'] ?? '') : false;
+    this.isOver18 = !!this.post.data['over_18'];
 
     // Needs enhancement. The logic does not cover all cases
-    this.isEmbededLink = !this.post.data['is_self']
+    this.isEmbededLink = !!((!this.post.data['is_self'])
       && !this.post.data['selftext']
       && !this.post.data['is_reddit_media_domain']
       && !this.hasImages
       && !this.isTwitterEmbedded
       && !this.isTwitchEmbedded
       && !this.isVideo
-      && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com'));
+      && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com')));
 
-    this.isCrossPost = this.post.data['crosspost_parent_list'] && this.post.data['crosspost_parent_list'].length > 0;
+    this.isCrossPost = !!(this.post.data['crosspost_parent_list'] && this.post.data['crosspost_parent_list'].length > 0);
 
     if (this.hasImages) {
       this.imageSrc = this.getImageSource();
     }
 
-    this.videoSrc = this.getVideoSource();
-    this.videoThumbnailSrc = this.getThumbnailSource();
+    this.videoSrc = this.getVideoSource() ?? '';
+    this.videoThumbnailSrc = this.getThumbnailSource() ?? '';
 
     if (this.post.data['preview']) {
       this.isWidescreenVideo = this.isWideScreen(this.post.data['preview']['images']);
     }
 
-    this.flair['flair_text'] = this.post.data['link_flair_text'];
-    this.flair['flair_richtext'] = this.post.data['link_flair_richtext'];
-    this.flair['flair_background_color'] = this.post.data['link_flair_background_color'];
+    this.flair.flair_text = this.post.data['link_flair_text'];
+    this.flair.flair_richtext = this.post.data['link_flair_richtext'];
+    this.flair.flair_background_color = this.post.data['link_flair_background_color'];
   }
 
   playVideo() {
@@ -192,9 +195,10 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
   initDashPlayer() {
     try {
-      let src = this.getVideoSource('dash');
+      const rawSrc = this.getVideoSource('dash');
+      if (!rawSrc) return;
 
-      src = ReplacePipe.prototype.transform(src);
+      let src = ReplacePipe.prototype.transform(rawSrc);
       this.dashPlayer = dashjs.MediaPlayer().create();
       this.dashPlayer.initialize(this.videoPlayer.nativeElement, src, false);
       this.dashPlayer.setVolume(0.5);
@@ -205,7 +209,8 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
   initHlsPlayer() {
     try {
-      let src = this.getVideoSource('hls');
+      const src = this.getVideoSource('hls');
+      if (!src) return;
       /**
        * First check for native browser HLS support else use Hls.js
        */
@@ -217,10 +222,8 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
         this.hlsPlayer.loadSource(src);
         this.hlsPlayer.attachMedia(this.videoPlayer.nativeElement);
 
-        this.hlsPlayer.on(Hls.Events.ERROR, function (event, data) {
-          const errorType = data.type;
+        this.hlsPlayer.on(Hls.Events.ERROR, function (_event, data) {
           const errorDetails = data.details;
-          const errorFatal = data.fatal;
           console.error(errorDetails);
         });
       }
@@ -253,7 +256,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     }
   }
 
-  isWideScreen(images): boolean {
+  isWideScreen(images: any[]): boolean {
     const image = images[0].hasOwnProperty('metadata') ? images[0]['metadata'] : images[0];
     const source = image.hasOwnProperty('source') ? 'source' : 's';
     const width = image[source]['width'] || image[source]['x'];
@@ -264,9 +267,9 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   getVideoSource(type?: string) {
     //  Get embeded link from iframe element returned
     if (!this.post.data['is_video'] && this.post.data['media']) {
-      const iframeHtml = this.post.data['media']['oembed']['html'];
-      const srcAttr = iframeHtml.match(/src="(.*?)"/g)[0];
-      const srcValue = Utils.clearUrl(srcAttr.match(/"(.*?)"/g)[0]);
+      const iframeHtml = this.post.data['media']['oembed']!['html'];
+      const srcAttr = iframeHtml.match(/src="(.*?)"/g)![0];
+      const srcValue = Utils.clearUrl(srcAttr.match(/"(.*?)"/g)![0]);
 
       //  Remove double quotes
       const url = srcValue.substring(1, srcValue.length - 1);
@@ -278,9 +281,9 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
       return null;
     }
 
-    const hlsUrl = this.post.data['media']['reddit_video']['hls_url'];
-    const dashUrl = this.post.data['media']['reddit_video']['dash_url'];
-    const fallbackUrl = this.post.data['media']['reddit_video']['fallback_url'];
+    const hlsUrl = this.post.data['media']['reddit_video']?.['hls_url'];
+    const dashUrl = this.post.data['media']['reddit_video']?.['dash_url'];
+    const fallbackUrl = this.post.data['media']['reddit_video']?.['fallback_url'];
 
     const src = this.post.data['media'] ?
       (type === 'dash' ? dashUrl : hlsUrl) : fallbackUrl;
@@ -292,8 +295,10 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
     if (this.post.data['preview'] && this.post.data['preview']['images'].length > 0) {
       const images = this.post.data['preview']['images'];
-      const resolutionIndex = Math.floor(images[0]['resolutions'].length / 2);
-      return this.getSmallerImage(images[0]['resolutions'], resolutionIndex);
+      const resolutions = images[0]['resolutions'];
+      if (!resolutions?.length) return this.post.data['thumbnail'] ?? '';
+      const resolutionIndex = Math.floor(resolutions.length / 2);
+      return this.getSmallerImage(resolutions, resolutionIndex);
     }
 
     if (this.post.data['thumbnail']) {
@@ -302,7 +307,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   getImageSource() {
-    const images = this.post.data['preview']['images'];
+    const images = this.post.data['preview']!['images'];
     let image = '';
     if (images.length > 0) {
       if (images[0]['variants'] && images[0]['variants']['gif']) {
@@ -315,7 +320,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     return image;
   }
 
-  getImage(data) {
+  getImage(data: any) {
     let image, resolutions, images;
 
     // GIFs
@@ -343,7 +348,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     return image;
   }
 
-  getSmallerImage(resolutionArr, resolutionIndex) {
+  getSmallerImage(resolutionArr: any[], resolutionIndex: number): string {
 
     if (resolutionArr.length === 0) {
       return '';
@@ -356,7 +361,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   viewDetail(isComment?: boolean) {
     if (this.isOver18 && !this.isOver18Consent) {
       const modalRef = this.modalService.open(NsfwPopupComponent);
-      modalRef.result.then(result => {
+      modalRef.result.then(_result => {
         this.navigateToDetail(isComment);
       }, reason => {
         console.log(reason, 'reason');
@@ -395,7 +400,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   initTwitter() {
-    let html = DomParserPipe.prototype.transform(this.post.data['media']['oembed']['html']);
+    let html = DomParserPipe.prototype.transform(this.post.data['media']!['oembed']!['html']);
     html = ReplacePipe.prototype.transform(html, '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>', '');
     this.renderer2.setProperty(this.tweet.nativeElement, 'innerHTML', html);
     twttr.widgets.load();
@@ -403,39 +408,35 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
   initGallery() {
 
-    this.galleryData.items = this.post.data['gallery_data']['items'];
-    let mediaResolutions, selectedResolution;
+    this.galleryData.items = this.post.data['gallery_data']!['items'];
+    let selectedResolution: number;
 
     this.galleryData.items.forEach(item => {
       const mediaId = item['media_id'];
-      item.metadata = {
-        ...this.post.data['media_metadata'][mediaId]
-      };
+      const meta = this.post.data['media_metadata']?.[mediaId];
+      item.metadata = { ...meta };
 
-      if (this.post.data['media_metadata'][mediaId]['status'].toLowerCase() === 'failed') {
+      if (meta?.['status']?.toLowerCase() === 'failed') {
         item.source = '';
-        this.post.data['media_metadata'][mediaId]['p'] = [];
+        if (meta) meta['p'] = [];
       } else {
-        item.source = this.post.data['media_metadata'][mediaId]['s']['u'];
+        item.source = meta?.['s']?.['u'] ?? '';
       }
 
-
       if (!this.options.isDetail) {
-        mediaResolutions = this.post.data['media_metadata'][mediaId]['p'];
+        const mediaResolutions = meta?.['p'];
 
-        if (mediaResolutions.length === 0) {
+        if (!mediaResolutions?.length) {
           return;
         }
 
         selectedResolution = mediaResolutions.length - 1;
-        const media = this.post.data['media_metadata'][mediaId]['p'][selectedResolution];
+        const media = mediaResolutions[selectedResolution];
 
         if (media) {
           item.source = media['u'];
         }
-
       }
-
     });
 
     this.galleryConfigs.class = this.isWideScreen(this.galleryData.items) ? 'gallery-wide' : 'gallery';
@@ -455,7 +456,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
       this.modalService.open(LoginPromptComponent);
     } else {
       this.isSaving = true;
-      this.listingService.savePost(this.post.data['name']).pipe(tap(next => {
+      this.listingService.savePost(this.post.data['name']).pipe(tap(() => {
         this.isSaved = true;
         this.isSaving = false;
       })).subscribe();
@@ -468,13 +469,13 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     }
 
     this.isSaving = true;
-    this.listingService.unsavePost(this.post.data['name']).pipe(tap(next => {
+    this.listingService.unsavePost(this.post.data['name']).pipe(tap(() => {
       this.isSaved = false;
       this.isSaving = false;
     })).subscribe();
   }
 
-  share(toastTemplate) {
+  share(toastTemplate: TemplateRef<any>) {
     const url = `https://www.reddit.com${this.post.data['permalink']}`;
 
     if (!navigator.clipboard) {
@@ -493,7 +494,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
    * Reference: https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
    */
 
-  fallbackCopyTextToClipboard(text, toastTemplate) {
+  fallbackCopyTextToClipboard(text: string, toastTemplate: TemplateRef<any>) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
 

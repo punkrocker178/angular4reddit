@@ -7,29 +7,27 @@
  */
 
 import { AfterViewInit, Directive, ElementRef, HostListener, Input, OnDestroy, Renderer2 } from '@angular/core';
-import { createPopper, VirtualElement } from '@popperjs/core';
+import { createPopper, Instance, VirtualElement } from '@popperjs/core';
 
 @Directive({
   selector: '[appPopover]'
 })
 export class PopoverDirective implements AfterViewInit, OnDestroy {
 
-  tooltipElement;
-
   // Needs to create config interface
   @Input() config;
   @Input() tooltip?: HTMLElement;
 
-  popoverInstance;
+  popoverInstance: Instance | undefined;
 
   virtualElement: VirtualElement = {
     getBoundingClientRect: this.generateGetBoundingClientRect()
   }
 
   // Reference from https://popper.js.org/docs/v2/virtual-elements/
-  @HostListener('mousemove', ['$event']) onMousemove(event) {
+  @HostListener('mousemove', ['$event']) onMousemove(event: MouseEvent) {
     this.virtualElement.getBoundingClientRect = this.generateGetBoundingClientRect(event.clientX, event.clientY);
-    this.popoverInstance.update();
+    this.popoverInstance!.update();
     this.renderer2.setAttribute(this.tooltip, 'data-show', 'true');
   }
 
@@ -43,7 +41,7 @@ export class PopoverDirective implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
 
-    this.popoverInstance = createPopper(this.virtualElement, this.tooltip, {
+    this.popoverInstance = createPopper(this.virtualElement, this.tooltip!, {
       placement: this.config.placement,
       modifiers: [{
         name: 'offset',
@@ -70,7 +68,7 @@ export class PopoverDirective implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.popoverInstance.destroy();
+    this.popoverInstance!.destroy();
   }
 
 }
