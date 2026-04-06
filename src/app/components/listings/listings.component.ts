@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, computed, signal } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { BehaviorSubject, of, combineLatest, Subject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
@@ -18,12 +18,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
   @Input() type: string;
   @Input() username: string;
 
-  public subreddit: string;
-  public flairFilter: string;
+  public subreddit = signal('');
+  public flairFilter = signal('');
+
+  public isShowFeed = computed(() => {
+    return this._authenticateService.getIsLoggedIn() && (!this.subreddit() || this.subreddit() === ApiList.LISTINGS_ALL_JSON)
+  });
 
   public sort = ApiList.LISTINGS_HOT;
   public posts$: BehaviorSubject<Post[]> = new BehaviorSubject([]);
-  public scroll$ = new BehaviorSubject(null);
+  public scroll$ = new BehaviorSubject(false);
   public scrollNextData$ = new BehaviorSubject(null);
 
   public destroy$ = new Subject();
@@ -34,8 +38,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   public isLoading: boolean;
   public isError: boolean;
   public errorMsg = '';
-
-  public isLoggedIn: boolean;
 
   constructor(
     private _authenticateService: RedditAuthenticateService,
@@ -48,8 +50,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this._subscribeQueryParamChanges();
     this._subscribeScrollDownChanges();
     this.loadMore(new Event('init'));
-
-    this.isLoggedIn = this._authenticateService.getIsLoggedIn();
   }
 
   private _subscribeQueryParamChanges(): void {
@@ -60,7 +60,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       switchMap(([pathParam, queryParam]) => {
         this.after = null;
-
+        console.log(paramMap, queryParam);
         this._flushDataOnSubredditChange(pathParam);
 
         this._flushDataOnUserChange(pathParam);
@@ -68,8 +68,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this._flushDataOnFlairChange(queryParam);
 
         if (pathParam.has('subreddit')) {
-          this.subreddit = pathParam.get('subreddit');
-          this._redditService.visitedSubreddit = this.subreddit;
+          this.subreddit.set(pathParam.get('subreddit')!);
+          this._redditService.visitedSubreddit = this.subreddit();
         } else {
           this._redditService.visitedSubreddit = null;
         }
@@ -121,9 +121,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
       queryParams.after = this.after
     }
 
-    if (this.flairFilter) {
-      const searchTerm = `flair_name:"${this.flairFilter}"`;
-      return this._subredditService.searchInSubreddit(searchTerm, this.subreddit, this.after).pipe(
+    if (this.flairFilter()) {
+      const searchTerm = `flair_name:"${this.flairFilter()}"`;
+      return this._subredditService.searchInSubreddit(searchTerm, this.subreddit(), this.after).pipe(
         tap(next => this._updateListingData(next)),
         finalize(() => this.isLoading = false)
       );
@@ -155,6 +155,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   public changeSort(value) {
+    this.subreddit.set('');
+    this.type = '';
+
     switch (value) {
       case ApiList.LISTINGS_HOT_LABEL:
         this.sort = ApiList.LISTINGS_HOT;
@@ -170,7 +173,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         break;
       case ApiList.LISTINGS_ALL:
         this.type = 'subreddit';
-        this.subreddit = 'all.json';
+        this.subreddit.set(ApiList.LISTINGS_ALL_JSON);
         this.sort = '';
         break;
     }
@@ -191,7 +194,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         apiSegment = `/user/${this.username}/overview${this.sort}`;
         break;
       case 'subreddit':
-        apiSegment = `/r/${this.subreddit}${this.sort}`;
+        apiSegment = `/r/${this.subreddit()}${this.sort}`;
         break;
       default:
         apiSegment = this.sort;
@@ -223,10 +226,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   private _flushDataOnFlairChange(queryParam) {
     if (queryParam.has('flair')) {
-      this.flairFilter = queryParam.get('flair');
+      this.flairFilter.set(queryParam.get('flair'));
       this._redditService.listingStoredData = null;
     } else {
-      this.flairFilter = null;
+      this.flairFilter.set('');
     }
   }
 

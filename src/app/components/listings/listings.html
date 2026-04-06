@@ -1,7 +1,7 @@
 <div class="container px-0 custom-height-container">
   <div class="row">
     <div class="col-12 col-lg-8 col-md-10 px-0 px-md-4 px-lg-5 contents">
-      <app-sort [showFeed]="isLoggedIn && !subreddit" (changeSort)="changeSort($event)"
+      <app-sort [showFeed]="isShowFeed" (changeSort)="changeSort($event)"
         (changeFeedEmitter)="changeSort($event)"></app-sort>
 
       <div *ngIf="isError && !isLoading" class="p-2 p-md-3 d-flex justify-content-center">
