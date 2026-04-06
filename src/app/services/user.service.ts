@@ -38,7 +38,7 @@ export class UserService {
         }
     }
 
-    setUser(user) {
+    intializeUser(user: UserInterface) {
         this.userSubject.next(user);
     }
 
@@ -46,18 +46,18 @@ export class UserService {
         return this.userSubject.getValue();
     }
 
-    getUserAbout(user) {
-        const aboutAPI = `/u/${user}/about`;
+    getUserAbout(username: string) {
+        const aboutAPI = `/u/${username}/about`;
         return this.http.get(HeadersUtils.buildUrl(aboutAPI));
     }
 
-    getUserOverview(user) {
-        const overviewAPI = `/u/${user}/overview`;
+    getUserOverview(username: string) {
+        const overviewAPI = `/u/${username}/overview`;
         return this.http.get(HeadersUtils.buildUrl(overviewAPI));
     }
 
-    getUserComments(user) {
-        const commentsAPI = `/u/${user}/comments`;
+    getUserComments(username: string) {
+        const commentsAPI = `/u/${username}/comments`;
         return this.http.get(HeadersUtils.buildUrl(commentsAPI));
     }
 

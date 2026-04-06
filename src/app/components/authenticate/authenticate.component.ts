@@ -42,7 +42,7 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
 
         const getAccessToken = (params: Params) => {
             if (params['code'] && params['state'] === this.localStorage.get<string>('state')) {
-                return this.authenService.getBearerAPI(params['code']).pipe(
+                return this.authenService.getBearerToken(params['code']).pipe(
                     mergeMap(getUserInfo)
                 )
             }
@@ -61,7 +61,7 @@ export class AuthenticateComponent implements OnInit, OnDestroy {
         ).subscribe(
             (data: UserInterface) => {
                 this.authenService.storeUserToStorage({ ...data, is_login: true });
-                this.userService.setUser({ ...data, is_login: true });
+                this.userService.intializeUser({ ...data, is_login: true });
                 this.preferenceService.setPreference('safeBrowsing', !data.over_18)
                 this.router.navigateByUrl('/home');
             }, err => {

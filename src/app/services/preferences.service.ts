@@ -30,7 +30,7 @@ export class PreferencesService {
 
             this.localStorage.set('prefs',prefs);
         } else {
-            this._preferences.next(this.localStorage.get('prefs'));
+            this._preferences.next(this.localStorage.get('prefs')!);
         }
     }
 
