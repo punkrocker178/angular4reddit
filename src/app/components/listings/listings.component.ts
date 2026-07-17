@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, Input, computed, signal } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
-import { BehaviorSubject, of, combineLatest, Subject } from 'rxjs';
+import { BehaviorSubject, of, combineLatest, Observable, Subject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
 import { tap, switchMap, filter, takeUntil, catchError, debounceTime, finalize } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { Post } from 'src/app/model/post';
+import { Listings } from 'src/app/model/listings.interface';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { QueryRequest } from 'src/app/model/query-request';
 import { MAX_POST_LIMIT, QUERY_LIMIT } from 'src/app/constants/constants';
@@ -26,15 +27,15 @@ export class ListingsComponent implements OnInit, OnDestroy {
   });
 
   public sort = ApiList.LISTINGS_HOT;
-  public posts$: BehaviorSubject<Post[]> = new BehaviorSubject([]);
-  public scroll$ = new BehaviorSubject(false);
-  public scrollNextData$ = new BehaviorSubject(null);
+  public posts$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
+  public scroll$ = new BehaviorSubject<boolean>(false);
+  public scrollNextData$ = new BehaviorSubject<Listings | null>(null);
 
-  public destroy$ = new Subject();
+  public destroy$ = new Subject<boolean>();
 
   public beforeData: Post[] = [];
   public pagingStack: string[] = [];
-  public after: string;
+  public after: string | null;
   public isLoading: boolean;
   public isError: boolean;
   public errorMsg = '';
@@ -49,7 +50,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._subscribeQueryParamChanges();
     this._subscribeScrollDownChanges();
-    this.loadMore(new Event('init'));
+    this.loadMore();
   }
 
   private _subscribeQueryParamChanges(): void {
@@ -101,10 +102,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private fetchData(after?: string, refreshData?: boolean) {
+  private fetchData(after?: string | null, refreshData?: boolean): Observable<Listings | Post[]> {
 
     if (this.after == null && this.posts$.getValue().length > 0 && !refreshData) {
-      return of([]);
+      return of([] as Post[]);
     }
 
     if (refreshData) {
@@ -132,16 +133,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
       catchError(err => {
         this.isError = true;
         this.errorMsg = `Code: ${err.status} -  Message: ${err.error.message}`;
-        return err;
+        return of({ kind: '', after: '', children: [] } as Listings);
       }),
-      tap(next => this._updateListingData(next)),
+      tap((next: Listings) => this._updateListingData(next)),
       finalize(() => this.isLoading = false)
     );
   }
 
   // Update listing, will remove old post if reaches limit
-  private _updateListingData(next) {
-    this.pagingStack.push(this.after);
+  private _updateListingData(next: Listings): void {
+    if (this.after) {
+      this.pagingStack.push(this.after);
+    }
     this.after = next.after;
     let currentPosts = this.posts$.getValue();
 
@@ -153,7 +156,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.posts$.next([...currentPosts, ...next.children]);
   }
 
-  public changeSort(value) {
+  public changeSort(value: string): void {
     this.subreddit.set('');
     this.type = '';
 
@@ -186,7 +189,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private _defaultListingsTypeApi() {
+  private _defaultListingsTypeApi(): string {
     let apiSegment = '';
     switch (this.type) {
       case 'user-profile':
@@ -202,7 +205,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     return apiSegment;
   }
 
-  private _flushDataOnSubredditChange(pathParam) {
+  private _flushDataOnSubredditChange(pathParam: ParamMap): void {
     // Flush stored data when subreddit changes
     const subredditChange = pathParam.has('subreddit') && pathParam.get('subreddit') !== this._redditService.visitedSubreddit;
 
@@ -214,7 +217,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _flushDataOnUserChange(pathParam) {
+  private _flushDataOnUserChange(pathParam: ParamMap): void {
     const userChange = pathParam.has('user') && pathParam.get('user') !== this._redditService.visitedUser;
     const goToHome = !pathParam.has('user') && this._redditService.visitedUser;
 
@@ -223,7 +226,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _flushDataOnFlairChange(queryParam) {
+  private _flushDataOnFlairChange(queryParam: ParamMap): void {
     if (queryParam.has('flair')) {
       this.flairFilter.set(queryParam.get('flair'));
       this._redditService.listingStoredData = null;
@@ -232,8 +235,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public loadMore(event) {
-    this.scroll$.next(event);
+  public loadMore(_event?: Event): void {
+    this.scroll$.next(true);
   }
 
   public loadPrevious() {
@@ -247,7 +250,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const end = MAX_POST_LIMIT - QUERY_LIMIT;
     currentPost = currentPost.slice(0, end);
     currentPost.unshift(...beforeToBePrepend);
-    this.after = this.pagingStack.pop();
+    this.after = this.pagingStack.pop() ?? null;
 
     this.posts$.next([...currentPost]);
   }

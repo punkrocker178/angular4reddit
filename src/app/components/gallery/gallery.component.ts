@@ -1,5 +1,10 @@
 import { AfterContentInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 
+export interface GalleryConfigs {
+    position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    class?: string;
+}
+
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html'
@@ -8,9 +13,9 @@ export class GalleryComponent implements OnInit, AfterContentInit {
 
     elementIndex = 0;
     positionClass: string;
-    @ViewChild('gallery') galleryEl: ElementRef;
-    childList = [];
-    @Input() configs;
+    @ViewChild('gallery') galleryEl: ElementRef<HTMLElement>;
+    childList: HTMLCollection | HTMLElement[] = [];
+    @Input() configs: GalleryConfigs;
 
     constructor(private renderer2: Renderer2) {
 
@@ -38,7 +43,7 @@ export class GalleryComponent implements OnInit, AfterContentInit {
         }
     }
 
-    changeIndex(value) {
+    changeIndex(value: number): void {
         const currEl = this.childList[this.elementIndex];
         this.renderer2.removeClass(currEl, 'active');
 
@@ -48,8 +53,8 @@ export class GalleryComponent implements OnInit, AfterContentInit {
         this.renderer2.addClass(newEl, 'active');
     }
 
-    getPositionClass() {
-        let position;
+    getPositionClass(): string {
+        let position: string;
         switch (this.configs.position) {
             case 'top-right':
                 position = 'image-number-top-right';

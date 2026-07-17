@@ -1,9 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
 import { Utils } from 'src/app/class/Utils';
+import { UserInterface } from 'src/app/model/user.interface';
+
+interface UserAboutResponse {
+    kind?: string;
+    data: UserInterface;
+}
+
+interface UserListingResponse {
+    kind?: string;
+    data: unknown;
+}
+
+interface UserProfileState {
+    about?: UserInterface;
+    comments?: unknown;
+    overview?: unknown;
+}
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -13,12 +30,12 @@ import { Utils } from 'src/app/class/Utils';
 
 export class UserProfileComponent implements OnInit {
 
-    about$: Observable<Object>;
-    comments$: Observable<Object>;
-    overview$: Observable<Object>;
+    about$: Observable<UserAboutResponse>;
+    comments$: Observable<UserListingResponse>;
+    overview$: Observable<UserListingResponse>;
 
-    userProfile = {};
-    username;
+    userProfile: UserProfileState = {};
+    username: string;
     listingsType = 'user-profile';
 
     constructor(private activatedRoute: ActivatedRoute,
@@ -31,23 +48,25 @@ export class UserProfileComponent implements OnInit {
                 const user = params.get('user');
                 this.username = user;
                 this.comments$ = this.userService.getUserComments(user).pipe(
-                    tap(next => this.userProfile['comments'] = next['data']));
+                    tap((next: UserListingResponse) => this.userProfile.comments = next.data)) as Observable<UserListingResponse>;
 
                 this.overview$ = this.userService.getUserOverview(user).pipe(
-                    tap(next => this.userProfile['overview'] = next['data']));
+                    tap((next: UserListingResponse) => this.userProfile.overview = next.data)) as Observable<UserListingResponse>;
 
                 this.about$ = this.userService.getUserAbout(user).pipe(
-                    tap(next => {
-                        this.userProfile['about'] = next['data'];
+                    tap((next: UserAboutResponse) => {
+                        this.userProfile.about = next.data;
                         this.clearIcon();
-                    }));
+                    })) as Observable<UserAboutResponse>;
             })
         ).subscribe();
 
     }
 
     clearIcon() {
-        this.userProfile['about'].icon_img = Utils.clearUrl(this.userProfile['about'].icon_img);
+        if (this.userProfile.about?.icon_img) {
+            this.userProfile.about.icon_img = Utils.clearUrl(this.userProfile.about.icon_img);
+        }
     }
 
 }

@@ -13,7 +13,7 @@
 
 				<div *ngIf="!showCommentEditor(); else commentEditor" class="d-flex comment-login">
 					<span class="me-3 align-self-center">Log in or sign up to leave a comment (~˘▾˘)~</span>
-					<button class="btn btn-outline-primary">Log In</button>
+					<button class="btn btn-outline-primary" (click)="login()">Log In</button>
 				</div>
 
 				<ng-template #commentEditor>

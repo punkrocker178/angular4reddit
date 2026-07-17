@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { interval, Subject } from "rxjs";
 import { take, takeUntil, tap } from "rxjs/operators";
@@ -10,10 +10,10 @@ import { RedditAuthenticateService } from "src/app/services/reddit-authenticate.
 })
 
 export class LoginPromptComponent {
-    @Input() input;
-
-    timer;
+    timer: number | null = null;
     dismiss$ = new Subject<void>();
+    countDownSeconds = 5;
+    countDownInterval = interval(1000);
 
     constructor(public activeModal: NgbActiveModal,
                 private authenService: RedditAuthenticateService) {}
@@ -25,13 +25,12 @@ export class LoginPromptComponent {
     }
 
     close(result: string) {
-        const counter = interval(1000);
-        const seconds = 5;
-
-        counter.pipe(take(seconds), takeUntil(this.dismiss$), tap(next => {
-            this.timer = seconds - next - 1;
-            console.log(this.timer);
-            if (this.timer === 0) {
+        this.countDownInterval.pipe(
+            take(this.countDownSeconds), 
+            takeUntil(this.dismiss$), 
+            tap(next => {
+            this.timer = this.countDownSeconds - next - 1;
+            if (this.timer !== null && this.timer === 0) {
                 this.activeModal.close(result);
                 this.authenService.login();
             }

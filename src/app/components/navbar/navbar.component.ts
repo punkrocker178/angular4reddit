@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     user: UserInterface;
     userSubscribtion: Observable<UserInterface>;
     destroy$ = new Subject<void>();
-    mainElement;
+    mainElement: HTMLElement | null;
 
     profilePath: string;
     aboutPath = '/about';

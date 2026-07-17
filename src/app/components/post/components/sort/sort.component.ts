@@ -16,8 +16,8 @@ export class SortComponent {
   clickState: boolean;
 
   @Input() showFeed: boolean;
-  @Output() changeSort = new EventEmitter();
-  @Output() changeFeedEmitter = new EventEmitter();
+  @Output() changeSort = new EventEmitter<string>();
+  @Output() changeFeedEmitter = new EventEmitter<string>();
 
   constructor() {
 

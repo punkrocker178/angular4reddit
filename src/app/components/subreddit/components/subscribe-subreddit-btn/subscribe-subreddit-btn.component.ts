@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { SubredditData } from 'src/app/model/subreddit.interface';
 import { SubredditService } from 'src/app/services/subreddit.service';
 
 @Component({
@@ -11,9 +12,9 @@ import { SubredditService } from 'src/app/services/subreddit.service';
 
 export class SubscribeSubredditBtnComponent implements OnInit, OnDestroy {
 
-    @Input() subredditData;
+    @Input() subredditData: SubredditData;
     isSubscribed: boolean;
-    subscribe$ = new Subject();
+    subscribe$ = new Subject<string>();
 
     constructor(
         private subredditService: SubredditService) {}

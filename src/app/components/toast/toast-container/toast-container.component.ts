@@ -1,6 +1,7 @@
 import {Component, HostBinding, TemplateRef} from '@angular/core';
 
 import {ToastService} from '../../../services/toast.service';
+import {Toast} from '../../../model/toast.interface';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class ToastsContainerComponent {
 
   constructor(public toastService: ToastService) {}
 
-  isTemplate(toast) {
+  isTemplate(toast: Toast): boolean {
       return toast.textOrTpl instanceof TemplateRef;
      }
 }

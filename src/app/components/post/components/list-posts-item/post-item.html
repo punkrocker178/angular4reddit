@@ -2,7 +2,7 @@
 <div class="card mt-3" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
   <div class="card-body" [ngClass]="{'mb-3': options.isDetail, 'crop-content': (!isGallery && !options.isDetail)}">
 
-    <div class="card-side-padding pointer">
+    <div class="card-side-padding my-2 pointer">
       <div *ngIf="post?.data['stickied']" class="mt-2">
         <span class="icon-before icon-thumbstack">
           <span class="ms-2">Pinned</span>
@@ -26,7 +26,7 @@
 
 
       <div class="d-flex flex-row flex-wrap pb-2">
-        <h5 (click)="viewDetail()" class="card-title mb-0 d-inline-block me-2">{{post?.data['title'] | replacePipe}}
+        <h5 (click)="viewDetail()" class="card-title mb-0 d-inline-block">{{post?.data['title'] | replacePipe}}
         </h5>
 
         <span title="Archived" *ngIf="options.isArchive" class="icon-before icon-archive me-2 text-warning"></span>
@@ -117,7 +117,7 @@
 
     <!-- Post text content -->
     <ng-container *ngIf="!isComment; else commentBlock">
-      <div (click)="viewDetail()" class="parsed-html card-side-padding pointer" appHTML
+      <div (click)="viewDetail()" class="parsed-html pt-1 pt-md-2 card-side-padding pointer" appHTML
         [selfText]="post?.data['selftext_html']">
       </div>
     </ng-container>

@@ -21,8 +21,8 @@ export class PostDetailComponent implements OnInit {
   isLoading: boolean = true;
 
   post: Post;
-  comments;
-  postOptions;
+  comments: Post[];
+  postOptions: { isDetail?: boolean; isArchive?: boolean };
   originalPoster: string;
 
   postId: string;
@@ -30,7 +30,7 @@ export class PostDetailComponent implements OnInit {
   defaultMarkdown: boolean;
   disableCommentBtn = true;
 
-  @ViewChild(CommentEditorComponent) commentEditor;
+  @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
 
   constructor(
     private router: Router,
@@ -82,7 +82,7 @@ export class PostDetailComponent implements OnInit {
       this.comments.push({
         data: data,
         kind: 't1'
-      });
+      } as Post);
     });
   }
 
@@ -96,6 +96,10 @@ export class PostDetailComponent implements OnInit {
 
   showCommentEditor() {
     return this.authenticateService.getIsLoggedIn();
+  }
+
+  login() {
+    this.authenticateService.login();
   }
 
 }
