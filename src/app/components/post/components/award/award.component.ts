@@ -1,4 +1,5 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Award } from 'src/app/model/post';
 
 @Component({
     selector: 'app-award',
@@ -6,8 +7,8 @@ import { Component, Input, Output } from '@angular/core';
 })
 export class AwardComponent {
 
-    @Input() awards;
-    @Input() isDetail;
+    @Input() awards: Award[];
+    @Input() isDetail: boolean;
 
     numberOfItems = 5;
     isShowAll = false;

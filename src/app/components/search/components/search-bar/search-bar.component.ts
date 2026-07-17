@@ -23,16 +23,16 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
   constructor(private redditSearchService: RedditSearchService,
     private router: Router) { }
 
-  model;
+  model: string;
 
-  @Input() showSearchBtn;
+  @Input() showSearchBtn: boolean;
   keyEventSubscription: Subscription;
   @ViewChild('inputEl') inputElement: ElementRef;
 
   ngAfterViewInit() {
     const keyEvent = fromEvent(this.inputElement.nativeElement, 'keydown');
     this.keyEventSubscription = keyEvent.pipe(tap((event: KeyboardEvent) => {
-      if (event.keyCode === 13) {
+      if (event.key === 'Enter') {
         this.navigateToSearchComponent();
       }
     })).subscribe();

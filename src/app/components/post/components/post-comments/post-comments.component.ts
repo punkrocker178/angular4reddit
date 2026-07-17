@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { tap } from 'rxjs/operators';
+import { Post, PostReplies } from 'src/app/model/post';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -8,11 +9,13 @@ import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
   })
 export class PostCommentsComponent implements OnInit{
 
-  @Input() comments;
-  @Input() isReplies;
+  @Input() comments: Post[] | PostReplies;
+  @Input() isReplies: boolean;
   @Input() postId: string;
   @Input() orginalPoster: string;
   @Input() isArchive: boolean;
+
+  commentList: Post[] = [];
 
   moreRepliesLoading: boolean;
   enableEditor: boolean;
@@ -30,10 +33,10 @@ export class PostCommentsComponent implements OnInit{
     private submitService: RedditSubmitService) {}
 
   ngOnInit() {
-    if (typeof this.comments === 'object') {
-      if (this.comments.data && this.comments.data['children']) {
-        this.comments = this.comments.data['children'];
-      }
+    if (Array.isArray(this.comments)) {
+      this.commentList = this.comments;
+    } else if (this.comments?.data?.children) {
+      this.commentList = this.comments.data.children;
     }
   }
 
@@ -47,8 +50,8 @@ export class PostCommentsComponent implements OnInit{
     return comment.kind === 't1';
   }
 
-  pushComment(comment) {
-    this.comments.push(comment);
+  pushComment(comment: Post) {
+    this.commentList.push(comment);
   }
 
   loadMoreReplies(event, comment) {
@@ -75,7 +78,7 @@ export class PostCommentsComponent implements OnInit{
     this.submitService.loadMoreComments(payload).pipe(
       tap(next => {
         this.moreChildrenId.splice(0, end);
-        this.comments = [...this.comments, ...next];
+        this.commentList = [...this.commentList, ...next];
         this.moreRepliesLoading = false;
       })
     ).subscribe();

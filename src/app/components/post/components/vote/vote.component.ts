@@ -7,7 +7,7 @@ import { VotingService } from 'src/app/services/vote.service';
 })
 export class VoteComponent implements OnInit {
 
-    @Input() score;
+    @Input() score: number;
     @Input() id: string;
     @Input() liked: boolean;
     @Input() isCompactView: boolean;

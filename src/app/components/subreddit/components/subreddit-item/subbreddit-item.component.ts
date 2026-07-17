@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { SubredditAbout } from 'src/app/model/subreddit.interface';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature
 export class SubbredditItemComponent implements OnInit, OnDestroy {
 
     icon: string;
-    @Input() subredditData;
+    @Input() subredditData: SubredditAbout;
     subscribe$ = new Subject();
 
     constructor(

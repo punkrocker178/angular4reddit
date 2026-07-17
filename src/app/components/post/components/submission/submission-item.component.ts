@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { PostData } from 'src/app/model/post';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
@@ -12,7 +13,7 @@ export class SubmissionItemComponent implements OnInit {
 
     subredddit: string;
 
-    @Input() submissionData;
+    @Input() submissionData: PostData;
 
     constructor(private checkDeviceFeature: CheckDeviceFeatureService) { }
 

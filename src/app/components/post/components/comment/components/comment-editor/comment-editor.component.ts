@@ -1,9 +1,14 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
+import { Post } from 'src/app/model/post';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { TrumbowygComponent } from 'src/app/shared/components/trumbowyg/trumbowyg.component';
+
+export interface TrumbowygConfigs {
+    isComment?: boolean;
+}
 
 @Component({
     selector: 'app-comment-editor',
@@ -29,11 +34,11 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
     @Input() useMarkdown: boolean;
 
-    @Input() trumbowygConfigs;
+    @Input() trumbowygConfigs?: TrumbowygConfigs;
 
-    @Input() commentData;
+    @Input() commentData: Post;
 
-    @Output() triggerCommentButton = new EventEmitter();
+    @Output() triggerCommentButton = new EventEmitter<boolean>();
 
     @ViewChild(TrumbowygComponent) trumbowygChild;
     @ViewChild('textAreaElement') textArea;

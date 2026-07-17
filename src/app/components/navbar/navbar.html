@@ -5,7 +5,7 @@
     </a>
     <span routerLink="/" class="d-flex align-items-center me-auto pointer">Angular Reddit</span>
 
-    <div *ngIf="!isMobile()" class="pt-2">
+    <div *ngIf="!isMobile()" class="pt-2 d-none d-md-block">
       <app-search-bar [showSearchBtn]="true"></app-search-bar>
     </div>
 

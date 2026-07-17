@@ -1,5 +1,10 @@
 import { AfterContentInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 
+export interface GalleryConfigs {
+    position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    class?: string;
+}
+
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html'
@@ -10,7 +15,7 @@ export class GalleryComponent implements OnInit, AfterContentInit {
     positionClass: string;
     @ViewChild('gallery') galleryEl: ElementRef;
     childList = [];
-    @Input() configs;
+    @Input() configs: GalleryConfigs;
 
     constructor(private renderer2: Renderer2) {
 

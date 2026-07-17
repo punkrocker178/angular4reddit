@@ -16,6 +16,7 @@ import { tap } from 'rxjs/operators';
 import { ToastService } from 'src/app/services/toast.service';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
+import { GalleryConfigs } from 'src/app/components/gallery/gallery.component';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { PreferencesService } from 'src/app/services/preferences.service';
 
@@ -71,7 +72,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   // Posts that don't have selft text, images, videos
   noSelfText = false;
 
-  galleryConfigs = {
+  galleryConfigs: GalleryConfigs = {
     position: 'top-left',
     class: ''
   }

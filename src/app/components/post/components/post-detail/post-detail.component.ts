@@ -98,4 +98,8 @@ export class PostDetailComponent implements OnInit {
     return this.authenticateService.getIsLoggedIn();
   }
 
+  login() {
+    this.authenticateService.login();
+  }
+
 }
