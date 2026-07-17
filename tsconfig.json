@@ -12,6 +12,9 @@
     "importHelpers": true,
     "target": "ES2022",
     "allowSyntheticDefaultImports": true,
+    "types": [
+      "jquery"
+    ],
     "lib": [
       "es2018",
       "dom"

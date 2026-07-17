@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import turndown from 'turndown';
 import { TrumbowygConstants } from '../constants/trymbowyg-constants';
 
-declare var $: any;
-
 @Injectable()
 export class TrumbowygService {
 

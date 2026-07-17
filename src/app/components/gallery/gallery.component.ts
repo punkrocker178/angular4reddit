@@ -1,5 +1,4 @@
 import { AfterContentInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
-declare var $: any;
 
 @Component({
     selector: 'app-gallery',
