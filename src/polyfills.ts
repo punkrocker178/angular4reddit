@@ -23,6 +23,13 @@ import '@angular/localize/init';
  */
 
 /**
+ * iOS Safari < 15.4 lacks Array.prototype.at (ES2022 RelativeIndexable).
+ * Angular 18 uses it in framework code; the CLI does not downlevel runtime
+ * prototype methods, so this must be loaded before the app bundle.
+ */
+import 'core-js/es/array/at';
+
+/**
  * By default, zone.js will patch all possible macroTask and DomEvents
  * user can disable parts of macroTask/DomEvents patch by setting following flags
  * because those flags need to be set before `zone.js` being loaded, and webpack
