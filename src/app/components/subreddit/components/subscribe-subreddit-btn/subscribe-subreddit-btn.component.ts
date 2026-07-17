@@ -14,7 +14,7 @@ export class SubscribeSubredditBtnComponent implements OnInit, OnDestroy {
 
     @Input() subredditData: SubredditData;
     isSubscribed: boolean;
-    subscribe$ = new Subject();
+    subscribe$ = new Subject<string>();
 
     constructor(
         private subredditService: SubredditService) {}

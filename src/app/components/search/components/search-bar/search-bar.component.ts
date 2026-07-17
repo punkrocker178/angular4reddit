@@ -27,7 +27,7 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
 
   @Input() showSearchBtn: boolean;
   keyEventSubscription: Subscription;
-  @ViewChild('inputEl') inputElement: ElementRef;
+  @ViewChild('inputEl') inputElement: ElementRef<HTMLInputElement>;
 
   ngAfterViewInit() {
     const keyEvent = fromEvent(this.inputElement.nativeElement, 'keydown');
@@ -38,19 +38,19 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
     })).subscribe();
   }
 
-  search = (text$: Observable<String>) => {
+  search = (text$: Observable<string>) => {
     return text$.pipe(debounceTime(300), distinctUntilChanged(), switchMap((term: string) => {
       if (term.length < 2) {
         return of([]);
       }
       return this.redditSearchService.searchSubredditNames(term);
-    }), catchError(error => {
+    }), catchError((error: unknown) => {
       console.error(error);
       return of([]);
     }));
   }
 
-  navigateToSubreddit(item) {
+  navigateToSubreddit(item: { item: string }): void {
     const subreddit = item.item;
     this.router.navigateByUrl(`/r/${subreddit}`);
   }

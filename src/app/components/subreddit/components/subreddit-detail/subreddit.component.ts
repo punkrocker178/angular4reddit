@@ -5,7 +5,7 @@ import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { Utils } from '../../../../class/Utils';
 import { Observable, of } from 'rxjs';
 import { SubredditAbout, SubredditData, SubredditRule, SubredditRulesResponse, LinkFlair } from 'src/app/model/subreddit.interface';
-
+import { FlairData } from 'src/app/model/post';
 
 @Component({
   selector: 'app-subreddit',
@@ -22,7 +22,7 @@ export class SubredditComponent implements OnInit {
   listingType = 'subreddit';
   subredditData: SubredditData;
   subredditRulesData: SubredditRule[];
-  subredditFlairData = [];
+  subredditFlairData: FlairData[] = [];
   activeBannerTab = 0;
 
   bannerTabActiveStatus = [
@@ -32,7 +32,7 @@ export class SubredditComponent implements OnInit {
     false,
   ];
 
-  collapseElementStatusArr;
+  collapseElementStatusArr: boolean[];
 
   @ViewChildren('collapseText') collapseTextList!: QueryList<ElementRef>;
 
@@ -60,7 +60,7 @@ export class SubredditComponent implements OnInit {
             next.map(flair => {
               this.subredditFlairData.push({
                 flair_text: flair.text,
-                flair_richtext: flair.richtext,
+                flair_richtext: flair.richtext as FlairData['flair_richtext'],
                 flair_background_color: flair.background_color
               });
             })
@@ -104,14 +104,14 @@ export class SubredditComponent implements OnInit {
     }
   }
 
-  changeTab(event, tabIndex: number) {
+  changeTab(event: Event, tabIndex: number): void {
     event.preventDefault();
     this.bannerTabActiveStatus = new Array(4).fill(false);
     this.bannerTabActiveStatus[tabIndex] = true;
     this.activeBannerTab = tabIndex;
   }
 
-  toggleCollapseElement(index) {
+  toggleCollapseElement(index: number): void {
     if (!this.collapseElementStatusArr[index]) {
       this.collapseElementStatusArr[index] = true;
     } else {
@@ -119,8 +119,8 @@ export class SubredditComponent implements OnInit {
     }
   }
 
-  filterByFlair(flair) {
-    const flairText = flair['flair_text'] || flair['flair_richtext'][0]['t'];
+  filterByFlair(flair: FlairData): void {
+    const flairText = flair.flair_text || flair.flair_richtext?.[0]?.t;
     this.router.navigate([`/r/${this.subreddit}/`], { queryParams: { flair: flairText } });
   }
 

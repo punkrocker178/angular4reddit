@@ -21,7 +21,7 @@ export class CommentComponent implements OnInit {
     @Input() originalPoster: string;
     @Output() submittedComment: EventEmitter<Post> = new EventEmitter();
 
-    @ViewChild(CommentEditorComponent) commentEditor;
+    @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
 
     enableEditor: boolean;
     disableReplyBtn = true;

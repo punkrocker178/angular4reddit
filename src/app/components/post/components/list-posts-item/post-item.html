@@ -117,7 +117,7 @@
 
     <!-- Post text content -->
     <ng-container *ngIf="!isComment; else commentBlock">
-      <div (click)="viewDetail()" class="parsed-html card-side-padding pointer" appHTML
+      <div (click)="viewDetail()" class="parsed-html pt-1 pt-md-2 card-side-padding pointer" appHTML
         [selfText]="post?.data['selftext_html']">
       </div>
     </ng-container>

@@ -40,13 +40,13 @@ export class PostCommentsComponent implements OnInit{
     }
   }
 
-  hasReplies(comment) {
+  hasReplies(comment: Post): boolean {
     return comment.data['replies'] &&
     comment.data['replies']['data']['children'] &&
     comment.data['replies']['data']['children'].length > 0;
   }
 
-  isComment(comment) {
+  isComment(comment: Post): boolean {
     return comment.kind === 't1';
   }
 
@@ -54,7 +54,7 @@ export class PostCommentsComponent implements OnInit{
     this.commentList.push(comment);
   }
 
-  loadMoreReplies(event, comment) {
+  loadMoreReplies(event: Event, comment: Post) {
     event.preventDefault();
 
     if (this.moreRepliesLoading) {

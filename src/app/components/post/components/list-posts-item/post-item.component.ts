@@ -1,5 +1,12 @@
 import { Component, Input, ElementRef, Renderer2, TemplateRef, ViewChild, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { Post } from 'src/app/model/post';
+import {
+  FlairData,
+  GalleryData,
+  GalleryItem,
+  MediaResolution,
+  Post,
+  PreviewImage
+} from 'src/app/model/post';
 import { Router } from '@angular/router';
 import { Utils } from 'src/app/class/Utils';
 import { HttpParams } from '@angular/common/http';
@@ -9,7 +16,7 @@ import { UserService } from 'src/app/services/user.service';
 import { DomParserPipe } from 'src/app/pipe/dom-parser.pipe';
 import { Domains } from 'src/app/constants/domains';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
-import Hls from 'hls.js';
+import Hls, { ErrorData } from 'hls.js';
 import dashjs from 'dashjs';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { tap } from 'rxjs/operators';
@@ -33,9 +40,9 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     isDetail: false,
     isArchive: false
   };
-  @ViewChild('twitterEmbed') tweet!: ElementRef;
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef;
-  @ViewChild('flairElement') flairEl!: ElementRef;
+  @ViewChild('twitterEmbed') tweet!: ElementRef<HTMLElement>;
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  @ViewChild('flairElement') flairEl!: ElementRef<HTMLElement>;
 
   isUpVoted = false;
   isDownVoted = false;
@@ -58,7 +65,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   hlsPlayer?: Hls;
   dashPlayer?: dashjs.MediaPlayerClass;
 
-  flair: { flair_text?: string; flair_richtext?: any; flair_background_color?: string } = {};
+  flair: FlairData = {};
 
   imageSrc = '';
   videoSrc = '';
@@ -77,7 +84,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     class: ''
   }
 
-  galleryData: { items: any[] } = {
+  galleryData: GalleryData = {
     items: []
   };
 
@@ -223,7 +230,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
         this.hlsPlayer.loadSource(src);
         this.hlsPlayer.attachMedia(this.videoPlayer.nativeElement);
 
-        this.hlsPlayer.on(Hls.Events.ERROR, function (_event, data) {
+        this.hlsPlayer.on(Hls.Events.ERROR, function (_event: string, data: ErrorData) {
           const errorDetails = data.details;
           console.error(errorDetails);
         });
@@ -257,11 +264,13 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     }
   }
 
-  isWideScreen(images: any[]): boolean {
-    const image = images[0].hasOwnProperty('metadata') ? images[0]['metadata'] : images[0];
-    const source = image.hasOwnProperty('source') ? 'source' : 's';
-    const width = image[source]['width'] || image[source]['x'];
-    const height = image[source]['height'] || image[source]['y'];
+  isWideScreen(images: (GalleryItem | PreviewImage)[]): boolean {
+    const first = images[0] as GalleryItem & PreviewImage;
+    const image = (first.metadata ?? first) as Record<string, { width?: number; height?: number; x?: number; y?: number }>;
+    const sourceKey = Object.prototype.hasOwnProperty.call(image, 'source') ? 'source' : 's';
+    const dims = image[sourceKey];
+    const width = dims?.width || dims?.x || 0;
+    const height = dims?.height || dims?.y || 0;
     return width > height;
   }
 
@@ -321,23 +330,29 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     return image;
   }
 
-  getImage(data: any) {
-    let image, resolutions, images;
+  getImage(data: PreviewImage | PreviewImage[]): string {
+    let image = '';
+    let resolutions: MediaResolution[] | undefined;
+    let images: PreviewImage | undefined;
 
     // GIFs
-    if (data['resolutions']) {
-      resolutions = data['resolutions'];
+    if (!Array.isArray(data) && data.resolutions) {
+      resolutions = data.resolutions;
       images = data;
     }
 
     // Images
-    if (data[0] && data[0]['resolutions']) {
-      resolutions = data[0]['resolutions'];
+    if (Array.isArray(data) && data[0]?.resolutions) {
+      resolutions = data[0].resolutions;
       images = data[0];
     }
 
-    if ((resolutions[resolutions.length - 1] && resolutions[resolutions.length - 1]['height'] < 300) || this.options.isDetail) {
-      image = images['source']['url'];
+    if (!resolutions?.length || !images?.source) {
+      return image;
+    }
+
+    if ((resolutions[resolutions.length - 1]?.height ?? 0) < 300 || this.options.isDetail) {
+      image = images.source.url;
     } else {
       try {
         image = this.getSmallerImage(resolutions, resolutions.length - 1);
@@ -349,13 +364,13 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     return image;
   }
 
-  getSmallerImage(resolutionArr: any[], resolutionIndex: number): string {
+  getSmallerImage(resolutionArr: MediaResolution[], resolutionIndex: number): string {
 
     if (resolutionArr.length === 0) {
       return '';
     }
 
-    return resolutionArr[resolutionIndex]['url'];
+    return resolutionArr[resolutionIndex].url;
   }
 
   // Needs refactor
@@ -476,7 +491,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     })).subscribe();
   }
 
-  share(toastTemplate: TemplateRef<any>) {
+  share(toastTemplate: TemplateRef<unknown>) {
     const url = `https://www.reddit.com${this.post.data['permalink']}`;
 
     if (!navigator.clipboard) {
@@ -495,7 +510,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
    * Reference: https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
    */
 
-  fallbackCopyTextToClipboard(text: string, toastTemplate: TemplateRef<any>) {
+  fallbackCopyTextToClipboard(text: string, toastTemplate: TemplateRef<unknown>) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
 

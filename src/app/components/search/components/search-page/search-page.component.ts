@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
-import { Post } from 'src/app/model/post';
+import { Post, PostData } from 'src/app/model/post';
 
 interface SearchSubredditResult {
   after: string;
@@ -29,20 +29,20 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
     paramSubscription: Subscription;
 
-    subreddit$ = new BehaviorSubject([]);
+    subreddit$ = new BehaviorSubject<Post[]>([]);
     subredditLoading = true;
     subredditAfter: string;
     allSubredditResults = false;
 
-    submission$ = new BehaviorSubject(null);
+    submission$ = new BehaviorSubject<PostData[] | null>(null);
     submissionLoading = true;
-    oldestSubmission;
+    oldestSubmission: number;
 
     allResults = false;
 
     subredditFilter: string;
     timeOffset: string;
-    resultsLimit;
+    resultsLimit: string | number;
     advancedSearchChanged: boolean;
 
     popoverConfig = {
@@ -71,15 +71,21 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
     }
 
-    getResultsLimit() {
+    getResultsLimit(): number {
         if (this.resultsLimit) {
-            return parseInt(this.resultsLimit);
+            return parseInt(String(this.resultsLimit), 10);
         }
 
         return 25;
     }
 
-    getSearchSubmissionPayload(term: string, subreddit?: string, before?, after?, limit?: number) {
+    getSearchSubmissionPayload(
+        term: string,
+        subreddit?: string,
+        before?: string | number,
+        after?: string | number,
+        limit?: number
+    ): SearchSubmissionPayload {
         return  {
             term: term,
             subredditFilter: subreddit,
@@ -89,7 +95,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    searchSubreddits(name: string, after?: string, limit?: number) {
+    searchSubreddits(name: string, after?: string, limit?: number): Observable<SearchSubredditResult> {
         const payload  = {
             name: name,
             limit: limit ? limit : 5,
@@ -136,7 +142,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         }
 
         return this.redditSearchService.searchSubmission(payload).pipe(
-            tap(next => {
+            tap((next: PostData[]) => {
 
                 if (next.length === 0) {
                     this.allResults = true;
@@ -144,7 +150,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
                 this.advancedSearchChanged = false;
                 this.submissionLoading = false;
-                const currentSubmissions = this.submission$.getValue();
+                const currentSubmissions = this.submission$.getValue() ?? [];
                 this.submission$.next([...currentSubmissions, ...next]);
                 this.oldestSubmission = this.getOldestSubmission(next);
             })
@@ -158,7 +164,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
     loadMoreSubmissions() {
         this.submissionLoading = true;
-        let after;
+        let after: number;
         switch(this.timeOffset) {
             case '1 Month':
                 after = this.oldestSubmission - 2628000;
@@ -181,11 +187,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         this.searchSubmissions(searchPayload).subscribe();
     }
 
-    getOldestSubmission(submissions: []) {
+    getOldestSubmission(submissions: PostData[]): number {
         let oldestDate = Number.MAX_SAFE_INTEGER;
         submissions.forEach(submission => {
-            if (oldestDate > submission['created_utc']) {
-                oldestDate = submission['created_utc']
+            if (oldestDate > submission.created_utc) {
+                oldestDate = submission.created_utc
             }
         });
         return oldestDate;
