@@ -2,9 +2,6 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, View
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime, tap } from 'rxjs/operators';
-declare var $: any;
-
 @Component({
     selector: 'app-trumbowyg-editor',
     templateUrl: './trumbowyg.component.html'
