@@ -5,6 +5,11 @@
 # You can see what browsers were selected by your queries by running:
 #   npx browserslist
 
+# Explicit iOS 15 floor: esbuild only downlevels ES2022 syntax (e.g. class
+# static blocks in zone.js and AOT output) when browserslist includes targets
+# that lack those features. Without this, "last 2 versions" resolves to iOS 16+.
+ios_saf >= 15
+
 > 0.5%
 last 2 versions
 Firefox ESR
