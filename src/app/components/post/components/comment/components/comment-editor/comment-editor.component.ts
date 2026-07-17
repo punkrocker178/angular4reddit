@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime, tap } from 'rxjs/operators';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { fromEvent, Observable, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { TrumbowygConfigs } from 'src/app/constants/trymbowyg-constants';
+import { Post } from 'src/app/model/post';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { TrumbowygComponent } from 'src/app/shared/components/trumbowyg/trumbowyg.component';
@@ -29,14 +31,14 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
     @Input() useMarkdown: boolean;
 
-    @Input() trumbowygConfigs;
+    @Input() trumbowygConfigs?: TrumbowygConfigs;
 
-    @Input() commentData;
+    @Input() commentData: Post;
 
-    @Output() triggerCommentButton = new EventEmitter();
+    @Output() triggerCommentButton = new EventEmitter<boolean>();
 
-    @ViewChild(TrumbowygComponent) trumbowygChild;
-    @ViewChild('textAreaElement') textArea;
+    @ViewChild(TrumbowygComponent) trumbowygChild: TrumbowygComponent;
+    @ViewChild('textAreaElement') textArea: ElementRef<HTMLTextAreaElement>;
 
     constructor(
         private checkDeviceFeatureService: CheckDeviceFeatureService,
@@ -44,7 +46,7 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
     ) { }
 
     ngAfterViewInit() {
-        let editorInstance;
+        let editorInstance: ElementRef<HTMLElement>;
 
         if (!this.useTrumbowygEditor()) {
             editorInstance = this.textArea;
@@ -66,9 +68,7 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
             editorInstance = this.trumbowygChild.editorInstance ?
                 this.trumbowygChild.editorInstance : this.trumbowygChild.commentEditorInstance;
 
-            let keyup$;
-
-            keyup$ = fromEvent(editorInstance.nativeElement, 'keyup');
+            const keyup$: Observable<Event> = fromEvent(editorInstance.nativeElement, 'keyup');
 
             this.keyEventSubscribtion = keyup$.pipe(debounceTime(300)).subscribe(_ => {
                 const content = this.trumbowygService.getTrumbowygAsMarkdown(this.trumbowygChild.trumbowygSelector);

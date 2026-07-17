@@ -1,4 +1,5 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Award } from 'src/app/model/post';
 
 @Component({
     selector: 'app-award',
@@ -6,8 +7,8 @@ import { Component, Input, Output } from '@angular/core';
 })
 export class AwardComponent {
 
-    @Input() awards;
-    @Input() isDetail;
+    @Input() awards: Award[];
+    @Input() isDetail: boolean;
 
     numberOfItems = 5;
     isShowAll = false;
@@ -26,15 +27,15 @@ export class AwardComponent {
 
     constructor() {}
 
-    getAwardIcon(award, index) {
-      return award['resized_icons'] && award['resized_icons'][index] ? award['resized_icons'][index].url : award['icon_url']; 
+    getAwardIcon(award: Award, index: number): string {
+      return award.resized_icons && award.resized_icons[index] ? award.resized_icons[index].url : award.icon_url; 
     }
 
-    getNumbersRemain() {
+    getNumbersRemain(): number {
         return this.awards.length - this.numberOfItems;
     }
 
-    showAllAwards() {
+    showAllAwards(): void {
         this.numberOfItems = this.awards.length;
         this.isShowAll = true;
     }

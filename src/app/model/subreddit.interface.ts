@@ -5,6 +5,7 @@ export interface SubredditAbout {
 
 export interface SubredditData {
   display_name: string;
+  display_name_prefixed?: string;
   title: string;
   public_description: string;
   subscribers: number;
@@ -17,6 +18,7 @@ export interface SubredditData {
   name: string;
   subreddit_type: string;
   created_utc: number;
+  user_is_subscriber?: boolean;
   [key: string]: unknown;
 }
 

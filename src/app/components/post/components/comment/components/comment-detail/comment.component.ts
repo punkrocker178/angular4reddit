@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
+import { Post } from 'src/app/model/post';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
@@ -15,12 +16,12 @@ import { CommentEditorComponent } from '../comment-editor/comment-editor.compone
 export class CommentComponent implements OnInit {
 
     @Input() useMarkdown: boolean;
-    @Input() commentData;
+    @Input() commentData: Post;
     @Input() isArchive: boolean;
     @Input() originalPoster: string;
-    @Output() submittedComment: EventEmitter<Object> = new EventEmitter();
+    @Output() submittedComment: EventEmitter<Post> = new EventEmitter();
 
-    @ViewChild(CommentEditorComponent) commentEditor;
+    @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
 
     enableEditor: boolean;
     disableReplyBtn = true;
@@ -73,7 +74,7 @@ export class CommentComponent implements OnInit {
             this.submittedComment.emit({
                 data: data,
                 kind: 't1'
-            });
+            } as Post);
         });
     }
 

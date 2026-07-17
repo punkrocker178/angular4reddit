@@ -124,11 +124,12 @@ export interface PostData {
   link_flair_background_color?: string;
   awards?: Award[];
   archived?: boolean;
+  distinguished?: string | null;
   parent_id?: string;
   children?: string[];
   replies?: PostReplies | '';
   crosspost_parent_list?: Post[];
-  all_awardings: unknown[];
+  all_awardings: Award[];
   [key: string]: unknown;
 }
 

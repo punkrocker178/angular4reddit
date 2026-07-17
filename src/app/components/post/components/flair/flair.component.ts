@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { FlairData } from 'src/app/model/post';
 
 @Component({
     selector: 'app-flair',
@@ -6,7 +7,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChi
 })
 export class FlairComponent implements OnInit, AfterViewInit {
 
-    @Input() flairInput;
+    @Input() flairInput: FlairData;
     @ViewChild('flairElement') flairEl: ElementRef;
     flairText: string;
     flairEmoji: string;

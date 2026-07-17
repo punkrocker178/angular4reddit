@@ -1,6 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { SubredditAbout } from 'src/app/model/subreddit.interface';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 
 @Component({
@@ -9,11 +9,10 @@ import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature
     templateUrl: './subreddit-item.component.html'
 })
 
-export class SubbredditItemComponent implements OnInit, OnDestroy {
+export class SubbredditItemComponent implements OnInit {
 
     icon: string;
-    @Input() subredditData;
-    subscribe$ = new Subject();
+    @Input() subredditData: SubredditAbout;
 
     constructor(
         private router: Router,
@@ -29,11 +28,6 @@ export class SubbredditItemComponent implements OnInit, OnDestroy {
 
     isMobile() {
         return this.checkDeviceFeatureService.isMobile();
-    }
-
-    ngOnDestroy() {
-        this.subscribe$.complete();
-        this.subscribe$.unsubscribe();
     }
 
 }
