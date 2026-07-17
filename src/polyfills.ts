@@ -1,7 +1,3 @@
-/***************************************************************************************************
- * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
- */
-import '@angular/localize/init';
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.
@@ -21,6 +17,18 @@ import '@angular/localize/init';
 /***************************************************************************************************
  * BROWSER POLYFILLS
  */
+
+/**
+ * iOS Safari < 15.4 lacks Array.prototype.at (ES2022 RelativeIndexable).
+ * Angular 18 uses it in framework code; the CLI does not downlevel runtime
+ * prototype methods, so this must be loaded before the app bundle.
+ */
+import 'core-js/es/array/at';
+
+/**
+ * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
+ */
+import '@angular/localize/init';
 
 /**
  * By default, zone.js will patch all possible macroTask and DomEvents
