@@ -1,20 +1,37 @@
 @import "../_vars.less";
 
 .set-theme(dark, @color, @background-color) {
-    --bs-blue: #3285ff;
+    --app-primary: @primary-dark;
+    --app-primary-rgb: 50, 133, 255;
+    --app-page-bg: @background-color-dark;
+    --app-surface: @background-color-dark-elevated;
+    --app-surface-muted: @background-color-dark-elevated-1;
+    --app-border: @border-dark;
+    --app-text: @color-dark;
+    --app-text-muted: @text-muted-dark;
+    --app-hover: @hover-dark;
+    --app-shadow: @shadow-dark;
+    --app-shadow-hover: @shadow-hover-dark;
+
+    --bs-blue: @primary-dark;
+    --bs-primary: var(--app-primary);
+    --bs-primary-rgb: var(--app-primary-rgb);
+    --bs-link-color: var(--app-primary);
+    --bs-body-color: var(--app-text);
+    --bs-body-bg: var(--app-page-bg);
 
     background-color: @background-color;
     color: @color;
 
     main {
-        background-color: @background-color;
+        background-color: var(--app-page-bg);
     }
 
     a {
-        color: var(--bs-blue);
+        color: var(--app-primary);
     }
-    
-    .set-theme-foreground(@color, @background-color-dark-elevated, @background-color-dark-elevated-1, @background-color-dark-elevated-variant);
+
+    .set-theme-foreground(@color, @background-color-dark-elevated, @background-color-dark-elevated-1);
 
     .dropdown-menu {
         background-color: @background-color-dark-elevated-1;
@@ -22,11 +39,11 @@
     }
 
     .dropdown-item:hover {
-        background-color: var(--bs-blue);
+        background-color: var(--app-primary);
     }
 
     .btn-secondary {
         background-color: transparent;
-        color: @color
+        color: @color;
     }
 }

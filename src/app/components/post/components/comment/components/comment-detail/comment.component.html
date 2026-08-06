@@ -1,6 +1,10 @@
 <div class="pe-2">
   <div class="d-flex flex-row">
-    <span class="me-1 align-self-center">{{commentData.data.author}}</span>
+    @if (commentData.data.author.startsWith('[deleted]')) {
+      <span class="me-1 align-self-center text-muted">{{commentData.data.author}}</span>
+    } @else {
+      <a routerLink="/u/{{commentData.data.author}}" class="me-1 align-self-center">{{commentData.data.author}}</a>
+    }
     <div class="svg-icon" *ngIf="originalPoster === commentData.data.author">
       <svg id="Capa_1" enable-background="new 0 0 512.001 512.001" viewBox="0 0 512.001 512.001"
         xmlns="http://www.w3.org/2000/svg">

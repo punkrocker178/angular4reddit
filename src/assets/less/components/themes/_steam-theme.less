@@ -1,8 +1,22 @@
 @import "../_vars.less";
 
 .set-theme(steam, @color, @background-color) {
+    --app-primary: @primary-steam-solid;
+    --app-primary-rgb: 117, 176, 34;
+    --app-page-bg: @background-color-steam;
+    --app-surface: @background-color-steam-variant-1;
+    --app-surface-muted: @background-color-steam-muted;
+    --app-border: @border-steam;
+    --app-text: @color-steam;
+    --app-text-muted: @text-muted-steam;
+    --app-hover: @hover-steam;
+    --app-shadow: @shadow-steam;
+    --app-shadow-hover: @shadow-hover-steam;
 
     --bs-primary: @primary-steam;
+    --bs-link-color: @color-link-steam;
+    --bs-body-color: var(--app-text);
+    --bs-body-bg: var(--app-page-bg);
 
     background: @background-color-steam;
     color: @color-steam;
@@ -12,23 +26,23 @@
     }
 
     main {
-        background: @background-color-steam;
+        background: var(--app-page-bg);
     }
 
-    .set-theme-foreground(@color, @background-color-steam-variant, @background-color-steam-variant-1, @background-color-steam-variant-2);
+    .set-theme-foreground(@color, @background-color-steam-variant, @background-color-steam-variant-1);
 
-    .set-post-buttons-hover(@background-color-steam-variant-2);
+    .post-buttons:hover {
+        background: @background-color-steam-variant-2;
+        color: #10161b;
+        border-radius: 4px;
+    }
 
     .comments-section {
-        background-color: #1b2838;
+        background-color: var(--app-page-bg);
     }
 
     .comments-section .md {
-        color: #acb2b8;
-    }
-
-    .children {
-        background-color: #16202d;
+        color: var(--app-text-muted);
     }
 
     .dropdown-menu, .form-select {
@@ -37,11 +51,7 @@
     }
 
     .dropdown-item:hover {
-        color:  @background-color-dark-elevated-variant;
-    }
-
-    .post-buttons:hover {
-        color: #10161b;
+        color: @background-color-dark-elevated-variant;
     }
 
     .btn-primary {
@@ -61,7 +71,7 @@
     .up-voted::before {
         color: #60b6e7;
     }
-    
+
     .down-voted::after {
         color: #cc5d60;
     }

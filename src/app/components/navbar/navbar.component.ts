@@ -11,7 +11,8 @@ import { PreferencesService } from 'src/app/services/preferences.service';
 
 @Component({
     selector: 'app-navbar',
-    templateUrl: './navbar.html'
+    templateUrl: './navbar.html',
+    styleUrls: ['./navbar.component.less']
 })
 
 export class NavbarComponent implements OnInit, OnDestroy {

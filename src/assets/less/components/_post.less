@@ -1,8 +1,37 @@
 @import "./_mixin.less";
 
+.card {
+    border-color: var(--app-border);
+    border-radius: 0.5rem;
+    background-color: var(--app-surface);
+    box-shadow: var(--app-shadow);
+    color: var(--app-text);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:not(.custom-card-no-border):hover {
+    box-shadow: var(--app-shadow-hover);
+    border-color: var(--app-border);
+}
+
+.card-footer {
+    background-color: var(--app-surface);
+    border-top: 1px solid var(--app-border);
+}
+
+.card-footer:last-child {
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
 .custom-card-no-border {
     border-width: 0;
-    border-radius: 5px;
+    border-radius: 0.5rem;
+    box-shadow: none;
+}
+
+.custom-card-no-border:hover {
+    box-shadow: none;
 }
 
 .crop-content {
@@ -10,7 +39,7 @@
 }
 
 .post-buttons {
-    font-family: 'Open Sans' sans-serif;
+    font-family: inherit;
     text-align: center;
 }
 
@@ -26,12 +55,13 @@
 }
 
 .post-buttons:hover {
-    background-color: gainsboro;
+    background-color: var(--app-hover);
     border-radius: 4px;
 }
 
 .post-author {
     font-size: 14px;
+    color: var(--app-text-muted);
 }
 
 .post-comments > p {
@@ -107,10 +137,15 @@
 
 .flair-text {
     .flair-tag-mixin(11px, 2px 6px);
-    border: 1px solid black;
+    border: 1px solid var(--app-border);
     display: inline-block;
-    background-color: #f8f9fa;
-    color: #212529;
+    background-color: var(--app-surface-muted);
+    color: var(--app-text);
+}
+
+.card-title {
+    font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
 .video-thumbnail-container {
