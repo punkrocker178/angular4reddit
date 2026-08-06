@@ -1,21 +1,8 @@
 @import "./_mixin.less";
 
-.card-body {
-    padding-left: 0;
-    padding-right: 0;
-}
-
-.card-side-padding {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
 .custom-card-no-border {
     border-width: 0;
     border-radius: 5px;
-    .card-body {
-        padding: 0;
-    }
 }
 
 .crop-content {
@@ -25,10 +12,6 @@
 .post-buttons {
     font-family: 'Open Sans' sans-serif;
     text-align: center;
-}
-
-.vote-btn {
-    padding: 0;
 }
 
 .vote-compact {
@@ -58,9 +41,6 @@
 
 .comments-section {
     max-width: 100%;
-    margin-top: 1rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
     border-radius: 5px;
 }
 
@@ -83,7 +63,6 @@
     font-weight: bold;
     font-size: 12px;
     border-radius: 4px;
-    padding: 10px;
     width: 200px;
 }
 
@@ -91,7 +70,6 @@
     background-color: #333;
     font-size: 14px;
     border-radius: 4px;
-    padding: 10px;
     max-width: 300px;
 }
 
@@ -103,13 +81,11 @@
 .submission-title {
     flex-basis: 0;
     flex-grow: 15;
-    padding-right: 0.5rem;
 }
 
 .submission-thumbnail {
     flex-basis: 0;
     flex-grow: 1;
-    padding: 0.5rem;
 }
 
 .subreddit-item-title {
@@ -155,7 +131,6 @@
 @media (min-width: 360px) {
     .button-group {
         .justify-center-mixin();
-        padding: 0 0 0 0.5rem;
     }
 
     .subreddit-item-title {
@@ -175,7 +150,6 @@
 @media (min-width: 768px) {
     .button-group {
         .justify-center-mixin();
-        padding: 0 1rem 0 1.5rem;
     }
 
     .subreddit-item-join-btn {

@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
+import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
 import { VotingService } from 'src/app/services/vote.service';
 
 @Component({
@@ -14,7 +17,11 @@ export class VoteComponent implements OnInit {
     isUpVoted = false;
     isDownVoted = false;
 
-    constructor(private votingService: VotingService) {
+    constructor(
+        private votingService: VotingService,
+        private authenticateService: RedditAuthenticateService,
+        private modalService: NgbModal
+    ) {
 
     }
 
@@ -26,8 +33,13 @@ export class VoteComponent implements OnInit {
     }
 
     vote(direction: number) {
+         if (!this.authenticateService.getIsLoggedIn()) {
+            this.modalService.open(LoginPromptComponent);
+            return;
+        }
 
-        let undo;
+        let undo: boolean;
+
         switch (direction) {
             case 1:
                 if (this.isDownVoted) {

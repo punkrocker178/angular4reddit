@@ -16,7 +16,7 @@
   top: calc(50% - 15px);
   opacity: 0.3;
   z-index: 2;
-  color: #212529!important
+  color: #212529 !important
 }
 
 .gallery-item {
@@ -28,6 +28,7 @@
 
 .active {
   display: flex;
+
   img {
     align-self: center;
   }
@@ -53,32 +54,33 @@
 .image-number-background {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.35);
-  border-radius: 10%;
-  padding: 4px;
+  border-radius: 6px;
+  line-height: 1;
+  padding: 0.25rem;
 }
 
 .image-number-top-left {
-  top: 5%;
+  top: 10%;
   left: calc(5% - 8px);
 }
 
 .image-number-top-right {
-  top: 5%;
+  top: 10%;
   right: calc(5% - 8px);
 }
 
 .image-number-bottom-left {
-  bottom: 5%;
+  top: 90%;
   left: calc(5% - 8px);
 }
 
 .image-number-bottom-right {
-  top: 5%;
+  top: 90%;
   right: calc(5% - 8px);
 }
 
 .image-number {
-  font-family: open-sans;
+  font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   font-weight: bold;
   color: #fff;
@@ -97,33 +99,11 @@
     height: 500px;
     overflow-y: hidden;
   }
-  
+
   .image-number-background {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.35);
-    border-radius: 10%;
-    padding: 0.625rem 0.5rem;
+    padding: 0.5rem;
   }
-  
-  .image-number-top-left {
-    top: 10%;
-    left: calc(5% - 8px);
-  }
-  
-  .image-number-top-right {
-    top: 10%;
-    right: calc(5% - 8px);
-  }
-  
-  .image-number-bottom-left {
-    bottom: 10%;
-    left: calc(5% - 8px);
-  }
-  
-  .image-number-bottom-right {
-    top: 10%;
-    right: calc(5% - 8px);
-  }
+
 }
 
 @media (min-width: 992px) {

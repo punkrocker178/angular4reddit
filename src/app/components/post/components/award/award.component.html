@@ -9,9 +9,9 @@
       </div>
 
       <!-- Tooltip -->
-      <div #tooltip role="tooltip" class="popover-tooltip award-tooltip">
+      <div #tooltip role="tooltip" class="popover-tooltip award-tooltip p-2">
         <h5>{{award['name']}}</h5>
-        <img class="award-icon-popover" [src]="getAwardIcon(award, 3) | replacePipe">
+        <img class="award-icon-popover my-1" [src]="getAwardIcon(award, 3) | replacePipe">
         <p>{{award['description']}}</p>
       </div>
 

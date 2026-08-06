@@ -9,7 +9,8 @@ import { FlairData } from 'src/app/model/post';
 
 @Component({
   selector: 'app-subreddit',
-  templateUrl: './subreddit.component.html'
+  templateUrl: './subreddit.component.html',
+  styleUrls: ['./subreddit.component.less']
 })
 
 export class SubredditComponent implements OnInit {

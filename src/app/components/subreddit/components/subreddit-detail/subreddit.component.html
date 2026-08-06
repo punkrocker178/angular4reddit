@@ -1,8 +1,8 @@
 <div>
   <div *ngIf="(subredditAboutOb | async)" class="subreddit-header">
     <!-- Background banner image -->
-    <div *ngIf="subredditData.banner_background_image" class="crop-banner-img">
-      <img class="img-fluid center-img" [src]="subredditData.banner_background_image">
+    <div *ngIf="subredditData.banner_background_image" class="header-img"
+      [ngStyle]="{'background-image': 'url(' + subredditData.banner_background_image + ')'}">
     </div>
 
     <div class="banner">
