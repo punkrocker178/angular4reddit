@@ -1,13 +1,14 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, input } from '@angular/core';
 import { FlairData } from 'src/app/model/post';
 
 @Component({
     selector: 'app-flair',
-    templateUrl: './flair.component.html'
+    templateUrl: './flair.component.html',
+    standalone: false
 })
 export class FlairComponent implements OnInit, AfterViewInit {
 
-    @Input() flairInput: FlairData;
+    readonly flairInput = input<FlairData>(undefined);
     @ViewChild('flairElement') flairEl: ElementRef;
     flairText: string;
     flairEmoji: string;
@@ -25,17 +26,19 @@ export class FlairComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.flairInput['flair_background_color']) {
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', this.flairInput['flair_background_color']);
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', this.flairInput['flair_background_color']);
+        const flairInput = this.flairInput();
+        if (flairInput['flair_background_color']) {
+            this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', flairInput['flair_background_color']);
+            this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', flairInput['flair_background_color']);
             this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
             this.renderer2.setStyle(this.flairEl.nativeElement, 'text-shadow', 'black 0 0');
         }
     }
 
     hasFlair() {
-        return this.flairInput['flair_text'] ||
-            (this.flairInput['flair_richtext'] && this.flairInput['flair_richtext'].length > 0);
+        const flairInput = this.flairInput();
+        return flairInput['flair_text'] ||
+            (flairInput['flair_richtext'] && flairInput['flair_richtext'].length > 0);
     }
 
     getFlair() {
@@ -52,8 +55,8 @@ export class FlairComponent implements OnInit, AfterViewInit {
         let flairText;
 
 
-        if (this.flairInput['flair_richtext'].length > 0) {
-            const flairRichText = this.flairInput['flair_richtext'];
+        if (this.flairInput()['flair_richtext'].length > 0) {
+            const flairRichText = this.flairInput()['flair_richtext'];
             const flairArr = flairRichText.filter(part => part['e'] === 'text');
             if (flairArr.length > 0) {
                 flairText = flairArr[0]['t'].replace(regex, (match) => replaceObj[match]);
@@ -61,20 +64,22 @@ export class FlairComponent implements OnInit, AfterViewInit {
             return flairText;
         }
 
-        flairText = this.flairInput['flair_text'].replace(regex, (match) => replaceObj[match]);
+        flairText = this.flairInput()['flair_text'].replace(regex, (match) => replaceObj[match]);
         return flairText;
     }
 
     getEmojiFlair() {
-        return (this.flairInput['flair_richtext'][0] && this.flairInput['flair_richtext'][0]['u']);
+        const flairInput = this.flairInput();
+        return (flairInput['flair_richtext'][0] && flairInput['flair_richtext'][0]['u']);
     }
 
     flairHasEmoji() {
-        if (this.flairInput['flair_richtext'] && this.flairInput['flair_richtext'].length == 0) {
+        const flairInput = this.flairInput();
+        if (flairInput['flair_richtext'] && flairInput['flair_richtext'].length == 0) {
             return false;
         }
 
-        const flair = this.flairInput['flair_richtext'];
+        const flair = flairInput['flair_richtext'];
         return flair &&
             flair.length > 1 &&
             flair[0]['e'] === 'emoji';

@@ -1,24 +1,24 @@
 <div *ngIf="!isMobile(); else submissionMobileView" class="d-flex flex-row p-md-2">
   <div class="submission-vote">
-    <app-vote [id]="submissionData['id']" [isCompactView]="true" [score]="submissionData['score']"
-      [liked]="submissionData['likes']"></app-vote>
+    <app-vote [id]="submissionData()['id']" [isCompactView]="true" [score]="submissionData()['score']"
+      [liked]="submissionData()['likes']"></app-vote>
   </div>
   <!-- Thumbnail  -->
   <div class="submission-thumbnail p-2">
-    <ng-container *ngTemplateOutlet="thumbnail; context: {$implicit: submissionData.thumbnail}"></ng-container>
+    <ng-container *ngTemplateOutlet="thumbnail; context: {$implicit: submissionData().thumbnail}"></ng-container>
   </div>
 
   <!-- Title, subreddit, author -->
   <div class="d-flex flex-column submission-title pe-2">
-    <div appHTML [selfText]="submissionData.title "></div>
+    <div appHTML [selfText]="submissionData().title "></div>
     <div class="d-flex">
       <span>{{subredddit}}</span>
 
-      <a class="ms-2" [routerLink]="'/u/' + submissionData['author']" [routerLinkActive]="'active'">Posted by
-        /u/{{submissionData['author']}}</a>
+      <a class="ms-2" [routerLink]="'/u/' + submissionData()['author']" [routerLinkActive]="'active'">Posted by
+        /u/{{submissionData()['author']}}</a>
 
-      <span [title]="submissionData['created_utc'] | dateTimePipe: 'format'"
-        class="ms-2">{{ submissionData['created_utc'] | dateTimePipe: 'diff' }}</span>
+      <span [title]="submissionData()['created_utc'] | dateTimePipe: 'format'"
+        class="ms-2">{{ submissionData()['created_utc'] | dateTimePipe: 'diff' }}</span>
     </div>
   </div>
 
@@ -27,21 +27,21 @@
 <ng-template #submissionMobileView>
   <div class="p-2">
     <div class="d-flex flex-row">
-      <a [routerLink]="'/r/' + submissionData['subreddit']" [replaceUrl]="true" [routerLinkActive]="'active'"
-          class="me-auto">r/{{submissionData['subreddit']}}</a>
-      <a class="me-1" [routerLink]="'/u/' + submissionData['author']" [routerLinkActive]="'active'">u/{{submissionData['author']}}</a>
+      <a [routerLink]="'/r/' + submissionData()['subreddit']" [replaceUrl]="true" [routerLinkActive]="'active'"
+          class="me-auto">r/{{submissionData()['subreddit']}}</a>
+      <a class="me-1" [routerLink]="'/u/' + submissionData()['author']" [routerLinkActive]="'active'">u/{{submissionData()['author']}}</a>
 
       <span>•</span>
 
-      <span [title]="submissionData['created_utc'] | dateTimePipe: 'format'"
-        class="ms-1">{{ submissionData['created_utc'] | dateTimePipe: 'diff' }}</span>
+      <span [title]="submissionData()['created_utc'] | dateTimePipe: 'format'"
+        class="ms-1">{{ submissionData()['created_utc'] | dateTimePipe: 'diff' }}</span>
     </div>
 
     <div class="d-flex flex-row">
-      <div class="submission-title pe-2" appHTML [selfText]="submissionData.title "></div>
+      <div class="submission-title pe-2" appHTML [selfText]="submissionData().title "></div>
 
       <div class="submission-thumbnail p-2">
-        <ng-container *ngTemplateOutlet="thumbnail; context: {$implicit: submissionData.thumbnail}"></ng-container>
+        <ng-container *ngTemplateOutlet="thumbnail; context: {$implicit: submissionData().thumbnail}"></ng-container>
       </div>
 
     </div>

@@ -25,7 +25,8 @@ interface UserProfileState {
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'user-profile',
-    templateUrl: './user-profile.component.html'
+    templateUrl: './user-profile.component.html',
+    standalone: false
 })
 
 export class UserProfileComponent implements OnInit {

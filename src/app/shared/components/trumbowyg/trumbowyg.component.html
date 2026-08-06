@@ -1,5 +1,5 @@
-<div #editor *ngIf="!configs?.isComment; else commentEditor" id="trumbowyg-content" placeholder="What are your thoughts ?"></div>
+<div #editor *ngIf="!configs()?.isComment; else commentEditor" id="trumbowyg-content" placeholder="What are your thoughts ?"></div>
 
 <ng-template #commentEditor>
-    <div #commentEditorInstance [id]="'trumbowyg-comment-content-' + editorId" placeholder="What are your thoughts ?"></div>
+    <div #commentEditorInstance [id]="'trumbowyg-comment-content-' + editorId()" placeholder="What are your thoughts ?"></div>
 </ng-template>

@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="d-flex" *ngIf="(this.about$ | async)">
+  <div class="d-flex" *ngIf="(about$ | async)">
     <div class="p-4">
       <img class="banner-icon" [src]="userProfile['about'].icon_img">
     </div>
@@ -26,13 +26,13 @@
 
   </div>
 
-  <div *ngIf="(this.comments$ | async)">
+  <div *ngIf="(comments$ | async)">
     <div class="">
 
     </div>
   </div>
 
-  <div *ngIf="(this.overview$ | async)">
+  <div *ngIf="(overview$ | async)">
     <app-listings-component [type]="listingsType" [username]="username"></app-listings-component>
   </div>
 </div>

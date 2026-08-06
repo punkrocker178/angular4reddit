@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, computed, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, computed, signal, input } from '@angular/core';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
 import { BehaviorSubject, of, combineLatest, Observable, Subject } from 'rxjs';
 import { ApiList } from 'src/app/constants/api-list';
@@ -12,13 +12,17 @@ import { QueryRequest } from 'src/app/model/query-request';
 import { MAX_POST_LIMIT, QUERY_LIMIT } from 'src/app/constants/constants';
 
 @Component({
-  selector: 'app-listings-component',
-  templateUrl: './listings.html'
+    selector: 'app-listings-component',
+    templateUrl: './listings.html',
+    standalone: false
 })
 export class ListingsComponent implements OnInit, OnDestroy {
-  @Input() type: string;
-  @Input() username: string;
+  readonly type = input<string>(undefined);
+  readonly username = input<string>(undefined);
 
+  private listingType = signal<string | undefined>(undefined);
+  readonly effectiveType = computed(() => this.type() || this.listingType());
+  
   public subreddit = signal('');
   public flairFilter = signal('');
 
@@ -158,7 +162,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   public changeSort(value: string): void {
     this.subreddit.set('');
-    this.type = '';
+    this.listingType.set('');
 
     switch (value) {
       case ApiList.LISTINGS_HOT_LABEL:
@@ -174,7 +178,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.sort = ApiList.LISTINGS_NEW;
         break;
       case ApiList.LISTINGS_ALL:
-        this.type = 'subreddit';
+        this.listingType.set('subreddit');
         this.subreddit.set(ApiList.LISTINGS_ALL_JSON);
         this.sort = '';
         break;
@@ -191,9 +195,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   private _defaultListingsTypeApi(): string {
     let apiSegment = '';
-    switch (this.type) {
+    switch (this.effectiveType()) {
       case 'user-profile':
-        apiSegment = `/user/${this.username}/overview${this.sort}`;
+        apiSegment = `/user/${this.username()}/overview${this.sort}`;
         break;
       case 'subreddit':
         apiSegment = `/r/${this.subreddit()}${this.sort}`;

@@ -1,16 +1,18 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import { Component, input, linkedSignal, output } from '@angular/core';
 
 @Component({
     selector: 'app-toggle-button',
-    templateUrl: './toggle-button.component.html'
+    templateUrl: './toggle-button.component.html',
+    standalone: false
 })
 export class ToggleButtonComponent {
-    @Output() toggleState: EventEmitter<boolean> = new EventEmitter();
+    readonly state = input(false);
+    readonly toggleState = output<boolean>();
 
-    @Input() state;
+    readonly checked = linkedSignal(() => this.state());
 
     toggle() {
-        this.state = !this.state;
-        this.toggleState.emit(this.state);
+        this.checked.update(s => !s);
+        this.toggleState.emit(this.checked());
     }
 }

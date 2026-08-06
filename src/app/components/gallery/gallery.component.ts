@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnInit, Renderer2, ViewChild, input } from '@angular/core';
 
 export interface GalleryConfigs {
     position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -7,7 +7,8 @@ export interface GalleryConfigs {
 
 @Component({
     selector: 'app-gallery',
-    templateUrl: './gallery.component.html'
+    templateUrl: './gallery.component.html',
+    standalone: false
 })
 export class GalleryComponent implements OnInit, AfterContentInit {
 
@@ -15,7 +16,7 @@ export class GalleryComponent implements OnInit, AfterContentInit {
     positionClass: string;
     @ViewChild('gallery') galleryEl: ElementRef<HTMLElement>;
     childList: HTMLCollection | HTMLElement[] = [];
-    @Input() configs: GalleryConfigs;
+    readonly configs = input<GalleryConfigs>(undefined);
 
     constructor(private renderer2: Renderer2) {
 
@@ -55,7 +56,7 @@ export class GalleryComponent implements OnInit, AfterContentInit {
 
     getPositionClass(): string {
         let position: string;
-        switch (this.configs.position) {
+        switch (this.configs().position) {
             case 'top-right':
                 position = 'image-number-top-right';
                 break;

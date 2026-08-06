@@ -8,7 +8,8 @@ import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.
 import { UserService } from 'src/app/services/user.service';
 @Component({
     selector: 'app-preferences',
-    templateUrl: './preferences.component.html'
+    templateUrl: './preferences.component.html',
+    standalone: false
 })
 
 export class PreferencesComponent implements OnInit, OnDestroy {

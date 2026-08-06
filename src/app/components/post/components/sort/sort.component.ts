@@ -1,11 +1,12 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, Output, input } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { ApiList } from 'src/app/constants/api-list';
 
 @Component({
-  selector: 'app-sort',
-  templateUrl: './sort.component.html',
-  styleUrls: ['./sort.component.less']
+    selector: 'app-sort',
+    templateUrl: './sort.component.html',
+    styleUrls: ['./sort.component.less'],
+    standalone: false
 })
 export class SortComponent {
 
@@ -15,7 +16,7 @@ export class SortComponent {
 
   clickState: boolean;
 
-  @Input() showFeed: boolean;
+  readonly showFeed = input<boolean>(undefined);
   @Output() changeSort = new EventEmitter<string>();
   @Output() changeFeedEmitter = new EventEmitter<string>();
 

@@ -1,13 +1,14 @@
-import {Component, Input} from "@angular/core";
+import {Component, input} from "@angular/core";
 
 @Component({
     selector: 'app-scroll-top-button',
-    templateUrl: './scroll-to-top.component.html'
+    templateUrl: './scroll-to-top.component.html',
+    standalone: false
 })
 export class ScrollToTopComponent {
-    @Input() targetElementId: string;
+    readonly targetElementId = input<string>(undefined);
 
     scroll() {
-        document.getElementById(this.targetElementId).scrollIntoView();
+        document.getElementById(this.targetElementId()).scrollIntoView();
     }
 }

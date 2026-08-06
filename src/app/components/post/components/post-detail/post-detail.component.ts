@@ -12,9 +12,10 @@ import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.
 import { PreferencesService } from 'src/app/services/preferences.service';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'post-detail',
-  templateUrl: './post-detail.html'
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'post-detail',
+    templateUrl: './post-detail.html',
+    standalone: false
 })
 export class PostDetailComponent implements OnInit {
 

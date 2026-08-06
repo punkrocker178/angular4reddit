@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Award } from 'src/app/model/post';
 
 @Component({
     selector: 'app-award',
-    templateUrl: './award.component.html'
+    templateUrl: './award.component.html',
+    standalone: false
 })
 export class AwardComponent {
 
-    @Input() awards: Award[];
-    @Input() isDetail: boolean;
+    readonly awards = input<Award[]>(undefined);
+    readonly isDetail = input<boolean>(undefined);
 
     numberOfItems = 5;
     isShowAll = false;
@@ -32,11 +33,11 @@ export class AwardComponent {
     }
 
     getNumbersRemain(): number {
-        return this.awards.length - this.numberOfItems;
+        return this.awards().length - this.numberOfItems;
     }
 
     showAllAwards(): void {
-        this.numberOfItems = this.awards.length;
+        this.numberOfItems = this.awards().length;
         this.isShowAll = true;
     }
     

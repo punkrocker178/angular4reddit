@@ -1,15 +1,16 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild, input } from '@angular/core';
 import { TrumbowygConfigs, TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-trumbowyg-editor',
-    templateUrl: './trumbowyg.component.html'
+    templateUrl: './trumbowyg.component.html',
+    standalone: false
 })
 export class TrumbowygComponent implements AfterViewInit {
-    @Input() configs?: TrumbowygConfigs;
+    readonly configs = input<TrumbowygConfigs>(undefined);
 
-    @Input() editorId?: string;
+    readonly editorId = input<string>(undefined);
 
     @Output() triggerCommentButton = new EventEmitter<boolean>();
 
@@ -28,8 +29,9 @@ export class TrumbowygComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this._trumbowygSelector = this.configs && this.configs.isComment ?
-        TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR + '-' + this.editorId: TrumbowygConstants.TRUMBOWYG_EDITOR;
+        const configs = this.configs();
+        this._trumbowygSelector = configs && configs.isComment ?
+        TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR + '-' + this.editorId(): TrumbowygConstants.TRUMBOWYG_EDITOR;
 
         this.trumbowygService.initEditor(this._trumbowygSelector,
             {

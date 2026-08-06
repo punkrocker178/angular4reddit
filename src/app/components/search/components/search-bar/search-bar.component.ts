@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
@@ -8,14 +8,13 @@ import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } f
 import { RedditSearchService } from 'src/app/services/reddit-search.service';
 
 @Component({
-  selector: 'app-search-bar',
-  templateUrl: './search-bar.component.html',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgbTypeaheadModule
-  ]
+    selector: 'app-search-bar',
+    templateUrl: './search-bar.component.html',
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgbTypeaheadModule
+    ]
 })
 
 export class SearchBarComponent implements AfterViewInit, OnDestroy {
@@ -25,7 +24,7 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
 
   model: string;
 
-  @Input() showSearchBtn: boolean;
+  readonly showSearchBtn = input<boolean>(undefined);
   keyEventSubscription: Subscription;
   @ViewChild('inputEl') inputElement: ElementRef<HTMLInputElement>;
 

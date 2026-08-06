@@ -2,7 +2,8 @@ import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Renderer2 } fro
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[appHTML]'
+    selector: '[appHTML]',
+    standalone: false
 })
 export class ParseHtmlDirective implements AfterViewInit, OnDestroy {
 

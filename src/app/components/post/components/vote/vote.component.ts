@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input, linkedSignal } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.service';
@@ -6,14 +6,19 @@ import { VotingService } from 'src/app/services/vote.service';
 
 @Component({
     selector: 'app-vote',
-    templateUrl: './vote.component.html'
+    templateUrl: './vote.component.html',
+    standalone: false
 })
 export class VoteComponent implements OnInit {
 
-    @Input() score: number;
-    @Input() id: string;
-    @Input() liked: boolean;
-    @Input() isCompactView: boolean;
+    readonly score = input<number>(0);
+    readonly id = input<string>(undefined);
+    readonly liked = input<boolean | null>(undefined);
+    readonly isCompactView = input<boolean>(false);
+
+    /** Local optimistic score; resyncs when the input score changes. */
+    readonly currentScore = linkedSignal(() => this.score() ?? 0);
+
     isUpVoted = false;
     isDownVoted = false;
 
@@ -26,9 +31,9 @@ export class VoteComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.liked != null) {
-            this.isUpVoted = this.liked;
-            this.isDownVoted = !this.liked;
+        if (this.liked() != null) {
+            this.isUpVoted = !!this.liked();
+            this.isDownVoted = !this.liked();
         }
     }
 
@@ -43,31 +48,31 @@ export class VoteComponent implements OnInit {
         switch (direction) {
             case 1:
                 if (this.isDownVoted) {
-                    this.score += direction + 1;
+                    this.currentScore.update(s => s + direction + 1);
                     this.isDownVoted = false;
                 } else if (this.isUpVoted) {
-                    this.score -= 1;
+                    this.currentScore.update(s => s - 1);
                     undo = true;
                 } else {
-                    this.score += direction;
+                    this.currentScore.update(s => s + direction);
                 }
                 this.isUpVoted = !this.isUpVoted;
                 break;
             case -1:
                 if (this.isUpVoted) {
-                    this.score += direction - 1;
+                    this.currentScore.update(s => s + direction - 1);
                     this.isUpVoted = false;
                 } else if (this.isDownVoted) {
-                    this.score += 1;
+                    this.currentScore.update(s => s + 1);
                     undo = true;
                 } else {
-                    this.score += direction;
+                    this.currentScore.update(s => s + direction);
                 }
                 this.isDownVoted = !this.isDownVoted;
                 break;
         }
 
-        this.votingService.vote(this.id,undo ? '0' : direction.toString()).subscribe();
+        this.votingService.vote(this.id(),undo ? '0' : direction.toString()).subscribe();
 
     }
 }

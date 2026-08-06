@@ -1,11 +1,11 @@
 <div class="pe-2">
   <div class="d-flex flex-row">
-    @if (commentData.data.author.startsWith('[deleted]')) {
-      <span class="me-1 align-self-center text-muted">{{commentData.data.author}}</span>
+    @if (commentData().data.author.startsWith('[deleted]')) {
+      <span class="me-1 align-self-center text-muted">{{commentData().data.author}}</span>
     } @else {
-      <a routerLink="/u/{{commentData.data.author}}" class="me-1 align-self-center">{{commentData.data.author}}</a>
+      <a routerLink="/u/{{commentData().data.author}}" class="me-1 align-self-center">{{commentData().data.author}}</a>
     }
-    <div class="svg-icon" *ngIf="originalPoster === commentData.data.author">
+    <div class="svg-icon" *ngIf="originalPoster() === commentData().data.author">
       <svg id="Capa_1" enable-background="new 0 0 512.001 512.001" viewBox="0 0 512.001 512.001"
         xmlns="http://www.w3.org/2000/svg">
         <g>
@@ -17,29 +17,29 @@
     </div>
 
     <span *ngIf="isAuthorModerator" class="icon-before icon-shield me-2"></span>
-    <span class="align-self-center" [title]="commentData.data.created_utc | dateTimePipe: 'format'">{{commentData.data.created_utc | dateTimePipe:
+    <span class="align-self-center" [title]="commentData().data.created_utc | dateTimePipe: 'format'">{{commentData().data.created_utc | dateTimePipe:
       'diff'}}</span>
   </div>
 
   <!-- Awards -->
-  <ng-container *ngIf="commentData.data['all_awardings'] && commentData.data['all_awardings'].length > 0">
-    <app-award [isDetail]="false" [awards]="commentData.data['all_awardings']"></app-award>
+  <ng-container *ngIf="commentData().data['all_awardings'] && commentData().data['all_awardings'].length > 0">
+    <app-award [isDetail]="false" [awards]="commentData().data['all_awardings']"></app-award>
   </ng-container>
 
-  <div class="post-comments parsed-html-comments" appHTML [selfText]="commentData.data.body_html"></div>
+  <div class="post-comments parsed-html-comments" appHTML [selfText]="commentData().data.body_html"></div>
   <ng-container *ngIf="enableEditor">
 
-    <app-comment-editor [useMarkdown]="useMarkdown" [commentData]="commentData" [trumbowygConfigs]="trumbowygConfigs"
+    <app-comment-editor [useMarkdown]="useMarkdown()" [commentData]="commentData()" [trumbowygConfigs]="trumbowygConfigs"
       (triggerCommentButton)="displayReplyButton($event)"></app-comment-editor>
 
     <button class="btn btn-dark me-2" [disabled]="disableReplyBtn"
-      (click)="replyComment(commentData.data.id, commentData.kind)">Reply</button>
+      (click)="replyComment(commentData().data.id, commentData().kind)">Reply</button>
 
     <button class="btn btn-outline-secondary" (click)="cancelEditor()">Cancel</button>
   </ng-container>
   <div class="d-flex justify-content-end">
-    <button *ngIf="!isArchive" (click)="showReplyEditor()" class="p-2 post-buttons btn align-self-center">Reply</button>
-    <app-vote [score]="commentData.data.score" [id]="commentData.data.name" [liked]="commentData.data.likes"></app-vote>
+    <button *ngIf="!isArchive()" (click)="showReplyEditor()" class="p-2 post-buttons btn align-self-center">Reply</button>
+    <app-vote [score]="commentData().data.score" [id]="commentData().data.name" [liked]="commentData().data.likes"></app-vote>
   </div>
 
 </div>

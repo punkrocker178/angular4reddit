@@ -8,9 +8,10 @@ import { SubredditAbout, SubredditData, SubredditRule, SubredditRulesResponse, L
 import { FlairData } from 'src/app/model/post';
 
 @Component({
-  selector: 'app-subreddit',
-  templateUrl: './subreddit.component.html',
-  styleUrls: ['./subreddit.component.less']
+    selector: 'app-subreddit',
+    templateUrl: './subreddit.component.html',
+    styleUrls: ['./subreddit.component.less'],
+    standalone: false
 })
 
 export class SubredditComponent implements OnInit {

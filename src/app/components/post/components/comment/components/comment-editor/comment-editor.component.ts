@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild, input } from '@angular/core';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TrumbowygConfigs } from 'src/app/constants/trymbowyg-constants';
@@ -9,7 +9,8 @@ import { TrumbowygComponent } from 'src/app/shared/components/trumbowyg/trumbowy
 
 @Component({
     selector: 'app-comment-editor',
-    templateUrl: './comment-editor.component.html'
+    templateUrl: './comment-editor.component.html',
+    standalone: false
 })
 export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
@@ -29,11 +30,11 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
     disableCommentBtn: boolean;
 
-    @Input() useMarkdown: boolean;
+    readonly useMarkdown = input<boolean>(undefined);
 
-    @Input() trumbowygConfigs?: TrumbowygConfigs;
+    readonly trumbowygConfigs = input<TrumbowygConfigs>(undefined);
 
-    @Input() commentData: Post;
+    readonly commentData = input<Post>(undefined);
 
     @Output() triggerCommentButton = new EventEmitter<boolean>();
 
@@ -86,7 +87,7 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
     }
 
     useTrumbowygEditor() {
-        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown;
+        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown();
     }
 
     ngOnDestroy() {

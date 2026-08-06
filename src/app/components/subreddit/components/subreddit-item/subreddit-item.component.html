@@ -9,13 +9,13 @@
     </svg>
   </ng-template>
   <div class="text-truncate subreddit-item-title pe-2" (click)="navigateToSubreddit()">
-    <p class="mb-0 text-truncate">{{subredditData.data.display_name_prefixed}}</p>
-    <p class="mb-0 text-truncate">{{subredditData.data.subscribers | formatNumber}} {{subredditData.data.subscribers > 0 ? 'Members' :
+    <p class="mb-0 text-truncate">{{subredditData().data.display_name_prefixed}}</p>
+    <p class="mb-0 text-truncate">{{subredditData().data.subscribers | formatNumber}} {{subredditData().data.subscribers > 0 ? 'Members' :
       'Member'}}</p>
   </div>
-  <span *ngIf="!isMobile()" class="subreddit-item-description pe-2">{{subredditData.data.public_description |
+  <span *ngIf="!isMobile()" class="subreddit-item-description pe-2">{{subredditData().data.public_description |
     replacePipe}}</span>
   <div class="subreddit-item-join-btn">
-    <subsribe-subreddit-btn [subredditData]="subredditData.data"></subsribe-subreddit-btn>
+    <subsribe-subreddit-btn [subredditData]="subredditData().data"></subsribe-subreddit-btn>
   </div>
 </div>

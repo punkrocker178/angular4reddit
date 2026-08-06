@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
@@ -11,14 +11,15 @@ import { CommentEditorComponent } from '../comment-editor/comment-editor.compone
 
 @Component({
     selector: 'app-comment',
-    templateUrl: './comment.component.html'
+    templateUrl: './comment.component.html',
+    standalone: false
 })
 export class CommentComponent implements OnInit {
 
-    @Input() useMarkdown: boolean;
-    @Input() commentData: Post;
-    @Input() isArchive: boolean;
-    @Input() originalPoster: string;
+    readonly useMarkdown = input<boolean>(undefined);
+    readonly commentData = input<Post>(undefined);
+    readonly isArchive = input<boolean>(undefined);
+    readonly originalPoster = input<string>(undefined);
     @Output() submittedComment: EventEmitter<Post> = new EventEmitter();
 
     @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
@@ -54,13 +55,13 @@ export class CommentComponent implements OnInit {
     }
 
     cancelEditor() {
-        this.trumbowygService.destroyEditor(`${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData.data.id}`);
+        this.trumbowygService.destroyEditor(`${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData().data.id}`);
         this.enableEditor = false;
     }
 
     replyComment(id: string, kind: string) {
         const thingID = `${kind}_${id}`;
-        const trumbowygSelector = `${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData.data.id}`;
+        const trumbowygSelector = `${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData().data.id}`;
 
         const content = !this.useTrumbowygEditor() ?
             this.commentEditor.commentContent : this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
@@ -79,7 +80,7 @@ export class CommentComponent implements OnInit {
     }
 
     useTrumbowygEditor() {
-        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown;
+        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown();
     }
 
     displayReplyButton(value: boolean) {
@@ -87,7 +88,8 @@ export class CommentComponent implements OnInit {
     }
 
     checkAuthor() {
-        if (this.commentData.data.distinguished && this.commentData.data.distinguished.toLowerCase() === 'moderator') {
+        const commentData = this.commentData();
+        if (commentData.data.distinguished && commentData.data.distinguished.toLowerCase() === 'moderator') {
             this.isAuthorModerator = true;
         }
     }
