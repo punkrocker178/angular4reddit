@@ -1,14 +1,32 @@
 @import "../_vars.less";
 
 .set-theme(candy, @color, @background-color) {
+    --app-primary: #e85d9a;
+    --app-primary-rgb: 232, 93, 154;
+    --app-page-bg: @background-color;
+    --app-surface: @background-color-variant;
+    --app-surface-muted: @background-color-variant-1;
+    --app-border: #f0b8d0;
+    --app-text: @color;
+    --app-text-muted: #5a5c5e;
+    --app-hover: @background-color-variant-2;
+    --app-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --app-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+    --bs-primary: var(--app-primary);
+    --bs-primary-rgb: var(--app-primary-rgb);
+    --bs-link-color: var(--app-primary);
+    --bs-body-color: var(--app-text);
+    --bs-body-bg: var(--app-page-bg);
+
     background-color: @background-color;
     color: @color;
 
     main {
-        background-color: @background-color;
+        background-color: var(--app-page-bg);
     }
-    
-    .set-theme-foreground(@color, @background-color-variant, @background-color-variant-1, @background-color-variant-2);
+
+    .set-theme-foreground(@color, @background-color-variant, @background-color-variant-1);
 
     .btn {
         color: #f5f5f5;

@@ -24,3 +24,56 @@
   width: 40px;
   justify-content: center;
 }
+
+.btn-primary {
+  color: #fff;
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  color: #fff;
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+  filter: brightness(0.92);
+  box-shadow: 0 0 0 0.25rem rgba(var(--app-primary-rgb), 0.35);
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  color: #fff;
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+  filter: brightness(0.88);
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  color: #fff;
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+  filter: none;
+  opacity: 0.65;
+}
+
+.btn-outline-primary {
+  color: var(--app-primary);
+  border-color: var(--app-primary);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  color: #fff;
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+  box-shadow: 0 0 0 0.25rem rgba(var(--app-primary-rgb), 0.35);
+}
+
+.border-primary {
+  border-color: var(--app-primary) !important;
+}
+
+.text-primary {
+  color: var(--app-primary) !important;
+}
