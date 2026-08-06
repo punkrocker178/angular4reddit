@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, input } from '@angular/core';
+import { Component, OnInit, ViewChild, input, output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
@@ -20,7 +20,7 @@ export class CommentComponent implements OnInit {
     readonly commentData = input<Post>(undefined);
     readonly isArchive = input<boolean>(undefined);
     readonly originalPoster = input<string>(undefined);
-    @Output() submittedComment: EventEmitter<Post> = new EventEmitter();
+    readonly submittedComment = output<Post>();
 
     @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
 

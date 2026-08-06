@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild, input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, input, output } from '@angular/core';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TrumbowygConfigs } from 'src/app/constants/trymbowyg-constants';
@@ -36,7 +36,7 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
     readonly commentData = input<Post>(undefined);
 
-    @Output() triggerCommentButton = new EventEmitter<boolean>();
+    readonly triggerCommentButton = output<boolean>();
 
     @ViewChild(TrumbowygComponent) trumbowygChild: TrumbowygComponent;
     @ViewChild('textAreaElement') textArea: ElementRef<HTMLTextAreaElement>;

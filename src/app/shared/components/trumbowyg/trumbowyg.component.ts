@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild, input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, input, output } from '@angular/core';
 import { TrumbowygConfigs, TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ export class TrumbowygComponent implements AfterViewInit {
 
     readonly editorId = input<string>(undefined);
 
-    @Output() triggerCommentButton = new EventEmitter<boolean>();
+    readonly triggerCommentButton = output<boolean>();
 
     keyEventSubscribtion: Subscription;
     private _trumbowygSelector: string;

@@ -1,5 +1,5 @@
-import { Component, Output, input } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+
 import { ApiList } from 'src/app/constants/api-list';
 
 @Component({
@@ -17,8 +17,8 @@ export class SortComponent {
   clickState: boolean;
 
   readonly showFeed = input<boolean>(undefined);
-  @Output() changeSort = new EventEmitter<string>();
-  @Output() changeFeedEmitter = new EventEmitter<string>();
+  readonly changeSort = output<string>();
+  readonly changeFeedEmitter = output<string>();
 
   constructor() {
 
