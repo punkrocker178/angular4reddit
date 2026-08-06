@@ -80,7 +80,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   noSelfText = false;
 
   galleryConfigs: GalleryConfigs = {
-    position: 'top-left',
+    position: 'bottom-left',
     class: ''
   }
 

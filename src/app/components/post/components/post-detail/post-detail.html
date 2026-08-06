@@ -11,9 +11,9 @@
 
 			<ng-container *ngIf="!post?.data['archived'] && !isLoading">
 
-				<div *ngIf="!showCommentEditor(); else commentEditor" class="d-flex comment-login">
-					<span class="me-3 align-self-center">Log in or sign up to leave a comment (~˘▾˘)~</span>
-					<button class="btn btn-outline-primary" (click)="login()">Log In</button>
+				<div *ngIf="!showCommentEditor(); else commentEditor" class="d-flex flex-column gap-2 gap-md-3 comment-login p-3 mt-3">
+					<span class="me-3 align-self-center">Log in to leave a comment (~˘▾˘)~</span>
+					<button class="btn btn-outline-primary align-self-center" (click)="login()">Log In</button>
 				</div>
 
 				<ng-template #commentEditor>
@@ -41,7 +41,7 @@
 			</ng-container>
 
 			<ng-container *ngIf="comments && !isLoading">
-				<div class="comments-section">
+				<div class="comments-section mt-3 px-2">
 					<post-comments [useMarkdown]="defaultMarkdown"
 												 [postId]="post.data['name']"
 												 [comments]="comments"

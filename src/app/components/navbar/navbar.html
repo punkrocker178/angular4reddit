@@ -1,4 +1,4 @@
-<nav id="navbar-top" class="custom-navbar">
+<nav id="navbar-top" class="custom-navbar py-2 px-3 px-lg-5">
   <div class="d-flex flex-row">
     <a routerLink="/" class="me-3">
       <img class="navbar-icon" src="../../../assets/images/reddit.png">
@@ -52,7 +52,7 @@
     </ng-container>
   </div>
 
-  <div [ngClass]="{'side-menu-show': menuToggle, 'side-menu': !menuToggle}">
+  <div [ngClass]="{'side-menu-show': menuToggle, 'side-menu': !menuToggle}" class="p-4">
     <div class="mt-5" [ngClass]="{'mobile-nav-item-2': user.is_login}">
       <app-search-bar [showSearchBtn]="false"></app-search-bar>
     </div>
@@ -80,7 +80,7 @@
   </div>
 
   <button *ngIf="isMobile()" (click)="toggleMenu()" [ngClass]="{'hamburger-btn-clicked': menuToggle}"
-    class="hamburger-btn">
+    class="hamburger-btn p-0">
     <div></div>
     <div></div>
     <div></div>

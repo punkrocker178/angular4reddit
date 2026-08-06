@@ -1,20 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { RedditAuthenticateService } from './reddit-authenticate.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LoginPromptComponent } from '../components/modals/login-required/login-prompt.component';
-import { map, switchMap, take, tap } from 'rxjs/operators';
-import { from, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
 @Injectable()
 export class VotingService {
 
     private voteAPI = environment.functionUrl + '/oauth/api/vote';
-    constructor(private http: HttpClient,
-        private authenticateService: RedditAuthenticateService,
-        private modalService: NgbModal) { }
+    constructor(private http: HttpClient) { }
 
     vote(fullname: string, dir: string) {
         let body = new HttpParams()
@@ -28,17 +22,6 @@ export class VotingService {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).pipe(map(_ =>  true ));
-
-        if (!this.authenticateService.getIsLoggedIn()) {
-            const modal = this.modalService.open(LoginPromptComponent);
-
-            return from(modal.result.then(result => false))
-            .pipe(
-                take(1),
-                switchMap(value =>  of(value))
-                );
-        }
-
         return apiCall;
     }
 }
