@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Post, PostReplies } from 'src/app/model/post';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
@@ -8,7 +8,7 @@ import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
     templateUrl: './post-comments.html',
     standalone: false
 })
-export class PostCommentsComponent implements OnInit{
+export class PostCommentsComponent {
 
   readonly comments = input<Post[] | PostReplies>(undefined);
   readonly isReplies = input<boolean>(undefined);
@@ -31,16 +31,16 @@ export class PostCommentsComponent implements OnInit{
   }
 
   constructor(
-    private submitService: RedditSubmitService) {}
-
-  ngOnInit() {
-    const comments = this.comments();
-    if (Array.isArray(comments)) {
-      this.commentList = comments;
-    } else if (comments?.data?.children) {
-      this.commentList = comments.data.children;
+    private submitService: RedditSubmitService) {
+      effect(() => {
+        const comments = this.comments();
+        if (Array.isArray(comments)) {
+          this.commentList = comments;
+        } else if (comments?.data?.children) {
+          this.commentList = comments.data.children;
+        }
+      });
     }
-  }
 
   hasReplies(comment: Post): boolean {
     return comment.data['replies'] &&

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, input } from '@angular/core';
+import { Component, input, linkedSignal, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { SubredditData } from 'src/app/model/subreddit.interface';
@@ -14,24 +14,23 @@ import { SubredditService } from 'src/app/services/subreddit.service';
 export class SubscribeSubredditBtnComponent implements OnInit, OnDestroy {
 
     readonly subredditData = input<SubredditData>(undefined);
-    isSubscribed: boolean;
+    readonly isSubscribed = linkedSignal(() => this.subredditData()?.user_is_subscriber ?? false);
     subscribe$ = new Subject<string>();
 
     constructor(
         private subredditService: SubredditService) {}
 
     ngOnInit() {
-        this.isSubscribed = this.subredditData().user_is_subscriber;
         this.subscribe$.pipe(
             switchMap((action:string) => this.subredditService.subscribeSubreddit(action, this.subredditData().name)),
             tap(_ => {
-                this.isSubscribed = !this.isSubscribed;
+                this.isSubscribed.update(v => !v);
             })
         ).subscribe();
     }
 
     subscribe() {
-        const action = this.isSubscribed ? 'unsub' : 'sub';
+        const action = this.isSubscribed() ? 'unsub' : 'sub';
         this.subscribe$.next(action);
     }
 

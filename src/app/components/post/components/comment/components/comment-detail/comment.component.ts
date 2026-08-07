@@ -1,4 +1,4 @@
-import { Component, OnInit, input, output, viewChild } from '@angular/core';
+import { Component, computed, input, output, viewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
@@ -14,7 +14,7 @@ import { CommentEditorComponent } from '../comment-editor/comment-editor.compone
     templateUrl: './comment.component.html',
     standalone: false
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent {
 
     readonly useMarkdown = input<boolean>(undefined);
     readonly commentData = input<Post>(undefined);
@@ -27,7 +27,10 @@ export class CommentComponent implements OnInit {
     enableEditor: boolean;
     disableReplyBtn = true;
 
-    isAuthorModerator: boolean;
+    readonly isAuthorModerator = computed(() => {
+        const distinguished = this.commentData()?.data.distinguished;
+        return distinguished?.toLowerCase() === 'moderator';
+    });
 
     trumbowygConfigs = {
         isComment: true
@@ -39,10 +42,6 @@ export class CommentComponent implements OnInit {
         private checkDeviceFeatureService: CheckDeviceFeatureService,
         private authenticatedService: RedditAuthenticateService,
         private modalService: NgbModal) {
-    }
-
-    ngOnInit() {
-        this.checkAuthor();
     }
 
     showReplyEditor() {
@@ -85,12 +84,5 @@ export class CommentComponent implements OnInit {
 
     displayReplyButton(value: boolean) {
         this.disableReplyBtn = value;
-    }
-
-    checkAuthor() {
-        const commentData = this.commentData();
-        if (commentData.data.distinguished && commentData.data.distinguished.toLowerCase() === 'moderator') {
-            this.isAuthorModerator = true;
-        }
     }
 }

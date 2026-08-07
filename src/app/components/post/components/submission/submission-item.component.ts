@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, computed, effect, input } from '@angular/core';
 import { PostData } from 'src/app/model/post';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
@@ -10,31 +10,33 @@ import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature
     standalone: false
 })
 
-export class SubmissionItemComponent implements OnInit {
-
-    subredddit: string;
+export class SubmissionItemComponent {
 
     readonly submissionData = input<PostData>(undefined);
 
-    constructor(private checkDeviceFeature: CheckDeviceFeatureService) { }
-
-    ngOnInit() {
-        const submissionData = this.submissionData();
-        if (!submissionData) {
-            return;
+    readonly displayTitle = computed(() => {
+        const data = this.submissionData();
+        if (!data?.title) {
+            return '';
         }
+        return ReplacePipe.prototype.transform(data.title);
+    });
 
-        submissionData.title = ReplacePipe.prototype.transform(submissionData.title);
-        this.subredddit = ReplacePipe.prototype.transform(submissionData['permalink'], /\/comments\/[A-Za-z0-9/_-]*/);
-
-        this.formatThumbnail();
-    }
-
-    formatThumbnail() {
-        const submissionData = this.submissionData();
-        if (submissionData?.['thumbnail'] && !submissionData['thumbnail'].includes('https://')) {
-            submissionData['thumbnail'] = '';
+    readonly subredddit = computed(() => {
+        const data = this.submissionData();
+        if (!data) {
+            return '';
         }
+        return ReplacePipe.prototype.transform(data['permalink'], /\/comments\/[A-Za-z0-9/_-]*/);
+    });
+
+    constructor(private checkDeviceFeature: CheckDeviceFeatureService) {
+        effect(() => {
+            const data = this.submissionData();
+            if (data?.['thumbnail'] && !data['thumbnail'].includes('https://')) {
+                data['thumbnail'] = '';
+            }
+        });
     }
 
     isMobile() {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, TemplateRef, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges, input, viewChild, effect } from '@angular/core';
+import { Component, ElementRef, TemplateRef, OnInit, OnDestroy, input, viewChild, effect } from '@angular/core';
 import {
   FlairData,
   GalleryData,
@@ -13,7 +13,6 @@ import { HttpParams } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NsfwPopupComponent } from 'src/app/components/modals/nsfw/nsfw-popup.component';
 import { UserService } from 'src/app/services/user.service';
-import { DomParserPipe } from 'src/app/pipe/dom-parser.pipe';
 import { Domains } from 'src/app/constants/domains';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
 import Hls, { ErrorData } from 'hls.js';
@@ -27,15 +26,13 @@ import { GalleryConfigs } from 'src/app/components/gallery/gallery.component';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
 import { PreferencesService } from 'src/app/services/preferences.service';
 
-declare var twttr: any;
-
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'post-item',
     templateUrl: './post-item.html',
     standalone: false
 })
-export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostItemComponent implements OnInit, OnDestroy {
   readonly post = input.required<Post>();
   readonly options = input<{
     isDetail?: boolean;
@@ -44,9 +41,7 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
     isDetail: false,
     isArchive: false
 });
-  readonly tweet = viewChild.required<ElementRef<HTMLElement>>('twitterEmbed');
   readonly videoPlayer = viewChild.required<ElementRef<HTMLVideoElement>>('videoPlayer');
-  readonly flairEl = viewChild.required<ElementRef<HTMLElement>>('flairElement');
 
   isUpVoted = false;
   isDownVoted = false;
@@ -61,7 +56,6 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
   isOver18 = false;
   isMediaEmbeded = false;
   isTwitchEmbedded = false;
-  isTwitterEmbedded = false;
   isEmbededLink = false;
   isCrossPost = false;
   embedSrc = '';
@@ -96,36 +90,28 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
     private listingService: RedditListingService,
     private modalService: NgbModal,
     private userService: UserService,
-    private renderer2: Renderer2,
     private toastService: ToastService,
     private authenticateService: RedditAuthenticateService,
     private checkDeviceFeatureService: CheckDeviceFeatureService,
-    private preferenceService: PreferencesService) { 
+    private preferenceService: PreferencesService) {
       effect(() => {
-        if (this.post()) {
-          this._bindData();
+        const post = this.post();
+        if (!post) {
+          return;
+        }
+        this._bindData();
+        this.formatThumbnail();
+        if (this.isGallery) {
+          this.initGallery();
+        }
+        if (this.isTwitchEmbedded) {
+          this._initTwitchEmbed();
         }
       });
     }
 
   ngOnInit() {
     this.isOver18Consent = this.userService.isNSFWAllowed() && !(this.preferenceService.preferenceValue?.safeBrowsing ?? false);
-
-    if (this.isGallery) {
-      this.initGallery();
-    }
-
-    if (this.isTwitchEmbedded) {
-      this._initTwitchEmbed()
-    }
-
-    this.formatThumbnail();
-  }
-
-  ngAfterViewInit() {
-    if (this.isEmbededLink && this.isTwitterEmbedded) {
-      this.initTwitter();
-    }
   }
 
   private _bindData() {
@@ -135,17 +121,16 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
     this.hasImages = !!post.data['preview'] && post.data['preview']['enabled']
       && Domains.imagesDomains.includes(post.data['domain'] ?? '');
 
+    this.isTwitchEmbedded = this.post().data['domain'] === Domains.twitchDomain;
+
     const postValue = this.post();
-    this.isVideo = !!(postValue.data['is_video'] || postValue.data['media']) && !this.isTwitterEmbedded && !this.isTwitchEmbedded;
+    this.isVideo = !!(postValue.data['is_video'] || postValue.data['media']) && !this.isTwitchEmbedded;
 
     const postVal = this.post();
     this.isGallery = !!(postVal.data['is_gallery'] &&
       postVal.data['gallery_data'] && postVal.data['gallery_data'].items.length > 0);
 
     this.isComment = this.post().kind === 't1';
-
-    this.isTwitterEmbedded = this.post().data['domain'] === Domains.twitterDomain;
-    this.isTwitchEmbedded = this.post().data['domain'] === Domains.twitchDomain;
 
     const postInput = this.post();
     this.isMediaEmbeded = postInput.data['media'] ? Domains.mediaEmbed.includes(postInput.data['media']['type'] ?? '') : false;
@@ -157,7 +142,6 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
       && !post_1.data['selftext']
       && !post_1.data['is_reddit_media_domain']
       && !this.hasImages
-      && !this.isTwitterEmbedded
       && !this.isTwitchEmbedded
       && !this.isVideo
       && (post_1.data['url'] && !post_1.data['url'].includes('https://www.reddit.com')));
@@ -423,13 +407,6 @@ export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.router.navigateByUrl(path);
     }
-  }
-
-  initTwitter() {
-    let html = DomParserPipe.prototype.transform(this.post().data['media']!['oembed']!['html']);
-    html = ReplacePipe.prototype.transform(html, '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>', '');
-    this.renderer2.setProperty(this.tweet().nativeElement, 'innerHTML', html);
-    twttr.widgets.load();
   }
 
   initGallery() {

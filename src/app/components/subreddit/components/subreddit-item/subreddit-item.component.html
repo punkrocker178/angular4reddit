@@ -1,5 +1,5 @@
 <div class="d-flex flex-row p-2">
-  <img *ngIf="icon; else defaultSnoo" class="banner-icon-small mt-2 me-2" [src]="icon | replacePipe">
+  <img *ngIf="icon(); else defaultSnoo" class="banner-icon-small mt-2 me-2" [src]="icon() | replacePipe">
 
   <ng-template #defaultSnoo>
     <svg class="banner-icon-small mt-2 me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" role="presentation">
