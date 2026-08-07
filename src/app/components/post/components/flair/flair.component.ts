@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, input, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, Renderer2, input, viewChild } from '@angular/core';
 import { FlairData } from 'src/app/model/post';
 
 @Component({
@@ -6,34 +6,39 @@ import { FlairData } from 'src/app/model/post';
     templateUrl: './flair.component.html',
     standalone: false
 })
-export class FlairComponent implements OnInit, AfterViewInit {
+export class FlairComponent {
 
     readonly flairInput = input<FlairData>(undefined);
     readonly flairEl = viewChild<ElementRef>('flairElement');
-    flairText: string;
-    flairEmoji: string;
 
-    constructor(private renderer2: Renderer2) { }
-
-    ngOnInit() {
-        if (this.hasFlair()) {
-            this.flairText = this.getFlair();
+    readonly flairText = computed(() => {
+        if (!this.hasFlair()) {
+            return undefined;
         }
+        return this.getFlair();
+    });
 
-        if (this.flairHasEmoji()) {
-            this.flairEmoji = this.getEmojiFlair();
+    readonly flairEmoji = computed(() => {
+        if (!this.flairHasEmoji()) {
+            return undefined;
         }
-    }
+        return this.getEmojiFlair();
+    });
 
-    ngAfterViewInit() {
-        const flairInput = this.flairInput();
-        if (flairInput['flair_background_color']) {
-            const flairEl = this.flairEl();
-            this.renderer2.setStyle(flairEl.nativeElement, 'background-color', flairInput['flair_background_color']);
-            this.renderer2.setStyle(flairEl.nativeElement, 'border-color', flairInput['flair_background_color']);
-            this.renderer2.setStyle(flairEl.nativeElement, 'color', '#FFFFFF');
-            this.renderer2.setStyle(flairEl.nativeElement, 'text-shadow', 'black 0 0');
-        }
+    constructor(private renderer2: Renderer2) {
+        effect(() => {
+            const flair = this.flairInput();
+            const el = this.flairEl();
+            if (!flair || !el) {
+                return;
+            }
+            if (flair['flair_background_color']) {
+                this.renderer2.setStyle(el.nativeElement, 'background-color', flair['flair_background_color']);
+                this.renderer2.setStyle(el.nativeElement, 'border-color', flair['flair_background_color']);
+                this.renderer2.setStyle(el.nativeElement, 'color', '#FFFFFF');
+                this.renderer2.setStyle(el.nativeElement, 'text-shadow', 'black 0 0');
+            }
+        });
     }
 
     hasFlair() {

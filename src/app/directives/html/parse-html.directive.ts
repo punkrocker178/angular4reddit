@@ -1,24 +1,28 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Renderer2 } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Directive, effect, ElementRef, input, Renderer2 } from '@angular/core';
 
 @Directive({
     selector: '[appHTML]',
     standalone: false
 })
-export class ParseHtmlDirective implements AfterViewInit, OnDestroy {
+export class ParseHtmlDirective {
 
-  private text$: BehaviorSubject<string> = new BehaviorSubject('');
-  textSubscription: Subscription;
-  private _selfText: string;
-  @Input() set selfText(value: string) {
-    this._selfText = value;
-    this.text$.next(this._selfText);
-  }
-  parsed: string;
+  readonly selfText = input<string>('');
 
   constructor(
     private el: ElementRef,
-    private renderer2: Renderer2) { }
+    private renderer2: Renderer2) {
+      effect(() => {
+        let text = this.selfText();
+        if (!text) {
+          return;
+        }
+
+        const regex = new RegExp(Object.keys(this.replaceChars).join('|'), 'g');
+        text = text.replace(regex, (match) => this.replaceChars[match]);
+
+        this.renderer2.setProperty(this.el.nativeElement, 'innerHTML', text);
+      });
+    }
 
     private replaceChars = {
         '&lt;':'<' ,
@@ -27,24 +31,4 @@ export class ParseHtmlDirective implements AfterViewInit, OnDestroy {
         '&quot;': '"',
         '&amp;': '&'
     };
-
-  ngAfterViewInit() {
-    this.textSubscription = this.text$.subscribe(text => {
-      if (text) {
-
-        let regex = new RegExp(Object.keys(this.replaceChars).join('|'), 'g');
-        text = text.replace(regex,(match) => {
-            return this.replaceChars[match];
-        });
-
-        this.renderer2.setProperty(this.el.nativeElement, 'innerHTML', text);
-      }
-    });
-
-  }
-
-  ngOnDestroy() {
-    this.text$.complete();
-    this.textSubscription.unsubscribe();
-  }
 }

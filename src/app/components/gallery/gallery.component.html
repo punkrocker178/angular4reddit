@@ -12,7 +12,7 @@
     <div class="icon-before icon-greater-than"></div>
   </button>
 
-  <div *ngIf="childList.length > 0" class="image-number-background" [ngClass]="positionClass">
+  <div *ngIf="childList.length > 0" class="image-number-background" [ngClass]="positionClass()">
     <span class="image-number">{{elementIndex + 1}} / {{childList.length}}</span>
   </div>
 </div>

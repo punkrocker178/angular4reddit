@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { SubredditAbout } from 'src/app/model/subreddit.interface';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
@@ -10,19 +10,18 @@ import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature
     standalone: false
 })
 
-export class SubbredditItemComponent implements OnInit {
+export class SubbredditItemComponent {
 
-    icon: string;
     readonly subredditData = input<SubredditAbout>(undefined);
+
+    readonly icon = computed(() => {
+        const data = this.subredditData();
+        return data?.data.community_icon || data?.data.icon_img;
+    });
 
     constructor(
         private router: Router,
         private checkDeviceFeatureService: CheckDeviceFeatureService) {}
-
-    ngOnInit() {
-        const subredditData = this.subredditData();
-        this.icon = subredditData.data.community_icon || subredditData.data.icon_img;
-    }
 
     navigateToSubreddit() {
         this.router.navigateByUrl(`/${this.subredditData().data.display_name_prefixed}`);

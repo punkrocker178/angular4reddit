@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, OnInit, Renderer2, input, viewChild } from '@angular/core';
+import { AfterContentInit, Component, computed, ElementRef, Renderer2, input, viewChild } from '@angular/core';
 
 export interface GalleryConfigs {
     position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -10,20 +10,17 @@ export interface GalleryConfigs {
     templateUrl: './gallery.component.html',
     standalone: false
 })
-export class GalleryComponent implements OnInit, AfterContentInit {
+export class GalleryComponent implements AfterContentInit {
 
     elementIndex = 0;
-    positionClass: string;
     readonly galleryEl = viewChild<ElementRef<HTMLElement>>('gallery');
     childList: HTMLCollection | HTMLElement[] = [];
     readonly configs = input<GalleryConfigs>(undefined);
 
+    readonly positionClass = computed(() => this.getPositionClass());
+
     constructor(private renderer2: Renderer2) {
 
-    }
-
-    ngOnInit() {
-        this.positionClass = this.getPositionClass();
     }
 
     ngAfterContentInit() {

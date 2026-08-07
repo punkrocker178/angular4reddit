@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, input, linkedSignal, WritableSignal } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Post, PostReplies } from 'src/app/model/post';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
@@ -8,7 +8,7 @@ import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
     templateUrl: './post-comments.html',
     standalone: false
 })
-export class PostCommentsComponent implements OnInit{
+export class PostCommentsComponent {
 
   readonly comments = input<Post[] | PostReplies>(undefined);
   readonly isReplies = input<boolean>(undefined);
@@ -16,8 +16,15 @@ export class PostCommentsComponent implements OnInit{
   readonly orginalPoster = input<string>(undefined);
   readonly isArchive = input<boolean>(undefined);
 
-  commentList: Post[] = [];
-
+  commentList: WritableSignal<Post[]> = linkedSignal(() => {
+    const comments = this.comments();
+    if (Array.isArray(comments)) {
+      return [...comments];
+    } else if (comments?.data?.children) {
+      return [...comments.data.children];
+    }
+    return [];
+  });
   moreRepliesLoading: boolean;
   enableEditor: boolean;
 
@@ -33,15 +40,6 @@ export class PostCommentsComponent implements OnInit{
   constructor(
     private submitService: RedditSubmitService) {}
 
-  ngOnInit() {
-    const comments = this.comments();
-    if (Array.isArray(comments)) {
-      this.commentList = comments;
-    } else if (comments?.data?.children) {
-      this.commentList = comments.data.children;
-    }
-  }
-
   hasReplies(comment: Post): boolean {
     return comment.data['replies'] &&
     comment.data['replies']['data']['children'] &&
@@ -53,7 +51,7 @@ export class PostCommentsComponent implements OnInit{
   }
 
   pushComment(comment: Post) {
-    this.commentList.push(comment);
+    this.commentList.update(comments => [...comments, comment]);
   }
 
   loadMoreReplies(event: Event, comment: Post) {
@@ -80,7 +78,7 @@ export class PostCommentsComponent implements OnInit{
     this.submitService.loadMoreComments(payload).pipe(
       tap(next => {
         this.moreChildrenId.splice(0, end);
-        this.commentList = [...this.commentList, ...next];
+        this.commentList.update(currentComments => [...currentComments, ...next]);
         this.moreRepliesLoading = false;
       })
     ).subscribe();
