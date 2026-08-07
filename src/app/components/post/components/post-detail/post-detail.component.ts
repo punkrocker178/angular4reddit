@@ -81,10 +81,10 @@ export class PostDetailComponent implements OnInit {
         commentEditor.commentContent = '';
       }
 
-      this.comments.push({
+      this.comments = [...this.comments, {
         data: data,
         kind: 't1'
-      } as Post);
+      } as Post];
     });
   }
 
