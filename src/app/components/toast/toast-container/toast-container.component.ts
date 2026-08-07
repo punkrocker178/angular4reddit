@@ -5,8 +5,8 @@ import {Toast} from '../../../model/toast.interface';
 
 
 @Component({
-  selector: 'app-toasts',
-  template: `
+    selector: 'app-toasts',
+    template: `
     <ngb-toast
       *ngFor="let toast of toastService.toasts"
       [class]="toast.classname"
@@ -20,7 +20,8 @@ import {Toast} from '../../../model/toast.interface';
 
       <ng-template #text>{{ toast.textOrTpl }}</ng-template>
     </ngb-toast>
-  `
+  `,
+    standalone: false
 })
 export class ToastsContainerComponent {
   @HostBinding('[class.toast-container]') toastContainer = true;

@@ -16,6 +16,11 @@ phases:
         commands:
         - echo Build
         - npm run build -- --configuration=production
+        - |
+            if [ -d dist/areddit/browser ]; then
+              mv dist/areddit/browser/* dist/areddit/
+              rmdir dist/areddit/browser
+            fi
     post_build:
         commands:
         - echo Build completed on `date`

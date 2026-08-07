@@ -10,7 +10,8 @@ import { TokenResponse } from "src/app/model/token-response.interface";
 
 @Component({
     selector: 'app-authenticate',
-    templateUrl: './authenticate.component.html'
+    templateUrl: './authenticate.component.html',
+    standalone: false
 })
 
 export class AuthenticateComponent implements OnInit, OnDestroy {

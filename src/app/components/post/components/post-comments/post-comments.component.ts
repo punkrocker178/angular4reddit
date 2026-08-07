@@ -1,19 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Post, PostReplies } from 'src/app/model/post';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'post-comments',
-    templateUrl: './post-comments.html'
-  })
+    templateUrl: './post-comments.html',
+    standalone: false
+})
 export class PostCommentsComponent implements OnInit{
 
-  @Input() comments: Post[] | PostReplies;
-  @Input() isReplies: boolean;
-  @Input() postId: string;
-  @Input() orginalPoster: string;
-  @Input() isArchive: boolean;
+  readonly comments = input<Post[] | PostReplies>(undefined);
+  readonly isReplies = input<boolean>(undefined);
+  readonly postId = input<string>(undefined);
+  readonly orginalPoster = input<string>(undefined);
+  readonly isArchive = input<boolean>(undefined);
 
   commentList: Post[] = [];
 
@@ -23,7 +24,7 @@ export class PostCommentsComponent implements OnInit{
   moreChildrenLimit = 0;
   moreChildrenId;
 
-  @Input() useMarkdown: boolean;
+  readonly useMarkdown = input<boolean>(undefined);
 
   trumbowygConfigs = {
     isComment: true
@@ -33,10 +34,11 @@ export class PostCommentsComponent implements OnInit{
     private submitService: RedditSubmitService) {}
 
   ngOnInit() {
-    if (Array.isArray(this.comments)) {
-      this.commentList = this.comments;
-    } else if (this.comments?.data?.children) {
-      this.commentList = this.comments.data.children;
+    const comments = this.comments();
+    if (Array.isArray(comments)) {
+      this.commentList = comments;
+    } else if (comments?.data?.children) {
+      this.commentList = comments.data.children;
     }
   }
 
@@ -74,7 +76,7 @@ export class PostCommentsComponent implements OnInit{
 
     moreChildrenArray = comment.data['children'].slice(0, end);
 
-    const payload = this.submitService.moreCommentsPayload(this.postId, moreChildrenArray);
+    const payload = this.submitService.moreCommentsPayload(this.postId(), moreChildrenArray);
     this.submitService.loadMoreComments(payload).pipe(
       tap(next => {
         this.moreChildrenId.splice(0, end);

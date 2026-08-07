@@ -5,7 +5,8 @@ import { UserService } from "src/app/services/user.service";
 
 @Component({
     selector: 'app-nsfw-popup',
-    templateUrl: './nsfw-popup.component.html'
+    templateUrl: './nsfw-popup.component.html',
+    standalone: false
 })
 
 

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, viewChildren } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
@@ -8,9 +8,10 @@ import { SubredditAbout, SubredditData, SubredditRule, SubredditRulesResponse, L
 import { FlairData } from 'src/app/model/post';
 
 @Component({
-  selector: 'app-subreddit',
-  templateUrl: './subreddit.component.html',
-  styleUrls: ['./subreddit.component.less']
+    selector: 'app-subreddit',
+    templateUrl: './subreddit.component.html',
+    styleUrls: ['./subreddit.component.less'],
+    standalone: false
 })
 
 export class SubredditComponent implements OnInit {
@@ -35,7 +36,7 @@ export class SubredditComponent implements OnInit {
 
   collapseElementStatusArr: boolean[];
 
-  @ViewChildren('collapseText') collapseTextList!: QueryList<ElementRef>;
+  readonly collapseTextList = viewChildren<ElementRef>('collapseText');
 
   constructor(private activatedRoute: ActivatedRoute,
     private subredditService: SubredditService,

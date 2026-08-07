@@ -6,7 +6,8 @@ import { RedditAuthenticateService } from "src/app/services/reddit-authenticate.
 
 @Component({
     selector: 'app-login-prompt',
-    templateUrl: './login-promt.component.html'
+    templateUrl: './login-promt.component.html',
+    standalone: false
 })
 
 export class LoginPromptComponent {

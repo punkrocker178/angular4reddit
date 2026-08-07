@@ -1,23 +1,24 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit, input, output } from '@angular/core';
 import { Theme } from 'src/app/model/theme.interface';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
     selector: 'app-theme-selector',
-    templateUrl: './theme-selector.component.html'
+    templateUrl: './theme-selector.component.html',
+    standalone: false
 })
 
 export class ThemeSelectorComponent implements OnInit {
     themes: Theme[];
     selectedThemeIndex: boolean[];
-    @Input() selectedTheme: string;
-    @Output() themeEmitter: EventEmitter<Theme> = new EventEmitter<Theme>();
+    readonly selectedTheme = input<string>(undefined);
+    readonly themeEmitter = output<Theme>();
 
     constructor(private themeService: ThemeService) {}
 
     ngOnInit() {
         this.themes = this.themeService.themes.filter((theme: Theme) => (theme.name !== 'Light' && theme.name !== 'Dark'));
-        const themeIndex = this.themes.findIndex((theme: Theme) => theme.name.toLowerCase() === this.selectedTheme.toLowerCase());
+        const themeIndex = this.themes.findIndex((theme: Theme) => theme.name.toLowerCase() === this.selectedTheme().toLowerCase());
         this.selectedThemeIndex = new Array(this.themes.length).fill(false);
 
         if (themeIndex > -1) {

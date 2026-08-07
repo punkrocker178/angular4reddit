@@ -1,7 +1,7 @@
 <div class="d-flex flex-row flex-wrap">
-  <ng-container *ngFor="let award of awards; let elementIndex = index">
+  <ng-container *ngFor="let award of awards(); let elementIndex = index">
 
-    <ng-container *ngIf="isDetail; else noPopover">
+    <ng-container *ngIf="isDetail(); else noPopover">
       <!-- Icon -->
       <div aria-describedby="tooltip" appPopover [config]="popoverConfig" [tooltip]="tooltip" class="p-1"
         *ngIf="elementIndex < numberOfItems">

@@ -1,17 +1,18 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, output, viewChild } from '@angular/core';
 import { TrumbowygConfigs, TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-trumbowyg-editor',
-    templateUrl: './trumbowyg.component.html'
+    templateUrl: './trumbowyg.component.html',
+    standalone: false
 })
 export class TrumbowygComponent implements AfterViewInit {
-    @Input() configs?: TrumbowygConfigs;
+    readonly configs = input<TrumbowygConfigs>(undefined);
 
-    @Input() editorId?: string;
+    readonly editorId = input<string>(undefined);
 
-    @Output() triggerCommentButton = new EventEmitter<boolean>();
+    readonly triggerCommentButton = output<boolean>();
 
     keyEventSubscribtion: Subscription;
     private _trumbowygSelector: string;
@@ -20,16 +21,17 @@ export class TrumbowygComponent implements AfterViewInit {
         return this._trumbowygSelector;
     }
 
-    @ViewChild('editor') editorInstance: ElementRef<HTMLElement>;
-    @ViewChild('commentEditorInstance') commentEditorInstance: ElementRef<HTMLElement>;
+    readonly editorInstance = viewChild<ElementRef<HTMLElement>>('editor');
+    readonly commentEditorInstance = viewChild<ElementRef<HTMLElement>>('commentEditorInstance');
 
     constructor(private trumbowygService: TrumbowygService) {
 
     }
 
     ngAfterViewInit() {
-        this._trumbowygSelector = this.configs && this.configs.isComment ?
-        TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR + '-' + this.editorId: TrumbowygConstants.TRUMBOWYG_EDITOR;
+        const configs = this.configs();
+        this._trumbowygSelector = configs && configs.isComment ?
+        TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR + '-' + this.editorId(): TrumbowygConstants.TRUMBOWYG_EDITOR;
 
         this.trumbowygService.initEditor(this._trumbowygSelector,
             {

@@ -32,6 +32,9 @@ import { UserService } from './services/user.service';
 import { VotingService } from './services/vote.service';
 import { SharedModule } from './shared/components/shared-components.module';
 import { SharedDirectivesModule } from './shared/directives/directives.module';
+import { ThemeService } from './services/theme.service';
+import { PreferencesService } from './services/preferences.service';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
@@ -71,9 +74,12 @@ describe('AppComponent', () => {
         RedditSubmitService,
         RedditSearchService,
         CheckDeviceFeatureService,
+        PreferencesService,
+        ThemeService,
         { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
         provideHttpClient(withInterceptorsFromDi())
-    ]
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 }).compileComponents();
   }));
 

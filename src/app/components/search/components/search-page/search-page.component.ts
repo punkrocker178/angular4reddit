@@ -20,7 +20,8 @@ interface SearchSubmissionPayload {
 
 @Component({
     selector: 'app-search',
-    templateUrl: './search-page.component.html'
+    templateUrl: './search-page.component.html',
+    standalone: false
 })
 
 export class SearchPageComponent implements OnInit, OnDestroy {

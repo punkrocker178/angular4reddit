@@ -3,7 +3,8 @@ import { DateTime } from 'luxon';
 import { FormatConfigs } from '../config/format-config';
 
 @Pipe({
-  name: 'dateTimePipe'
+    name: 'dateTimePipe',
+    standalone: false
 })
 export class DateTimePipe implements PipeTransform {
 

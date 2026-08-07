@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, input, output, viewChild } from '@angular/core';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TrumbowygConfigs } from 'src/app/constants/trymbowyg-constants';
@@ -9,7 +9,8 @@ import { TrumbowygComponent } from 'src/app/shared/components/trumbowyg/trumbowy
 
 @Component({
     selector: 'app-comment-editor',
-    templateUrl: './comment-editor.component.html'
+    templateUrl: './comment-editor.component.html',
+    standalone: false
 })
 export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
@@ -29,16 +30,16 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
 
     disableCommentBtn: boolean;
 
-    @Input() useMarkdown: boolean;
+    readonly useMarkdown = input<boolean>(false);
 
-    @Input() trumbowygConfigs?: TrumbowygConfigs;
+    readonly trumbowygConfigs = input<TrumbowygConfigs>({});
 
-    @Input() commentData: Post;
+    readonly commentData = input<Post | undefined>(undefined);
 
-    @Output() triggerCommentButton = new EventEmitter<boolean>();
+    readonly triggerCommentButton = output<boolean>();
 
-    @ViewChild(TrumbowygComponent) trumbowygChild: TrumbowygComponent;
-    @ViewChild('textAreaElement') textArea: ElementRef<HTMLTextAreaElement>;
+    readonly trumbowygChild = viewChild(TrumbowygComponent);
+    readonly textArea = viewChild<ElementRef<HTMLTextAreaElement>>('textAreaElement');
 
     constructor(
         private checkDeviceFeatureService: CheckDeviceFeatureService,
@@ -49,7 +50,7 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
         let editorInstance: ElementRef<HTMLElement>;
 
         if (!this.useTrumbowygEditor()) {
-            editorInstance = this.textArea;
+            editorInstance = this.textArea();
 
             const keyEvent$ = fromEvent(editorInstance.nativeElement, 'keydown');
             this.keyEventSubscribtion = keyEvent$.pipe(debounceTime(300)).subscribe(_ => {
@@ -65,13 +66,14 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
                 this.triggerCommentButton.emit(this.disableCommentBtn);
             });
         } else {
-            editorInstance = this.trumbowygChild.editorInstance ?
-                this.trumbowygChild.editorInstance : this.trumbowygChild.commentEditorInstance;
+            const trumbowygChild = this.trumbowygChild();
+            editorInstance = this.trumbowygConfigs()?.isComment ?
+                trumbowygChild?.commentEditorInstance() : trumbowygChild?.editorInstance();
 
             const keyup$: Observable<Event> = fromEvent(editorInstance.nativeElement, 'keyup');
 
             this.keyEventSubscribtion = keyup$.pipe(debounceTime(300)).subscribe(_ => {
-                const content = this.trumbowygService.getTrumbowygAsMarkdown(this.trumbowygChild.trumbowygSelector);
+                const content = this.trumbowygService.getTrumbowygAsMarkdown(trumbowygChild.trumbowygSelector);
 
                 if (content.length > 0) {
                     this.disableCommentBtn = false;
@@ -86,7 +88,7 @@ export class CommentEditorComponent implements AfterViewInit, OnDestroy {
     }
 
     useTrumbowygEditor() {
-        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown;
+        return !this.checkDeviceFeatureService.isTouchScreen && !this.useMarkdown();
     }
 
     ngOnDestroy() {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { PostData } from 'src/app/model/post';
 import { ReplacePipe } from 'src/app/pipe/replace.pipe';
 import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature.service';
@@ -6,27 +6,34 @@ import { CheckDeviceFeatureService } from 'src/app/services/check-device-feature
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'submission-item',
-    templateUrl: './submission-item.component.html'
+    templateUrl: './submission-item.component.html',
+    standalone: false
 })
 
 export class SubmissionItemComponent implements OnInit {
 
     subredddit: string;
 
-    @Input() submissionData: PostData;
+    readonly submissionData = input<PostData>(undefined);
 
     constructor(private checkDeviceFeature: CheckDeviceFeatureService) { }
 
     ngOnInit() {
-        this.submissionData.title = ReplacePipe.prototype.transform(this.submissionData.title);
-        this.subredddit = ReplacePipe.prototype.transform(this.submissionData['permalink'], /\/comments\/[A-Za-z0-9/_-]*/);
+        const submissionData = this.submissionData();
+        if (!submissionData) {
+            return;
+        }
+
+        submissionData.title = ReplacePipe.prototype.transform(submissionData.title);
+        this.subredddit = ReplacePipe.prototype.transform(submissionData['permalink'], /\/comments\/[A-Za-z0-9/_-]*/);
 
         this.formatThumbnail();
     }
 
     formatThumbnail() {
-        if (this.submissionData['thumbnail'] && !this.submissionData['thumbnail'].includes('https://')) {
-            this.submissionData['thumbnail'] = '';
+        const submissionData = this.submissionData();
+        if (submissionData?.['thumbnail'] && !submissionData['thumbnail'].includes('https://')) {
+            submissionData['thumbnail'] = '';
         }
     }
 

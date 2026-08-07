@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, viewChild } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedditListingService } from 'src/app/services/reddit-listing.service';
@@ -12,9 +12,10 @@ import { RedditAuthenticateService } from 'src/app/services/reddit-authenticate.
 import { PreferencesService } from 'src/app/services/preferences.service';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'post-detail',
-  templateUrl: './post-detail.html'
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'post-detail',
+    templateUrl: './post-detail.html',
+    standalone: false
 })
 export class PostDetailComponent implements OnInit {
 
@@ -30,7 +31,7 @@ export class PostDetailComponent implements OnInit {
   defaultMarkdown: boolean;
   disableCommentBtn = true;
 
-  @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
+  readonly commentEditor = viewChild(CommentEditorComponent);
 
   constructor(
     private router: Router,
@@ -67,7 +68,7 @@ export class PostDetailComponent implements OnInit {
   comment() {
     const thingID = `${this.post.kind}_${this.post.data['id']}`;
     const content = !this.useTrumbowygEditor() ?
-      this.commentEditor.commentContent: this.trumbowygService.getTrumbowygAsMarkdown(TrumbowygConstants.TRUMBOWYG_EDITOR);
+      this.commentEditor().commentContent: this.trumbowygService.getTrumbowygAsMarkdown(TrumbowygConstants.TRUMBOWYG_EDITOR);
     const data = {
       thingID: thingID,
       content: content
@@ -75,8 +76,9 @@ export class PostDetailComponent implements OnInit {
 
     this.redditSubmitService.comment(data).subscribe(data => {
 
-      if (this.commentEditor) {
-        this.commentEditor.commentContent = '';
+      const commentEditor = this.commentEditor();
+      if (commentEditor) {
+        commentEditor.commentContent = '';
       }
 
       this.comments.push({

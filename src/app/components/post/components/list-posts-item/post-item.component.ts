@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, Renderer2, TemplateRef, ViewChild, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Renderer2, TemplateRef, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges, input, viewChild, effect } from '@angular/core';
 import {
   FlairData,
   GalleryData,
@@ -30,19 +30,23 @@ import { PreferencesService } from 'src/app/services/preferences.service';
 declare var twttr: any;
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'post-item',
-  templateUrl: './post-item.html'
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'post-item',
+    templateUrl: './post-item.html',
+    standalone: false
 })
-export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
-  @Input() post!: Post;
-  @Input() options: { isDetail?: boolean, isArchive?: boolean } = {
+export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
+  readonly post = input.required<Post>();
+  readonly options = input<{
+    isDetail?: boolean;
+    isArchive?: boolean;
+}>({
     isDetail: false,
     isArchive: false
-  };
-  @ViewChild('twitterEmbed') tweet!: ElementRef<HTMLElement>;
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
-  @ViewChild('flairElement') flairEl!: ElementRef<HTMLElement>;
+});
+  readonly tweet = viewChild.required<ElementRef<HTMLElement>>('twitterEmbed');
+  readonly videoPlayer = viewChild.required<ElementRef<HTMLVideoElement>>('videoPlayer');
+  readonly flairEl = viewChild.required<ElementRef<HTMLElement>>('flairElement');
 
   isUpVoted = false;
   isDownVoted = false;
@@ -96,19 +100,13 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     private toastService: ToastService,
     private authenticateService: RedditAuthenticateService,
     private checkDeviceFeatureService: CheckDeviceFeatureService,
-    private preferenceService: PreferencesService) { }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.post && changes.post.currentValue) {
-      if (!this.options) {
-        this.options = {
-          isDetail: false
-        };
-      }
-
-      this._bindData();
+    private preferenceService: PreferencesService) { 
+      effect(() => {
+        if (this.post()) {
+          this._bindData();
+        }
+      });
     }
-  }
 
   ngOnInit() {
     this.isOver18Consent = this.userService.isNSFWAllowed() && !(this.preferenceService.preferenceValue?.safeBrowsing ?? false);
@@ -131,35 +129,41 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   private _bindData() {
-    this.isSaved = !!this.post.data.saved;
+    this.isSaved = !!this.post().data.saved;
 
-    this.hasImages = !!this.post.data['preview'] && this.post.data['preview']['enabled']
-      && Domains.imagesDomains.includes(this.post.data['domain'] ?? '');
+    const post = this.post();
+    this.hasImages = !!post.data['preview'] && post.data['preview']['enabled']
+      && Domains.imagesDomains.includes(post.data['domain'] ?? '');
 
-    this.isVideo = !!(this.post.data['is_video'] || this.post.data['media']) && !this.isTwitterEmbedded && !this.isTwitchEmbedded;
+    const postValue = this.post();
+    this.isVideo = !!(postValue.data['is_video'] || postValue.data['media']) && !this.isTwitterEmbedded && !this.isTwitchEmbedded;
 
-    this.isGallery = !!(this.post.data['is_gallery'] &&
-      this.post.data['gallery_data'] && this.post.data['gallery_data'].items.length > 0);
+    const postVal = this.post();
+    this.isGallery = !!(postVal.data['is_gallery'] &&
+      postVal.data['gallery_data'] && postVal.data['gallery_data'].items.length > 0);
 
-    this.isComment = this.post.kind === 't1';
+    this.isComment = this.post().kind === 't1';
 
-    this.isTwitterEmbedded = this.post.data['domain'] === Domains.twitterDomain;
-    this.isTwitchEmbedded = this.post.data['domain'] === Domains.twitchDomain;
+    this.isTwitterEmbedded = this.post().data['domain'] === Domains.twitterDomain;
+    this.isTwitchEmbedded = this.post().data['domain'] === Domains.twitchDomain;
 
-    this.isMediaEmbeded = this.post.data['media'] ? Domains.mediaEmbed.includes(this.post.data['media']['type'] ?? '') : false;
-    this.isOver18 = !!this.post.data['over_18'];
+    const postInput = this.post();
+    this.isMediaEmbeded = postInput.data['media'] ? Domains.mediaEmbed.includes(postInput.data['media']['type'] ?? '') : false;
+    this.isOver18 = !!this.post().data['over_18'];
 
     // Needs enhancement. The logic does not cover all cases
-    this.isEmbededLink = !!((!this.post.data['is_self'])
-      && !this.post.data['selftext']
-      && !this.post.data['is_reddit_media_domain']
+    const post_1 = this.post();
+    this.isEmbededLink = !!((!post_1.data['is_self'])
+      && !post_1.data['selftext']
+      && !post_1.data['is_reddit_media_domain']
       && !this.hasImages
       && !this.isTwitterEmbedded
       && !this.isTwitchEmbedded
       && !this.isVideo
-      && (this.post.data['url'] && !this.post.data['url'].includes('https://www.reddit.com')));
+      && (post_1.data['url'] && !post_1.data['url'].includes('https://www.reddit.com')));
 
-    this.isCrossPost = !!(this.post.data['crosspost_parent_list'] && this.post.data['crosspost_parent_list'].length > 0);
+    const post_2 = this.post();
+    this.isCrossPost = !!(post_2.data['crosspost_parent_list'] && post_2.data['crosspost_parent_list'].length > 0);
 
     if (this.hasImages) {
       this.imageSrc = this.getImageSource();
@@ -168,13 +172,14 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     this.videoSrc = this.getVideoSource() ?? '';
     this.videoThumbnailSrc = this.getThumbnailSource() ?? '';
 
-    if (this.post.data['preview']) {
-      this.isWidescreenVideo = this.isWideScreen(this.post.data['preview']['images']);
+    const post_3 = this.post();
+    if (post_3.data['preview']) {
+      this.isWidescreenVideo = this.isWideScreen(post_3.data['preview']['images']);
     }
 
-    this.flair.flair_text = this.post.data['link_flair_text'];
-    this.flair.flair_richtext = this.post.data['link_flair_richtext'];
-    this.flair.flair_background_color = this.post.data['link_flair_background_color'];
+    this.flair.flair_text = post_3.data['link_flair_text'];
+    this.flair.flair_richtext = post_3.data['link_flair_richtext'];
+    this.flair.flair_background_color = post_3.data['link_flair_background_color'];
   }
 
   playVideo() {
@@ -208,7 +213,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
       let src = ReplacePipe.prototype.transform(rawSrc);
       this.dashPlayer = dashjs.MediaPlayer().create();
-      this.dashPlayer.initialize(this.videoPlayer.nativeElement, src, false);
+      this.dashPlayer.initialize(this.videoPlayer().nativeElement, src, false);
       this.dashPlayer.setVolume(0.5);
     } catch (err) {
       throw err;
@@ -222,13 +227,14 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
       /**
        * First check for native browser HLS support else use Hls.js
        */
-      if (this.videoPlayer.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
-        this.videoPlayer.nativeElement.src = src;
-        this.videoPlayer.nativeElement.click();
+      const videoPlayer = this.videoPlayer();
+      if (videoPlayer.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
+        videoPlayer.nativeElement.src = src;
+        videoPlayer.nativeElement.click();
       } else if (Hls.isSupported()) {
         this.hlsPlayer = new Hls();
         this.hlsPlayer.loadSource(src);
-        this.hlsPlayer.attachMedia(this.videoPlayer.nativeElement);
+        this.hlsPlayer.attachMedia(videoPlayer.nativeElement);
 
         this.hlsPlayer.on(Hls.Events.ERROR, function (_event: string, data: ErrorData) {
           const errorDetails = data.details;
@@ -259,8 +265,9 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   formatThumbnail() {
-    if (this.post.data['thumbnail'] && !this.post.data['thumbnail'].includes('https://')) {
-      this.post.data['thumbnail'] = '';
+    const post = this.post();
+    if (post.data['thumbnail'] && !post.data['thumbnail'].includes('https://')) {
+      post.data['thumbnail'] = '';
     }
   }
 
@@ -276,8 +283,9 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
   getVideoSource(type?: string) {
     //  Get embeded link from iframe element returned
-    if (!this.post.data['is_video'] && this.post.data['media']) {
-      const iframeHtml = this.post.data['media']['oembed']!['html'];
+    const post = this.post();
+    if (!post.data['is_video'] && post.data['media']) {
+      const iframeHtml = post.data['media']['oembed']!['html'];
       const srcAttr = iframeHtml.match(/src="(.*?)"/g)![0];
       const srcValue = Utils.clearUrl(srcAttr.match(/"(.*?)"/g)![0]);
 
@@ -287,15 +295,15 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
       return decodeURI(url);
     }
 
-    if (!this.post.data['media']) {
+    if (!post.data['media']) {
       return null;
     }
 
-    const hlsUrl = this.post.data['media']['reddit_video']?.['hls_url'];
-    const dashUrl = this.post.data['media']['reddit_video']?.['dash_url'];
-    const fallbackUrl = this.post.data['media']['reddit_video']?.['fallback_url'];
+    const hlsUrl = post.data['media']['reddit_video']?.['hls_url'];
+    const dashUrl = post.data['media']['reddit_video']?.['dash_url'];
+    const fallbackUrl = post.data['media']['reddit_video']?.['fallback_url'];
 
-    const src = this.post.data['media'] ?
+    const src = post.data['media'] ?
       (type === 'dash' ? dashUrl : hlsUrl) : fallbackUrl;
 
     return src;
@@ -303,21 +311,22 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
   getThumbnailSource() {
 
-    if (this.post.data['preview'] && this.post.data['preview']['images'].length > 0) {
-      const images = this.post.data['preview']['images'];
+    const post = this.post();
+    if (post.data['preview'] && post.data['preview']['images'].length > 0) {
+      const images = post.data['preview']['images'];
       const resolutions = images[0]['resolutions'];
-      if (!resolutions?.length) return this.post.data['thumbnail'] ?? '';
+      if (!resolutions?.length) return post.data['thumbnail'] ?? '';
       const resolutionIndex = Math.floor(resolutions.length / 2);
       return this.getSmallerImage(resolutions, resolutionIndex);
     }
 
-    if (this.post.data['thumbnail']) {
-      return this.post.data['thumbnail'];
+    if (post.data['thumbnail']) {
+      return post.data['thumbnail'];
     }
   }
 
   getImageSource() {
-    const images = this.post.data['preview']!['images'];
+    const images = this.post().data['preview']!['images'];
     let image = '';
     if (images.length > 0) {
       if (images[0]['variants'] && images[0]['variants']['gif']) {
@@ -351,7 +360,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
       return image;
     }
 
-    if ((resolutions[resolutions.length - 1]?.height ?? 0) < 300 || this.options.isDetail) {
+    if ((resolutions[resolutions.length - 1]?.height ?? 0) < 300 || this.options().isDetail) {
       image = images.source.url;
     } else {
       try {
@@ -389,13 +398,14 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   navigateToDetail(isComment?: boolean) {
-    if (!this.options.isDetail) {
-      let path = `/r/${this.post.data['subreddit']}/comments/`;
-      const parentPost = this.post.data['permalink'].split('/')[4];
+    if (!this.options().isDetail) {
+      let path = `/r/${this.post().data['subreddit']}/comments/`;
+      const parentPost = this.post().data['permalink'].split('/')[4];
 
-      if (isComment && this.post.data['parent_id']) {
-        const parentId = this.post.data['parent_id'].split('_');
-        let comment = this.post.data['id'];
+      const post = this.post();
+      if (isComment && post.data['parent_id']) {
+        const parentId = post.data['parent_id'].split('_');
+        let comment = post.data['id'];
         let parent = parentId[1];
 
         if (parentId[1] !== parentPost) {
@@ -408,7 +418,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
         path += `${parent}?${params.toString()}`;
       } else {
-        path += `${this.post.data['id']}`;
+        path += `${post.data['id']}`;
       }
 
       this.router.navigateByUrl(path);
@@ -416,20 +426,20 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   initTwitter() {
-    let html = DomParserPipe.prototype.transform(this.post.data['media']!['oembed']!['html']);
+    let html = DomParserPipe.prototype.transform(this.post().data['media']!['oembed']!['html']);
     html = ReplacePipe.prototype.transform(html, '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>', '');
-    this.renderer2.setProperty(this.tweet.nativeElement, 'innerHTML', html);
+    this.renderer2.setProperty(this.tweet().nativeElement, 'innerHTML', html);
     twttr.widgets.load();
   }
 
   initGallery() {
 
-    this.galleryData.items = this.post.data['gallery_data']!['items'];
+    this.galleryData.items = this.post().data['gallery_data']!['items'];
     let selectedResolution: number;
 
     this.galleryData.items.forEach(item => {
       const mediaId = item['media_id'];
-      const meta = this.post.data['media_metadata']?.[mediaId];
+      const meta = this.post().data['media_metadata']?.[mediaId];
       item.metadata = { ...meta };
 
       if (meta?.['status']?.toLowerCase() === 'failed') {
@@ -439,7 +449,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
         item.source = meta?.['s']?.['u'] ?? '';
       }
 
-      if (!this.options.isDetail) {
+      if (!this.options().isDetail) {
         const mediaResolutions = meta?.['p'];
 
         if (!mediaResolutions?.length) {
@@ -459,8 +469,8 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   filterByFlair() {
-    this.router.navigate([`${this.post.data['subreddit_name_prefixed']}/`],
-      { queryParams: { flair: this.post.data['link_flair_text'] } });
+    this.router.navigate([`${this.post().data['subreddit_name_prefixed']}/`],
+      { queryParams: { flair: this.post().data['link_flair_text'] } });
   }
 
   save() {
@@ -472,7 +482,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
       this.modalService.open(LoginPromptComponent);
     } else {
       this.isSaving = true;
-      this.listingService.savePost(this.post.data['name']).pipe(tap(() => {
+      this.listingService.savePost(this.post().data['name']).pipe(tap(() => {
         this.isSaved = true;
         this.isSaving = false;
       })).subscribe();
@@ -485,14 +495,14 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     }
 
     this.isSaving = true;
-    this.listingService.unsavePost(this.post.data['name']).pipe(tap(() => {
+    this.listingService.unsavePost(this.post().data['name']).pipe(tap(() => {
       this.isSaved = false;
       this.isSaving = false;
     })).subscribe();
   }
 
   share(toastTemplate: TemplateRef<unknown>) {
-    const url = `https://www.reddit.com${this.post.data['permalink']}`;
+    const url = `https://www.reddit.com${this.post().data['permalink']}`;
 
     if (!navigator.clipboard) {
       this.fallbackCopyTextToClipboard(url, toastTemplate);

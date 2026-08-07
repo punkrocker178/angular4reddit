@@ -1,9 +1,9 @@
-@if (post?.data) {
-<div class="card mt-3" [ngClass]="{'mb-5': !options.isDetail, 'custom-card-no-border': options.isDetail}">
-  <div class="card-body px-0" [ngClass]="{'mb-3 p-0': options.isDetail, 'crop-content': (!isGallery && !options.isDetail)}">
+@if (post()?.data) {
+<div class="card mt-3" [ngClass]="{'mb-5': !options().isDetail, 'custom-card-no-border': options().isDetail}">
+  <div class="card-body px-0" [ngClass]="{'mb-3 p-0': options().isDetail, 'crop-content': (!isGallery && !options().isDetail)}">
 
     <div class="px-3 my-2 pointer">
-      <div *ngIf="post?.data['stickied']" class="mt-2">
+      <div *ngIf="post()?.data['stickied']" class="mt-2">
         <span class="icon-before icon-thumbstack">
           <span class="ms-2">Pinned</span>
         </span>
@@ -11,29 +11,29 @@
 
       <!-- Subreddit - author - post date -->
       <div class="d-flex flex-row post-author">
-        <a [routerLink]="'/' + post?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
-          class="me-auto">{{post?.data['subreddit_name_prefixed']}}</a>
-        <a [routerLink]="'/u/' + post?.data['author']" [routerLinkActive]="'active'">by /u/{{post?.data['author']}}</a>
-        <span [title]="post.data['created_utc'] | dateTimePipe: 'format'" class="ms-2">{{ post.data['created_utc'] |
+        <a [routerLink]="'/' + post()?.data['subreddit_name_prefixed']" [replaceUrl]="true" [routerLinkActive]="'active'"
+          class="me-auto">{{post()?.data['subreddit_name_prefixed']}}</a>
+        <a [routerLink]="'/u/' + post()?.data['author']" [routerLinkActive]="'active'">by /u/{{post()?.data['author']}}</a>
+        <span [title]="post().data['created_utc'] | dateTimePipe: 'format'" class="ms-2">{{ post().data['created_utc'] |
           dateTimePipe: 'diff' }}</span>
       </div>
 
       <!-- Awards -->
-      <ng-container *ngIf="post.data.all_awardings && post.data.all_awardings.length > 0">
-        <app-award [isDetail]="options.isDetail" [awards]="post.data['all_awardings']"></app-award>
+      <ng-container *ngIf="post().data.all_awardings && post().data.all_awardings.length > 0">
+        <app-award [isDetail]="options().isDetail" [awards]="post().data['all_awardings']"></app-award>
       </ng-container>
 
 
 
       <div class="d-flex flex-row flex-wrap pb-2">
-        <h5 (click)="viewDetail()" class="card-title mb-0 d-inline-block">{{post?.data['title'] | replacePipe}}
+        <h5 (click)="viewDetail()" class="card-title mb-0 d-inline-block">{{post()?.data['title'] | replacePipe}}
         </h5>
 
-        <span title="Archived" *ngIf="options.isArchive" class="icon-before icon-archive me-2 text-warning"></span>
+        <span title="Archived" *ngIf="options().isArchive" class="icon-before icon-archive me-2 text-warning"></span>
 
         <!-- Flair -->
-        <ng-container *ngIf="post.data['link_flair_text'] ||
-        (post.data['link_flair_richtext'] && post.data['link_flair_richtext'].length > 0)">
+        <ng-container *ngIf="post().data['link_flair_text'] ||
+        (post().data['link_flair_richtext'] && post().data['link_flair_richtext'].length > 0)">
           <app-flair (click)="filterByFlair()" [flairInput]="flair"></app-flair>
         </ng-container>
 
@@ -43,13 +43,13 @@
       </div>
 
       <ng-container *ngIf="isCrossPost">
-        <h5>Crosspost: {{post.data['crosspost_parent']}}</h5>
+        <h5>Crosspost: {{post().data['crosspost_parent']}}</h5>
       </ng-container>
     </div>
 
     <ng-container *ngIf="imageSrc">
       <div [ngClass]="{'blur-img': isOver18 && !isOver18Consent}" class="img-container pointer" (click)="viewDetail()">
-        <img class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe" [alt]="post.data['title']">
+        <img class="img-fluid center-img scale-img" [src]="imageSrc | replacePipe" [alt]="post().data['title']">
       </div>
     </ng-container>
 
@@ -99,9 +99,9 @@
 
     <!-- Link & thumbnail -->
     <div class="px-3 pointer" *ngIf="isEmbededLink || noSelfText">
-      <a class="d-flex flex-row flex-wrap" [href]="post.data['url']" target="_blank">
-        <span class="w-100 me-auto">{{ post.data['url'] }}</span>
-        <img class="" *ngIf="post.data['thumbnail']" [src]="post.data['thumbnail'] | replacePipe">
+      <a class="d-flex flex-row flex-wrap" [href]="post().data['url']" target="_blank">
+        <span class="w-100 me-auto">{{ post().data['url'] }}</span>
+        <img class="" *ngIf="post().data['thumbnail']" [src]="post().data['thumbnail'] | replacePipe">
       </a>
     </div>
 
@@ -118,16 +118,16 @@
     <!-- Post text content -->
     <ng-container *ngIf="!isComment; else commentBlock">
       <div (click)="viewDetail()" class="parsed-html pt-1 pt-md-2 px-3 pointer" appHTML
-        [selfText]="post?.data['selftext_html']">
+        [selfText]="post()?.data['selftext_html']">
       </div>
     </ng-container>
 
     <ng-template #commentBlock>
       <div class="px-3">
-        <span>Commented on <a target="_blank" [href]="post.data['link_url']"
-            class="fw-bold">{{post.data['link_title']}}</a></span>
+        <span>Commented on <a target="_blank" [href]="post().data['link_url']"
+            class="fw-bold">{{post().data['link_title']}}</a></span>
         <div (click)="viewDetail(true)" class="post-comments parsed-html-comments" appHTML
-          [selfText]="post?.data['body_html']"></div>
+          [selfText]="post()?.data['body_html']"></div>
       </div>
 
     </ng-template>
@@ -136,16 +136,16 @@
 
   <!-- Vote - Comments - Share section -->
   <div class="card-footer d-flex button-group ps-2 ps-md-4 pe-md-3">
-    <app-vote [score]="post?.data['score']" [id]="post?.data['name']" [liked]="post?.data['likes']"></app-vote>
+    <app-vote [score]="post()?.data['score']" [id]="post()?.data['name']" [liked]="post()?.data['likes']"></app-vote>
 
     <div (click)="viewDetail(true)" class="p-2 post-buttons align-self-center flex-fill pointer">
       <span class="d-md-none">
-        <span class="fw-bold me-2">{{post?.data['num_comments']}}</span>
+        <span class="fw-bold me-2">{{post()?.data['num_comments']}}</span>
         <i class="fas fa-comment-dots"></i>
       </span>
 
       <span class="d-none d-md-inline">
-        <span class="fw-bold">{{post?.data['num_comments']}}</span>
+        <span class="fw-bold">{{post()?.data['num_comments']}}</span>
         Comments
       </span>
     </div>
