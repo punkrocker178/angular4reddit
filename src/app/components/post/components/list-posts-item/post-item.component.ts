@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, TemplateRef, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges, input, viewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, TemplateRef, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges, input, viewChild, effect } from '@angular/core';
 import {
   FlairData,
   GalleryData,
@@ -35,7 +35,7 @@ declare var twttr: any;
     templateUrl: './post-item.html',
     standalone: false
 })
-export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+export class PostItemComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly post = input.required<Post>();
   readonly options = input<{
     isDetail?: boolean;
@@ -100,13 +100,13 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     private toastService: ToastService,
     private authenticateService: RedditAuthenticateService,
     private checkDeviceFeatureService: CheckDeviceFeatureService,
-    private preferenceService: PreferencesService) { }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.post && changes.post.currentValue) {
-      this._bindData();
+    private preferenceService: PreferencesService) { 
+      effect(() => {
+        if (this.post()) {
+          this._bindData();
+        }
+      });
     }
-  }
 
   ngOnInit() {
     this.isOver18Consent = this.userService.isNSFWAllowed() && !(this.preferenceService.preferenceValue?.safeBrowsing ?? false);
