@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, viewChildren } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SubredditService } from 'src/app/services/subreddit.service';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class SubredditComponent implements OnInit {
 
   collapseElementStatusArr: boolean[];
 
-  @ViewChildren('collapseText') collapseTextList!: QueryList<ElementRef>;
+  readonly collapseTextList = viewChildren<ElementRef>('collapseText');
 
   constructor(private activatedRoute: ActivatedRoute,
     private subredditService: SubredditService,

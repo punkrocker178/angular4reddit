@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, OnInit, Renderer2, ViewChild, input } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnInit, Renderer2, input, viewChild } from '@angular/core';
 
 export interface GalleryConfigs {
     position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -14,7 +14,7 @@ export class GalleryComponent implements OnInit, AfterContentInit {
 
     elementIndex = 0;
     positionClass: string;
-    @ViewChild('gallery') galleryEl: ElementRef<HTMLElement>;
+    readonly galleryEl = viewChild<ElementRef<HTMLElement>>('gallery');
     childList: HTMLCollection | HTMLElement[] = [];
     readonly configs = input<GalleryConfigs>(undefined);
 
@@ -28,7 +28,7 @@ export class GalleryComponent implements OnInit, AfterContentInit {
 
     ngAfterContentInit() {
         setTimeout(() => {
-            this.childList = this.galleryEl.nativeElement.children;
+            this.childList = this.galleryEl().nativeElement.children;
         });
     }
 

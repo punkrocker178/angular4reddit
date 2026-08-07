@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, input, viewChild } from '@angular/core';
 import { FlairData } from 'src/app/model/post';
 
 @Component({
@@ -9,7 +9,7 @@ import { FlairData } from 'src/app/model/post';
 export class FlairComponent implements OnInit, AfterViewInit {
 
     readonly flairInput = input<FlairData>(undefined);
-    @ViewChild('flairElement') flairEl: ElementRef;
+    readonly flairEl = viewChild<ElementRef>('flairElement');
     flairText: string;
     flairEmoji: string;
 
@@ -28,10 +28,11 @@ export class FlairComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         const flairInput = this.flairInput();
         if (flairInput['flair_background_color']) {
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'background-color', flairInput['flair_background_color']);
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'border-color', flairInput['flair_background_color']);
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'color', '#FFFFFF');
-            this.renderer2.setStyle(this.flairEl.nativeElement, 'text-shadow', 'black 0 0');
+            const flairEl = this.flairEl();
+            this.renderer2.setStyle(flairEl.nativeElement, 'background-color', flairInput['flair_background_color']);
+            this.renderer2.setStyle(flairEl.nativeElement, 'border-color', flairInput['flair_background_color']);
+            this.renderer2.setStyle(flairEl.nativeElement, 'color', '#FFFFFF');
+            this.renderer2.setStyle(flairEl.nativeElement, 'text-shadow', 'black 0 0');
         }
     }
 

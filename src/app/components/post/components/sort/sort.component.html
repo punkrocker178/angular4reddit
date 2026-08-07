@@ -12,7 +12,7 @@
     </button>
     <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="categoryDropdown">
       <ng-container *ngFor="let type of sortTypes; let idx = index">
-        <a ngbDropdownItem (click)="toggleDropdown(type)" class="pointer">
+        <a ngbDropdownItem (click)="toggleDropdown(type)" class="pointer text-decoration-none">
 
           <!-- SVG icons -->
           <ng-container [ngSwitch]="type">

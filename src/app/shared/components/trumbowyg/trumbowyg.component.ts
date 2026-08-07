@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, input, output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, output, viewChild } from '@angular/core';
 import { TrumbowygConfigs, TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
 import { TrumbowygService } from 'src/app/services/trumbowyg.service';
 import { Subscription } from 'rxjs';
@@ -21,8 +21,8 @@ export class TrumbowygComponent implements AfterViewInit {
         return this._trumbowygSelector;
     }
 
-    @ViewChild('editor') editorInstance: ElementRef<HTMLElement>;
-    @ViewChild('commentEditorInstance') commentEditorInstance: ElementRef<HTMLElement>;
+    readonly editorInstance = viewChild<ElementRef<HTMLElement>>('editor');
+    readonly commentEditorInstance = viewChild<ElementRef<HTMLElement>>('commentEditorInstance');
 
     constructor(private trumbowygService: TrumbowygService) {
 

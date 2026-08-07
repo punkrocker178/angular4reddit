@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, TemplateRef, ViewChild, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges, input } from '@angular/core';
+import { Component, ElementRef, Renderer2, TemplateRef, OnInit, AfterViewInit, OnDestroy, OnChanges, SimpleChanges, input, viewChild } from '@angular/core';
 import {
   FlairData,
   GalleryData,
@@ -44,9 +44,9 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     isDetail: false,
     isArchive: false
 });
-  @ViewChild('twitterEmbed') tweet!: ElementRef<HTMLElement>;
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
-  @ViewChild('flairElement') flairEl!: ElementRef<HTMLElement>;
+  readonly tweet = viewChild.required<ElementRef<HTMLElement>>('twitterEmbed');
+  readonly videoPlayer = viewChild.required<ElementRef<HTMLVideoElement>>('videoPlayer');
+  readonly flairEl = viewChild.required<ElementRef<HTMLElement>>('flairElement');
 
   isUpVoted = false;
   isDownVoted = false;
@@ -213,7 +213,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
       let src = ReplacePipe.prototype.transform(rawSrc);
       this.dashPlayer = dashjs.MediaPlayer().create();
-      this.dashPlayer.initialize(this.videoPlayer.nativeElement, src, false);
+      this.dashPlayer.initialize(this.videoPlayer().nativeElement, src, false);
       this.dashPlayer.setVolume(0.5);
     } catch (err) {
       throw err;
@@ -227,13 +227,14 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
       /**
        * First check for native browser HLS support else use Hls.js
        */
-      if (this.videoPlayer.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
-        this.videoPlayer.nativeElement.src = src;
-        this.videoPlayer.nativeElement.click();
+      const videoPlayer = this.videoPlayer();
+      if (videoPlayer.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
+        videoPlayer.nativeElement.src = src;
+        videoPlayer.nativeElement.click();
       } else if (Hls.isSupported()) {
         this.hlsPlayer = new Hls();
         this.hlsPlayer.loadSource(src);
-        this.hlsPlayer.attachMedia(this.videoPlayer.nativeElement);
+        this.hlsPlayer.attachMedia(videoPlayer.nativeElement);
 
         this.hlsPlayer.on(Hls.Events.ERROR, function (_event: string, data: ErrorData) {
           const errorDetails = data.details;
@@ -427,7 +428,7 @@ export class PostItemComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   initTwitter() {
     let html = DomParserPipe.prototype.transform(this.post().data['media']!['oembed']!['html']);
     html = ReplacePipe.prototype.transform(html, '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>', '');
-    this.renderer2.setProperty(this.tweet.nativeElement, 'innerHTML', html);
+    this.renderer2.setProperty(this.tweet().nativeElement, 'innerHTML', html);
     twttr.widgets.load();
   }
 

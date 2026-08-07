@@ -1,22 +1,35 @@
-
-.icon-before::before:extend(.icon) {
+// Font Awesome 6 pseudo-elements — requires FA kit script in index.html
+.fa-pseudo-element-base() {
     display: inline-block;
-    font-family: 'FontAwesome';
-    font-weight: 400;
     font-style: normal;
     font-variant: normal;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+.fa-pseudo-element-solid() {
+    .fa-pseudo-element-base();
+    font: var(--fa-font-solid, 900 1rem/1 "Font Awesome 6 Free");
+}
+
+.fa-pseudo-element-regular() {
+    .fa-pseudo-element-base();
+    font: var(--fa-font-regular, 400 1rem/1 "Font Awesome 6 Free");
+}
+
+.fa-pseudo-element-brands() {
+    .fa-pseudo-element-base();
+    font: var(--fa-font-brands, 400 1rem/1 "Font Awesome 6 Brands");
+}
+
+.icon-before::before,
 .icon-after::after {
-    display: inline-block;
-    font-family: 'FontAwesome';
-    font-weight: 400;
-    font-style: normal;
-    font-variant: normal;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
+    .fa-pseudo-element-solid();
+}
+
+.small-icon {
+    font-size: 0.8rem;
 }
 
 .icon-before {
@@ -29,13 +42,27 @@
     align-items: center;
 }
 
+// Brands (fab)
+.icon-angular::before,
+.icon-reddit::before,
+.icon-aws::before {
+    .fa-pseudo-element-brands();
+}
+
+// Regular (far) — moon, sun, circle-play
+.icon-moon::before,
+.icon-sun::before,
+.icon-play::before {
+    .fa-pseudo-element-regular();
+}
+
 .icon-angular::before {
     content: '\f420';
     color: red;
 }
 
 .icon-reddit::before {
-    content: '\f281';
+    content: '\f1a1';
 }
 
 .icon-aws::before {
@@ -76,11 +103,11 @@
 }
 
 .icon-less-than::before {
-    content: '\f536';
+    content: '\f104';
 }
 
 .icon-greater-than::before {
-    content: '\f531';
+    content: '\f105';
 }
 
 .icon-search::before {
@@ -128,23 +155,19 @@
 }
 
 .icon-shield::before {
-    content: '\f3ed';
+    content: '\f132';
 }
 
 .icon-arrow-up::before {
     content: '\f35b';
 }
 
-.icon-pen::before {
-    content: '\f5ac';
-}
-
 .icon-thumbstack::before {
-  content: '\f08d';
-  color: #75d377;
+    content: '\f08d';
+    color: #75d377;
 }
 
 .svg-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
 }

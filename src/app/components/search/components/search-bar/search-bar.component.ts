@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, input, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
@@ -26,10 +26,10 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
 
   readonly showSearchBtn = input<boolean>(undefined);
   keyEventSubscription: Subscription;
-  @ViewChild('inputEl') inputElement: ElementRef<HTMLInputElement>;
+  readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputEl');
 
   ngAfterViewInit() {
-    const keyEvent = fromEvent(this.inputElement.nativeElement, 'keydown');
+    const keyEvent = fromEvent(this.inputElement().nativeElement, 'keydown');
     this.keyEventSubscription = keyEvent.pipe(tap((event: KeyboardEvent) => {
       if (event.key === 'Enter') {
         this.navigateToSearchComponent();

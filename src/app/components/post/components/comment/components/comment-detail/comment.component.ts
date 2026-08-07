@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, input, output } from '@angular/core';
+import { Component, OnInit, input, output, viewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginPromptComponent } from 'src/app/components/modals/login-required/login-prompt.component';
 import { TrumbowygConstants } from 'src/app/constants/trymbowyg-constants';
@@ -22,7 +22,7 @@ export class CommentComponent implements OnInit {
     readonly originalPoster = input<string>(undefined);
     readonly submittedComment = output<Post>();
 
-    @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
+    readonly commentEditor = viewChild(CommentEditorComponent);
 
     enableEditor: boolean;
     disableReplyBtn = true;
@@ -64,7 +64,7 @@ export class CommentComponent implements OnInit {
         const trumbowygSelector = `${TrumbowygConstants.TRUMBOWYG_COMMENT_EDITOR}-${this.commentData().data.id}`;
 
         const content = !this.useTrumbowygEditor() ?
-            this.commentEditor.commentContent : this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
+            this.commentEditor().commentContent : this.trumbowygService.getTrumbowygAsMarkdown(trumbowygSelector);
 
         const data = {
             thingID: thingID,
