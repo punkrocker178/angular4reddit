@@ -1,6 +1,6 @@
-<ng-container *ngIf="commentList['length'];else noComments">
+<ng-container *ngIf="commentList().length; else noComments">
 
-	<div class="mb-2" *ngFor="let comment of commentList">
+	<div class="mb-2" *ngFor="let comment of commentList()">
 
 		<ng-container *ngIf="comment.kind === 't1'; else moreReplies">
 			<app-comment

@@ -1,4 +1,4 @@
-import { Component, effect, input } from '@angular/core';
+import { Component, input, linkedSignal, WritableSignal } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Post, PostReplies } from 'src/app/model/post';
 import { RedditSubmitService } from 'src/app/services/reddit-submit.service';
@@ -16,8 +16,15 @@ export class PostCommentsComponent {
   readonly orginalPoster = input<string>(undefined);
   readonly isArchive = input<boolean>(undefined);
 
-  commentList: Post[] = [];
-
+  commentList: WritableSignal<Post[]> = linkedSignal(() => {
+    const comments = this.comments();
+    if (Array.isArray(comments)) {
+      return [...comments];
+    } else if (comments?.data?.children) {
+      return [...comments.data.children];
+    }
+    return [];
+  });
   moreRepliesLoading: boolean;
   enableEditor: boolean;
 
@@ -31,16 +38,7 @@ export class PostCommentsComponent {
   }
 
   constructor(
-    private submitService: RedditSubmitService) {
-      effect(() => {
-        const comments = this.comments();
-        if (Array.isArray(comments)) {
-          this.commentList = comments;
-        } else if (comments?.data?.children) {
-          this.commentList = comments.data.children;
-        }
-      });
-    }
+    private submitService: RedditSubmitService) {}
 
   hasReplies(comment: Post): boolean {
     return comment.data['replies'] &&
@@ -53,7 +51,7 @@ export class PostCommentsComponent {
   }
 
   pushComment(comment: Post) {
-    this.commentList.push(comment);
+    this.commentList.update(comments => [...comments, comment]);
   }
 
   loadMoreReplies(event: Event, comment: Post) {
@@ -80,7 +78,7 @@ export class PostCommentsComponent {
     this.submitService.loadMoreComments(payload).pipe(
       tap(next => {
         this.moreChildrenId.splice(0, end);
-        this.commentList = [...this.commentList, ...next];
+        this.commentList.update(currentComments => [...currentComments, ...next]);
         this.moreRepliesLoading = false;
       })
     ).subscribe();
